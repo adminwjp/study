@@ -1,7 +1,0 @@
-E:\work\program\SocialContact\src\Infrastructure\bin\Release\netstandard2.0\Infrastructure.deps.json
-E:\work\program\SocialContact\src\Infrastructure\bin\Release\netstandard2.0\Infrastructure.dll
-E:\work\program\SocialContact\src\Infrastructure\bin\Release\netstandard2.0\Infrastructure.pdb
-E:\work\program\SocialContact\src\Infrastructure\obj\Release\netstandard2.0\Infrastructure.AssemblyInfoInputs.cache
-E:\work\program\SocialContact\src\Infrastructure\obj\Release\netstandard2.0\Infrastructure.AssemblyInfo.cs
-E:\work\program\SocialContact\src\Infrastructure\obj\Release\netstandard2.0\Infrastructure.dll
-E:\work\program\SocialContact\src\Infrastructure\obj\Release\netstandard2.0\Infrastructure.pdb
