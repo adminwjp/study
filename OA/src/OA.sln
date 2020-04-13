@@ -31,12 +31,25 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OA.Domain", "OA.Domain\OA.D
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		..\..\Shared\Utility.Attribute\Utility.Attribute.projitems*{071e329f-4674-4e5f-a6ca-bcd4c7be594d}*SharedItemsImports = 5
+		..\..\Shared\Utility.Base64\Utility.Base64.projitems*{071e329f-4674-4e5f-a6ca-bcd4c7be594d}*SharedItemsImports = 5
+		..\..\Shared\Utility.Cache\Utility.Cache.projitems*{071e329f-4674-4e5f-a6ca-bcd4c7be594d}*SharedItemsImports = 5
+		..\..\Shared\Utility.Cmd\Utility.Cmd.projitems*{071e329f-4674-4e5f-a6ca-bcd4c7be594d}*SharedItemsImports = 5
+		..\..\Shared\Utility.Common\Utility.Common.projitems*{071e329f-4674-4e5f-a6ca-bcd4c7be594d}*SharedItemsImports = 5
+		..\..\Shared\Utility.Elasticsearch\Utility.Elasticsearch.projitems*{071e329f-4674-4e5f-a6ca-bcd4c7be594d}*SharedItemsImports = 5
+		..\..\Shared\Utility.File\Utility.File.projitems*{071e329f-4674-4e5f-a6ca-bcd4c7be594d}*SharedItemsImports = 5
+		..\..\Shared\Utility.Http\Utility.Http.projitems*{071e329f-4674-4e5f-a6ca-bcd4c7be594d}*SharedItemsImports = 5
 		..\..\Shared\Utility.Autofac\Utility.Autofac.projitems*{2a9399d7-aa05-4d92-a95a-074cbbbb5f5e}*SharedItemsImports = 13
 		..\..\Shared\Utility.AspNetCore\Utility.AspNetCore.projitems*{2be7be86-2cf4-4b63-b591-e0daf943b0b9}*SharedItemsImports = 13
 		..\..\Shared\Utility.Nhibernate\Utility.Nhibernate.projitems*{46eeeb23-fae6-4074-af47-686f33ee9817}*SharedItemsImports = 13
 		..\..\Shared\Utility.AspNetCore.Zipkin\Utility.AspNetCore.Zipkin.projitems*{6316c617-3963-4dc1-85f8-9f8309533aca}*SharedItemsImports = 13
 		..\..\Shared\Utility.Common\Utility.Common.projitems*{a1e7ae8a-98a6-4b45-ae9b-03cc204a7060}*SharedItemsImports = 13
 		..\..\Shared\Utility.Wpf\Utility.Wpf.projitems*{d603e271-9555-4f3a-811a-b21f74a09902}*SharedItemsImports = 13
+		..\..\Shared\Utility.Autofac\Utility.Autofac.projitems*{e5ac58f9-7f0c-4235-9f78-5ccceb01a99d}*SharedItemsImports = 5
+		..\..\Shared\Utility.Nhibernate\Utility.Nhibernate.projitems*{e5ac58f9-7f0c-4235-9f78-5ccceb01a99d}*SharedItemsImports = 5
+		..\..\Shared\Utility.AspNetCore.Consul\Utility.AspNetCore.Consul.projitems*{ef04b3de-5a3c-44e2-9222-4c2ca5170b31}*SharedItemsImports = 5
+		..\..\Shared\Utility.AspNetCore.Zipkin\Utility.AspNetCore.Zipkin.projitems*{ef04b3de-5a3c-44e2-9222-4c2ca5170b31}*SharedItemsImports = 5
+		..\..\Shared\Utility.AspNetCore\Utility.AspNetCore.projitems*{ef04b3de-5a3c-44e2-9222-4c2ca5170b31}*SharedItemsImports = 5
 		..\..\Shared\Utility.AspNetCore.Consul\Utility.AspNetCore.Consul.projitems*{f21d4f55-1b28-4783-ad95-286a5e87f060}*SharedItemsImports = 13
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
