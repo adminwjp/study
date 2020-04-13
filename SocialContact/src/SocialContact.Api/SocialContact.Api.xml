@@ -1,0 +1,847 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SocialContact.Api</name>
+    </assembly>
+    <members>
+        <member name="M:SocialContact.Api.Areas.Admin.Controllers.AdminController.QueryChildFilter(System.Linq.IQueryable{SocialContact.Domain.Core.AdminInfo},SocialContact.Domain.ViewModel.QueryAdminFormViewModel)">
+            <summary>
+            实现树形列表查询 
+            </summary>
+            <param name="query"></param>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SocialContact.Api.Areas.Admin.Controllers.JobCategoryController.QueryChildFilter(System.Linq.IQueryable{SocialContact.Domain.Core.JobCategoryInfo},SocialContact.Domain.ViewModel.QueryJobCategoryFormViewModel)">
+            <summary>
+            实现树形列表查询 
+            </summary>
+            <param name="query"></param>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SocialContact.Api.Areas.Admin.Controllers.LikeCategoryController.QueryChildFilter(System.Linq.IQueryable{SocialContact.Domain.Core.LikeCategoryInfo},SocialContact.Domain.ViewModel.QueryLikeCategoryFormViewModel)">
+            <summary>
+            实现树形列表查询 
+            </summary>
+            <param name="query"></param>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SocialContact.Api.Areas.Admin.Controllers.RoleController.QueryChildFilter(System.Linq.IQueryable{SocialContact.Domain.Core.AdminRoleInfo},SocialContact.Domain.ViewModel.QueryRoleFormViewModel)">
+            <summary>
+            实现树形列表查询 
+            </summary>
+            <param name="query"></param>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SocialContact.Api.Areas.Admin.Controllers.SkillCategoryController.QueryChildFilter(System.Linq.IQueryable{SocialContact.Domain.Core.SkillCategoryInfo},SocialContact.Domain.ViewModel.QuerySkillCategoryFormViewModel)">
+            <summary>
+            实现树形列表查询 
+            </summary>
+            <param name="query"></param>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SocialContact.Api.Areas.Admin.Controllers.UserFileController">
+            <summary>
+            上传 单独上传 或一起提交
+            </summary>
+        </member>
+        <member name="M:SocialContact.Api.Areas.Admin.Controllers.UserFileController.Get(System.String)">
+            <summary>
+            查看文件
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SocialContact.Api.Areas.Admin.Controllers.UserFileController.Images(System.String)">
+            <summary>
+            查看文件
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SocialContact.Api.Controllers.BaseController`3">
+            <summary>
+            后台基类 [FromForm,FromBody]  FromForm模型绑定优先级最高  绑定失败 ,[FromBody] 可以省略 手动绑定,FromForm 必须存在 不然 FromForm请求通过不了
+            </summary>
+            <typeparam name="T"></typeparam>
+            <typeparam name="F"></typeparam>
+            <typeparam name="G"></typeparam>
+        </member>
+        <member name="P:SocialContact.Api.Controllers.BaseController`3.Test">
+            <summary>
+            测试用的
+            </summary>
+        </member>
+        <member name="M:SocialContact.Api.Controllers.BaseController`3.AddMiddlewareExecute(`0)">
+            <summary>
+            添加 数据之前绑定数据到对象上
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SocialContact.Api.Controllers.BaseController`3.EditMiddlewareExecute(`0)">
+            <summary>
+            修改 数据之前绑定数据到对象上
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SocialContact.Api.Controllers.BaseController`3.Edit(`0)">
+            <summary>
+            修改
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SocialContact.Api.Controllers.BaseController`3.UpdateOldObject(`0,`0@)">
+            <summary>
+            修改数据 有些数据更新了
+            </summary>
+            <param name="newObj"></param>
+            <param name="oldObj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SocialContact.Api.Controllers.BaseController`3.Delete(System.Nullable{System.Int32})">
+            <summary>
+            删除操作
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SocialContact.Api.Controllers.BaseController`3.DeleteBefore(System.Int32)">
+            <summary>
+            删除之前操作  默认未实现
+            </summary>
+            <param name="id"></param>
+        </member>
+        <member name="M:SocialContact.Api.Controllers.BaseController`3.DeleteAfter(System.Int32)">
+            <summary>
+            删除之后操作  默认未实现
+            </summary>
+            <param name="id"></param>
+        </member>
+        <member name="M:SocialContact.Api.Controllers.BaseController`3.Query(`1,System.Nullable{System.Int32},System.Nullable{System.Int32})">
+            <summary>
+            模糊查询
+            </summary>
+            <param name="query"></param>
+            <param name="page"></param>
+            <param name="size"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SocialContact.Api.Controllers.BaseController`3.Delete(SocialContact.Domain.ViewModel.DeleteEntry)">
+            <summary>
+            删除多条数据
+            </summary>
+            <param name="deleteEntry"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SocialContact.Api.Controllers.BaseController`3.DeleteBefore(System.Int32[])">
+            <summary>
+            删除之前操作
+            </summary>
+            <param name="id"></param>
+        </member>
+        <member name="M:SocialContact.Api.Controllers.BaseController`3.RecursionOrderBy(System.Collections.Generic.List{`0})">
+            <summary>
+            去除递归 后 的排序 默认未实现
+            </summary>
+            <param name="result"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SocialContact.Api.Controllers.BaseController`3.RecursionDataParse``1(System.Collections.Generic.List{``0},System.Nullable{System.Int32})">
+            <summary>
+            递归去除 无限引用 用于 automapper 
+            </summary>
+            <typeparam name="M"></typeparam>
+            <param name="result"></param>
+            <param name="parentId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SocialContact.Api.Controllers.BaseController`3.RecursionDataParseByWhere``1(System.Collections.Generic.List{``0},System.Collections.Generic.List{System.Int32})">
+            <summary>
+            递归去除 无限引用 用于 automapper 整理树形列表  如果断层了 断层的下级的成为上级 
+            </summary>
+            <typeparam name="M"></typeparam>
+            <param name="result"></param>
+            <param name="ids"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SocialContact.Api.Controllers.BaseController`3.Validate(`0,System.Int32)">
+            <summary>
+            添加 或修改 数据之前验证
+            </summary>
+            <param name="obj"></param>
+            <param name="way"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SocialContact.Api.Controllers.BaseController`3.CustomValidate(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},`0,System.Int32)">
+            <summary>
+            自定义验证
+            </summary>
+            <param name="errors"></param>
+            <param name="obj"></param>
+            <param name="way"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SocialContact.Api.Controllers.BaseController`3.Ref``1(``0@,System.String)">
+            <summary>
+            formform 数据转换
+            </summary>
+            <param name="obj"></param>
+            <param name="str"></param>
+        </member>
+        <member name="M:SocialContact.Api.Controllers.BaseController`3.QueryChildFilter(System.Linq.IQueryable{`0},`1)">
+            <summary>
+            实现树形列表查询 未任何实现
+            </summary>
+            <param name="query"></param>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SocialContact.Api.Controllers.BaseController`3.QueryChildFilter``1(System.Linq.IQueryable{``0})">
+            <summary>
+            默认实现树形列表查询
+            </summary>
+            <typeparam name="M"></typeparam>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SocialContact.Api.Controllers.BaseController`3.QueryFilterByOr(System.Collections.Generic.List{NHibernate.Criterion.AbstractCriterion}@,`1)">
+            <summary>
+            模糊查询 通用查询 默认实现
+            </summary>
+            <param name="criterias"></param>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SocialContact.Api.Controllers.BaseController`3.QueryFilterByAnd(System.Collections.Generic.List{NHibernate.Criterion.AbstractCriterion},`1)">
+            <summary>
+            模糊查询 通用查询 默认实现
+            </summary>
+            <param name="criterias"></param>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SocialContact.Api.Controllers.BaseController`3.QueryFilterByCategory``2(System.Collections.Generic.List{NHibernate.Criterion.AbstractCriterion}@,``1)">
+             <summary>
+            模糊查询 过滤分类信息 默认实现
+             </summary>
+             <typeparam name="J"></typeparam>
+             <typeparam name="K"></typeparam>
+             <param name="query"></param>
+             <param name="obj"></param>
+             <returns></returns>
+        </member>
+        <member name="T:SocialContact.Api.Data.IUserFileService">
+            <summary>
+            逻辑不严谨 测试或正式用 的 
+            </summary>
+        </member>
+        <member name="M:SocialContact.Api.Data.IUserFileService.AddOrUpdate(SocialContact.Domain.Core.UserFileInfo,System.Boolean@,System.Boolean,System.Boolean)">
+            <summary>
+            存在父类 添加 则添加子类 否则 父类 子类 都添加  更新则 更新子类 父类不存在则添加 
+            </summary>
+            <param name="file"></param>
+            <param name="channge"></param>
+            <param name="add"></param>
+            <param name="update"> 更新时 是否 强制更新 file_id src 用户头像等情况下更新不变</param>
+            <returns></returns>
+        </member>
+        <member name="T:SocialContact.Api.Filter.SwaggerOperationFilter">
+            <summary>
+            使用过滤器单独对某些API接口实施认证
+            </summary>
+        </member>
+        <member name="M:SocialContact.Api.Models.AuthrizeValidator.RoleRequired(System.Int32)">
+            <summary>
+            角色必选(父角色)
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Utility.Nhibernate.NhibernateHelper">
+            <summary>
+            NHibernate 帮助类
+            </summary>
+        </member>
+        <member name="P:Utility.Nhibernate.NhibernateHelper.SessionFactory">
+             <summary>
+            NHibernate ISessionFactory
+             </summary>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateHelper.Init(System.Action{NHibernate.Cfg.Configuration})">
+            <summary>
+            初始化 配置信息
+            </summary>
+            <param name="action"></param>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateHelper.Init(System.Reflection.Assembly)">
+            <summary>
+            初始化 配置信息
+            </summary>
+            <param name="assembly"></param>
+        </member>
+        <member name="P:Utility.Nhibernate.NhibernateHelper.Session">
+            <summary>获取Session会话 </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateHelper.OpenSession(NHibernate.EmptyInterceptor)">
+            <summary>获取Session会话 </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Utility.Nhibernate.NhibernateHelper.SessionBuilder">
+            <summary>
+            获取Session会话
+            </summary>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateHelper.GetSessionBuilder(System.Boolean)">
+            <summary>
+            获取Session会话
+            </summary>
+            <param name="autoJoinTransaction"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateHelper.GetSession(System.Boolean)">
+            <summary>
+            获取Session会话
+            </summary>
+            <param name="autoJoinTransaction"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Utility.Nhibernate.NhibernateTemplate">
+            <summary> Nihernate 模板 </summary>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.#ctor">
+             <summary>
+            构造函数 
+             </summary>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.#ctor(Microsoft.Extensions.Logging.ILoggerFactory)">
+             <summary>
+            构造函数 
+             </summary>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.#ctor(NHibernate.IStatelessSession)">
+             <summary>
+            构造函数 
+             </summary>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.#ctor(NHibernate.ISession)">
+             <summary>
+            构造函数 
+             </summary>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.#ctor(System.Action{NHibernate.Cfg.Configuration})">
+            <summary>
+            构造函数 注入
+            </summary>
+            <param name="action"></param>
+        </member>
+        <member name="P:Utility.Nhibernate.NhibernateTemplate.Default">
+             <summary>
+            NhibernateTemplate 
+             </summary>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.Add``1(NHibernate.ISession,``0)">
+            <summary> Nihernate 添加操作 </summary>
+            <param name="session"><see cref="T:NHibernate.ISession"/></param>
+            <param name="obj"></param>
+            <returns>获取主键编号</returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.BatchAdd``1(NHibernate.ISession,``0[])">
+            <summary> Nihernate 添加操作 </summary>
+            <param name="session"><see cref="T:NHibernate.ISession"/></param>
+            <param name="obj"></param>
+            <returns>获取主键编号</returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.AddAsync``1(NHibernate.ISession,``0)">
+            <summary> Nihernate 添加异步操作 </summary>
+            <param name="session"><see cref="T:NHibernate.ISession"/></param>
+            <param name="obj"></param>
+            <returns>获取主键编号</returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.Edit``1(NHibernate.ISession,``0)">
+            <summary> Nihernate 修改操作 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="session"><see cref="T:NHibernate.ISession"/></param>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.BatchEdit``1(NHibernate.ISession,``0[])">
+            <summary> Nihernate 修改操作 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="session"><see cref="T:NHibernate.ISession"/></param>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.EditAsync``1(NHibernate.ISession,``0)">
+            <summary> Nihernate 修改异步操作 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="session"><see cref="T:NHibernate.ISession"/></param>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.Del``1(NHibernate.ISession,``0)">
+            <summary> Nihernate 删除操作 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="session"><see cref="T:NHibernate.ISession"/></param>
+            <param name="obj"></param>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.Del``1(NHibernate.ISession,System.Object)">
+            <summary> Nihernate 删除操作 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="session"><see cref="T:NHibernate.ISession"/></param>
+            <param name="id"></param>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.DelAsync``1(NHibernate.ISession,``0)">
+            <summary> Nihernate 删除异步操作 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="session"><see cref="T:NHibernate.ISession"/></param>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.DelAsync``1(NHibernate.ISession,System.Object)">
+            <summary> Nihernate 删除异步操作 </summary>
+            <param name="session"><see cref="T:NHibernate.ISession"/></param>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.Get``1(NHibernate.ISession,System.Object)">
+            <summary> Nihernate 查询操作 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="session"><see cref="T:NHibernate.IStatelessSession"/></param>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.GetAsync``1(NHibernate.ISession,System.Object)">
+            <summary> Nihernate 查询异步操作 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="session"><see cref="T:NHibernate.ISession"/></param>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.Query``1(NHibernate.ISession,System.String)">
+            <summary>根据实体名称查询，没有则根据泛型查询  异常</summary>
+            <typeparam name="T"></typeparam>
+            <param name="session"><see cref="T:NHibernate.ISession"/></param>
+            <param name="entityName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.QueryOver``1(NHibernate.ISession,System.Linq.Expressions.Expression{System.Func{``0}})">
+            <summary>根据实体类型查询，没有则根据泛型查询 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="session"><see cref="T:NHibernate.ISession"/></param>
+            <param name="alias"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.AddBySession(System.Object)">
+            <summary> Nihernate 添加操作 </summary>
+            <param name="obj"></param>
+            <returns>获取主键编号</returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.BatchAddBySession``1(``0[])">
+            <summary> Nihernate 添加操作 </summary>
+            <param name="obj"></param>
+            <returns>获取主键编号</returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.AddAsyncBySession(System.Object)">
+            <summary> Nihernate 添加异步操作 </summary>
+            <param name="obj"></param>
+            <returns>获取主键编号</returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.EditBySession``1(``0)">
+            <summary> Nihernate 修改操作 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.BatchEditBySession``1(``0[])">
+            <summary> Nihernate 修改操作 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.EditAsyncBySession``1(``0)">
+            <summary> Nihernate 修改异步操作 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.DelBySession``1(``0)">
+            <summary> Nihernate 删除操作 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj"></param>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.DelBySession``1(System.Object)">
+            <summary> Nihernate 删除操作 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="id"></param>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.DelAsyncBySession``1(``0)">
+            <summary> Nihernate 删除异步操作 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.DelAsyncBySession``1(System.Object)">
+            <summary> Nihernate 删除异步操作 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.GetBySession``1(System.Object)">
+            <summary> Nihernate 查询操作 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.GetAsyncBySession``1(System.Object)">
+            <summary> Nihernate 查询异步操作 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.QueryBySession``1(System.String)">
+            <summary>根据实体名称查询，没有则根据泛型查询  异常</summary>
+            <typeparam name="T"></typeparam>
+            <param name="entityName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.QueryOverBySession``1(System.Linq.Expressions.Expression{System.Func{``0}})">
+            <summary>根据实体类型查询，没有则根据泛型查询 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="alias"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.ExecuteQueryBySession(System.String)">
+             <summary>
+            
+             </summary>
+             <param name="sql"></param>
+             <returns></returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.FindBySession``1(System.String,System.Int32)">
+            <summary>
+            查询
+            </summary>
+            <param name="sql"></param>
+            <param name="size">每页记录</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.FindBySession``1(System.String,System.String[])">
+            <summary>
+            查询
+            </summary>
+            <param name="sql"></param>
+            <param name="param"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.Add``1(NHibernate.IStatelessSession,``0)">
+            <summary> Nihernate 添加操作 </summary>
+            <param name="session"><see cref="T:NHibernate.IStatelessSession"/></param>
+            <param name="obj"></param>
+            <returns>获取主键编号</returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.BatchAdd``1(NHibernate.IStatelessSession,``0[])">
+            <summary> Nihernate 添加操作 </summary>
+            <param name="session"><see cref="T:NHibernate.IStatelessSession"/></param>
+            <param name="obj"></param>
+            <returns>获取主键编号</returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.AddAsync``1(NHibernate.IStatelessSession,``0)">
+            <summary> Nihernate 添加异步操作 </summary>
+            <param name="session"><see cref="T:NHibernate.IStatelessSession"/></param>
+            <param name="obj"></param>
+            <returns>获取主键编号</returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.Edit``1(NHibernate.IStatelessSession,``0)">
+            <summary> Nihernate 修改操作 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="session"><see cref="T:NHibernate.IStatelessSession"/></param>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.BatchEdit``1(NHibernate.IStatelessSession,``0[])">
+            <summary> Nihernate 修改操作 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="session"><see cref="T:NHibernate.IStatelessSession"/></param>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.EditAsync``1(NHibernate.IStatelessSession,``0)">
+            <summary> Nihernate 修改异步操作 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="session"><see cref="T:NHibernate.IStatelessSession"/></param>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.Del``1(NHibernate.IStatelessSession,``0)">
+            <summary> Nihernate 删除操作 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="session"><see cref="T:NHibernate.IStatelessSession"/></param>
+            <param name="obj"></param>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.Del``1(NHibernate.IStatelessSession,System.Object)">
+            <summary> Nihernate 删除操作 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="session"><see cref="T:NHibernate.IStatelessSession"/></param>
+            <param name="id"></param>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.DelAsync``1(NHibernate.IStatelessSession,``0)">
+            <summary> Nihernate 删除异步操作 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="session"><see cref="T:NHibernate.IStatelessSession"/></param>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.DelAsync``1(NHibernate.IStatelessSession,System.Object)">
+            <summary> Nihernate 删除异步操作 </summary>
+            <param name="session"><see cref="T:NHibernate.IStatelessSession"/></param>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.Get``1(NHibernate.IStatelessSession,System.Object)">
+            <summary> Nihernate 查询操作 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="session"><see cref="T:NHibernate.IStatelessSession"/></param>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.GetAsync``1(NHibernate.IStatelessSession,System.Object)">
+            <summary> Nihernate 查询异步操作 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="session"><see cref="T:NHibernate.IStatelessSession"/></param>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.Query``1(NHibernate.IStatelessSession,System.String)">
+            <summary>根据实体名称查询，没有则根据泛型查询  异常</summary>
+            <typeparam name="T"></typeparam>
+            <param name="session"><see cref="T:NHibernate.IStatelessSession"/></param>
+            <param name="entityName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.QueryOver``1(NHibernate.IStatelessSession,System.Linq.Expressions.Expression{System.Func{``0}})">
+            <summary>根据实体类型查询，没有则根据泛型查询 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="session"><see cref="T:NHibernate.IStatelessSession"/></param>
+            <param name="alias"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.Add(System.Object)">
+            <summary> Nihernate 添加操作 </summary>
+            <param name="obj"></param>
+            <returns>获取主键编号</returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.BatchAdd``1(``0[])">
+            <summary> Nihernate 添加操作 </summary>
+            <param name="obj"></param>
+            <returns>获取主键编号</returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.AddAsync(System.Object)">
+            <summary> Nihernate 添加异步操作 </summary>
+            <param name="obj"></param>
+            <returns>获取主键编号</returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.Edit``1(``0)">
+            <summary> Nihernate 修改操作 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.BatchEdit``1(``0[])">
+            <summary> Nihernate 修改操作 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.EditAsync``1(``0)">
+            <summary> Nihernate 修改异步操作 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.Del``1(``0)">
+            <summary> Nihernate 删除操作 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj"></param>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.Del``1(System.Object)">
+            <summary> Nihernate 删除操作 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="id"></param>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.DelAsync``1(``0)">
+            <summary> Nihernate 删除异步操作 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.DelAsync``1(System.Object)">
+            <summary> Nihernate 删除异步操作 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.Get``1(System.Object)">
+            <summary> Nihernate 查询操作 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.GetAsync``1(System.Object)">
+            <summary> Nihernate 查询异步操作 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.Query``1(System.String)">
+            <summary>根据实体名称查询，没有则根据泛型查询  异常</summary>
+            <typeparam name="T"></typeparam>
+            <param name="entityName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.QueryOver``1(System.Linq.Expressions.Expression{System.Func{``0}})">
+            <summary>根据实体类型查询，没有则根据泛型查询 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="alias"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.ExecuteQuery(System.String)">
+             <summary>
+            
+             </summary>
+             <param name="sql"></param>
+             <returns></returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.Find``1(System.String,System.Int32)">
+            <summary>
+            查询
+            </summary>
+            <param name="sql"></param>
+            <param name="size">每页记录</param>
+            <returns></returns>
+        </member>
+        <member name="M:Utility.Nhibernate.NhibernateTemplate.Find``1(System.String,System.String[])">
+            <summary>
+            查询
+            </summary>
+            <param name="sql"></param>
+            <param name="param"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Utility.Nhibernate.SqlInterceptor">
+            <summary>
+            NHibernate 拦截器
+            </summary>
+        </member>
+        <member name="M:Utility.Nhibernate.SqlInterceptor.OnPrepareStatement(NHibernate.SqlCommand.SqlString)">
+            <summary>
+            NHibernate 拦截器
+            </summary>
+            <param name="sql"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Utility.Nhibernate.SqlInterceptor.Write(System.String)">
+            <summary>
+            写入
+            </summary>
+            <param name="content"></param>
+        </member>
+        <member name="M:Utility.Nhibernate.SqlInterceptor.Write(System.String,System.String)">
+            <summary>
+            写入
+            </summary>
+            <param name="file"></param>
+            <param name="content"></param>
+        </member>
+        <member name="M:Utility.Nhibernate.SqlInterceptor.Write(System.String,System.String,System.String)">
+            <summary>
+            写入
+            </summary>
+            <param name="dire"></param>
+            <param name="file"></param>
+            <param name="content"></param>
+        </member>
+        <member name="P:Utility.AspNetCore.Data.CustomActionDescriptorCollectionProvider.ActionDescriptors">
+            <summary>
+            Returns a cached collection of <see cref="T:Microsoft.AspNetCore.Mvc.Abstractions.ActionDescriptor" />.
+            </summary>
+        </member>
+        <member name="M:Utility.AspNetCore.Data.CustomActionDescriptorCollectionProvider.GetChangeToken">
+            <summary>
+            Gets an <see cref="T:Microsoft.Extensions.Primitives.IChangeToken"/> that will be signaled after the <see cref="P:Utility.AspNetCore.Data.CustomActionDescriptorCollectionProvider.ActionDescriptors"/>
+            collection has changed.
+            </summary>
+            <returns>The <see cref="T:Microsoft.Extensions.Primitives.IChangeToken"/>.</returns>
+        </member>
+        <member name="T:Utility.AspNetCore.Data.ApiDescriptionActionData">
+            <summary>
+            Represents data used to build an <c>ApiDescription</c>, stored as part of the
+            <see cref="!:Abstractions.ActionDescriptor.Properties"/>.
+            </summary>
+        </member>
+        <member name="P:Utility.AspNetCore.Data.ApiDescriptionActionData.GroupName">
+            <summary>
+            The <c>ApiDescription.GroupName</c> of <c>ApiDescription</c> objects for the associated
+            action.
+            </summary>
+        </member>
+        <member name="T:Utility.AspNetCore.Data.CustomApiDescriptionProvider">
+            <summary>
+            Implements a provider of <see cref="T:Microsoft.AspNetCore.Mvc.ApiExplorer.ApiDescription"/> for actions represented
+            by <see cref="T:Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor"/>.
+            </summary>
+        </member>
+        <member name="M:Utility.AspNetCore.Data.CustomApiDescriptionProvider.#ctor(Microsoft.Extensions.Options.IOptions{Microsoft.AspNetCore.Mvc.MvcOptions},Microsoft.AspNetCore.Routing.IInlineConstraintResolver,Microsoft.AspNetCore.Mvc.ModelBinding.IModelMetadataProvider,Microsoft.AspNetCore.Mvc.Infrastructure.IActionResultTypeMapper,Microsoft.Extensions.Options.IOptions{Microsoft.AspNetCore.Routing.RouteOptions})">
+            <summary>
+            Creates a new instance of <see cref="T:Microsoft.AspNetCore.Mvc.ApiExplorer.DefaultApiDescriptionProvider"/>.
+            </summary>
+            <param name="optionsAccessor">The accessor for <see cref="T:Microsoft.AspNetCore.Mvc.MvcOptions"/>.</param>
+            <param name="constraintResolver">The <see cref="T:Microsoft.AspNetCore.Routing.IInlineConstraintResolver"/> used for resolving inline
+            constraints.</param>
+            <param name="modelMetadataProvider">The <see cref="T:Microsoft.AspNetCore.Mvc.ModelBinding.IModelMetadataProvider"/>.</param>
+            <param name="mapper">The <see cref="T:Microsoft.AspNetCore.Mvc.Infrastructure.IActionResultTypeMapper"/>.</param>
+            <param name="routeOptions">The accessor for <see cref="T:Microsoft.AspNetCore.Routing.RouteOptions"/>.</param>
+            <remarks>The <paramref name="mapper"/> parameter is currently ignored.</remarks>
+        </member>
+        <member name="P:Utility.AspNetCore.Data.CustomApiDescriptionProvider.Order">
+            <inheritdoc />
+        </member>
+        <member name="M:Utility.AspNetCore.Data.CustomApiDescriptionProvider.OnProvidersExecuting(Microsoft.AspNetCore.Mvc.ApiExplorer.ApiDescriptionProviderContext)">
+            <inheritdoc />
+        </member>
+        <member name="M:Utility.AspNetCore.Data.CustomApiDescriptionProvider.OnProvidersExecuted(Microsoft.AspNetCore.Mvc.ApiExplorer.ApiDescriptionProviderContext)">
+            <inheritdoc />
+        </member>
+        <member name="M:Utility.AspNetCore.Data.CustomApiDescriptionProvider.PseudoModelBindingVisitor.Visit(Utility.AspNetCore.Data.CustomApiDescriptionProvider.ApiParameterDescriptionContext,Microsoft.AspNetCore.Mvc.ModelBinding.BindingSource,System.String,System.Boolean,System.Boolean)">
+            <summary>
+            循环引用 递归遍历 导致 内存 不够 机器死机  重写 
+            </summary>
+            <param name="bindingContext"></param>
+            <param name="ambientSource"></param>
+            <param name="containerName"></param>
+        </member>
+        <member name="M:Utility.AspNetCore.Extensions.ServiceExtensions.AddApiModelValidate(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            添加 api 模型 验证 自动取消 需要手动调用
+            </summary>
+            <param name="services"></param>
+        </member>
+        <member name="M:Utility.AspNetCore.Extensions.ServiceExtensions.AddSwaggerV1``1(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,System.String)">
+             <summary>
+             services.AddSingleton &lt; Swashbuckle.AspNetCore.SwaggerGen.ISchemaGenerator, Swashbuckle.AspNetCore.SwaggerGen.JsonSchemaGenerator &gt; ();
+            <para> Register the Swagger generator, defining 1 or more Swagger documents</para>
+             </summary>
+             <typeparam name="T"></typeparam>
+             <param name="services"></param>
+             <param name="verion"></param>
+             <param name="title"></param>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,173 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <IsTestAssetProject>true</IsTestAssetProject>
+    <!--<UserSecretsId>dff531fb-6b60-4392-93da-3f2373e401e4</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>-->
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile></DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Config\hbm\admin_role_info.hbm.xml" />
+    <None Remove="Config\hbm\edution_category_info.hbm.xml" />
+    <None Remove="Config\hbm\edution_info.hbm.xml" />
+    <None Remove="Config\hbm\file_category_info.hbm.xml" />
+    <None Remove="Config\hbm\icon_info.hbm.xml" />
+    <None Remove="Config\hbm\job_category_info.hbm.xml" />
+    <None Remove="Config\hbm\like_category_info.hbm.xml" />
+    <None Remove="Config\hbm\like_info.hbm.xml" />
+    <None Remove="Config\hbm\marital_status_info.hbm.xml" />
+    <None Remove="Config\hbm\menu_info.hbm.xml" />
+    <None Remove="Config\hbm\skill_category_info.hbm.xml" />
+    <None Remove="Config\hbm\skill_info.hbm.xml" />
+    <None Remove="Config\hbm\user_file_Info.hbm.xml" />
+    <None Remove="Config\hbm\user_info.hbm.xml" />
+    <None Remove="Config\hbm\user_level_info.hbm.xml" />
+    <None Remove="Config\hbm\user_menu_info.hbm.xml" />
+    <None Remove="Config\hbm\user_status_info.hbm.xml" />
+    <None Remove="Config\hbm\user_tag_category_info.hbm.xml" />
+    <None Remove="Config\hbm\user_tag_info.hbm.xml" />
+    <None Remove="Config\hbm\work_info.hbm.xml" />
+    <None Remove="Config\hibernate.cfg.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Config\hbm\admin_role_info.hbm.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Config\hbm\edution_category_info.hbm.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Config\hbm\edution_info.hbm.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Config\hbm\file_category_info.hbm.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Config\hbm\user_file_Info.hbm.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Config\hbm\icon_info.hbm.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Config\hbm\job_category_info.hbm.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Config\hbm\like_category_info.hbm.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Config\hbm\like_info.hbm.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Config\hbm\marital_status_info.hbm.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Config\hbm\menu_info.hbm.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Config\hbm\skill_category_info.hbm.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Config\hbm\skill_info.hbm.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Config\hbm\user_menu_info.hbm.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Config\hbm\user_info.hbm.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Config\hbm\user_level_info.hbm.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Config\hbm\user_status_info.hbm.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Config\hbm\user_tag_category_info.hbm.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Config\hbm\user_tag_info.hbm.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Config\hbm\work_info.hbm.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Config\hibernate.cfg.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <!--<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>-->
+    <!--<PackageReference Include="Microsoft.Extensions.Caching.Redis" Version="2.2.0" />-->
+    <!--<PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />-->
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.9.10" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.0.0" />
+    <PackageReference Include="MySql.Data" Version="8.0.18" />
+    <PackageReference Include="StackExchange.Redis" Version="2.0.601" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="4.0.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="3.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0-rc4" />
+    <!--<PackageReference Include="StackExchange.Redis" Version="2.0.601" />
+    <PackageReference Include="Elasticsearch.Net" Version="7.4.0" />
+    <PackageReference Include="AutoMapper" Version="9.0.0" />
+  -->
+    <PackageReference Include="NHibernate" Version="5.2.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Areas\Admin\Data\" />
+    <Folder Include="Areas\Admin\Models\" />
+    <Folder Include="Areas\Admin\Views\" />
+    <Folder Include="logs\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\upload\imgs\07a9e9014f6b780db7365675be5d9ef75dc56090.jpg" />
+    <None Include="wwwroot\upload\imgs\0a0cd7421eb8c2ba410a5672dde9add85ea65fea.jpg" />
+    <None Include="wwwroot\upload\imgs\2d60193fa8c17e7c41201690c055596326f272de.jpg" />
+    <None Include="wwwroot\upload\imgs\3644a9da5bdec5786b6d468d316938aad3309245.jpg" />
+    <None Include="wwwroot\upload\imgs\59c3bb72be769cd1fb3dd27f35d99cce25265774.jpg" />
+    <None Include="wwwroot\upload\imgs\638042d0ec01b58ae1dbf7f0bd927333bf6a3b0f.jpg" />
+    <None Include="wwwroot\upload\imgs\8056e91e69cacb95d2183fbfa54a86786b905a6a.jpg" />
+    <None Include="wwwroot\upload\imgs\8aca90a19e8113f66735bc08749d6cbae819d5c7.jpg" />
+    <None Include="wwwroot\upload\imgs\a3e613d151fb1491ac558b9a444784d167fd77ea.jpg" />
+    <None Include="wwwroot\upload\imgs\b999c27a7fdab9df76498b592fd22d31f31f636f.jpg" />
+    <None Include="wwwroot\upload\imgs\dbcbe49fd2b7279790adadce7a743142d4181caa.jpg" />
+    <None Include="wwwroot\upload\imgs\ea9c27993ccbd3f94128a1f48d410ad5f03e1dbf.jpg" />
+    <None Include="wwwroot\upload\imgs\f325c4fba25ebc5075b72897b3407cb1fcf99217.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!--<ProjectReference Include="..\..\..\..\git\nhibernate-core\src\NHibernate\NHibernate.csproj" />-->
+    <ProjectReference Include="..\SocialContact.Domain\SocialContact.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Config\address.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Config\hbm\admin_info.hbm.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
+
+  <Import Project="..\..\..\Shared\Utility.Nhibernate\Utility.Nhibernate.projitems" Label="Shared" />
+
+  <Import Project="..\..\..\Shared\Utility.AspNetCore\Utility.AspNetCore.projitems" Label="Shared" />
+
+  <!--<Import Project="..\..\..\Shared\Utility.Nhibernate\Utility.Nhibernate.projitems" Label="Shared" />-->
+
+</Project>

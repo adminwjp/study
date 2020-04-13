@@ -1,0 +1,11 @@
+E:\work\program\OA\src\OA.Domain\bin\Debug\netstandard2.1\OA.Domain.deps.json
+E:\work\program\OA\src\OA.Domain\bin\Debug\netstandard2.1\OA.Domain.dll
+E:\work\program\OA\src\OA.Domain\bin\Debug\netstandard2.1\OA.Domain.pdb
+E:\work\program\OA\src\OA.Domain\bin\Debug\netstandard2.1\Utility.dll
+E:\work\program\OA\src\OA.Domain\bin\Debug\netstandard2.1\Utility.pdb
+E:\work\program\OA\src\OA.Domain\obj\Debug\netstandard2.1\OA.Domain.csprojAssemblyReference.cache
+E:\work\program\OA\src\OA.Domain\obj\Debug\netstandard2.1\OA.Domain.AssemblyInfoInputs.cache
+E:\work\program\OA\src\OA.Domain\obj\Debug\netstandard2.1\OA.Domain.AssemblyInfo.cs
+E:\work\program\OA\src\OA.Domain\obj\Debug\netstandard2.1\OA.Domain.csproj.CopyComplete
+E:\work\program\OA\src\OA.Domain\obj\Debug\netstandard2.1\OA.Domain.dll
+E:\work\program\OA\src\OA.Domain\obj\Debug\netstandard2.1\OA.Domain.pdb

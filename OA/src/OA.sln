@@ -1,0 +1,83 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29613.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utility", "..\..\Utility\Utility.csproj", "{071E329F-4674-4E5F-A6CA-BCD4C7BE594D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{28FD4AB4-BA0D-4BB8-99EE-81638FF7EBB0}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Utility.AspNetCore", "..\..\Shared\Utility.AspNetCore\Utility.AspNetCore.shproj", "{2BE7BE86-2CF4-4B63-B591-E0DAF943B0B9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wpf.OA", "Wpf.OA\Wpf.OA.csproj", "{C27D7CA8-0023-49D9-A003-188B856B97B6}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Utility.Wpf", "..\..\Shared\Utility.Wpf\Utility.Wpf.shproj", "{D603E271-9555-4F3A-811A-B21F74A09902}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Utility.Common", "..\..\Shared\Utility.Common\Utility.Common.shproj", "{A1E7AE8A-98A6-4B45-AE9B-03CC204A7060}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Utility.Nhibernate", "..\..\Shared\Utility.Nhibernate\Utility.Nhibernate.shproj", "{46EEEB23-FAE6-4074-AF47-686F33EE9817}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OA.Api", "OA.Api\OA.Api.csproj", "{EF04B3DE-5A3C-44E2-9222-4C2CA5170B31}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Utility.AspNetCore.Consul", "..\..\Shared\Utility.AspNetCore.Consul\Utility.AspNetCore.Consul.shproj", "{F21D4F55-1B28-4783-AD95-286A5E87F060}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Utility.AspNetCore.Zipkin", "..\..\Shared\Utility.AspNetCore.Zipkin\Utility.AspNetCore.Zipkin.shproj", "{6316C617-3963-4DC1-85F8-9F8309533ACA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BootstrapWpfStyle", "..\..\..\BootstrapWpfStyle\BootstrapWpfStyle\BootstrapWpfStyle.csproj", "{1C0F2E8B-E47B-4581-9D0A-A90BD88D204E}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Utility.Autofac", "..\..\Shared\Utility.Autofac\Utility.Autofac.shproj", "{2A9399D7-AA05-4D92-A95A-074CBBBB5F5E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OA.Domain", "OA.Domain\OA.Domain.csproj", "{E5AC58F9-7F0C-4235-9F78-5CCCEB01A99D}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		..\..\Shared\Utility.Autofac\Utility.Autofac.projitems*{2a9399d7-aa05-4d92-a95a-074cbbbb5f5e}*SharedItemsImports = 13
+		..\..\Shared\Utility.AspNetCore\Utility.AspNetCore.projitems*{2be7be86-2cf4-4b63-b591-e0daf943b0b9}*SharedItemsImports = 13
+		..\..\Shared\Utility.Nhibernate\Utility.Nhibernate.projitems*{46eeeb23-fae6-4074-af47-686f33ee9817}*SharedItemsImports = 13
+		..\..\Shared\Utility.AspNetCore.Zipkin\Utility.AspNetCore.Zipkin.projitems*{6316c617-3963-4dc1-85f8-9f8309533aca}*SharedItemsImports = 13
+		..\..\Shared\Utility.Common\Utility.Common.projitems*{a1e7ae8a-98a6-4b45-ae9b-03cc204a7060}*SharedItemsImports = 13
+		..\..\Shared\Utility.Wpf\Utility.Wpf.projitems*{d603e271-9555-4f3a-811a-b21f74a09902}*SharedItemsImports = 13
+		..\..\Shared\Utility.AspNetCore.Consul\Utility.AspNetCore.Consul.projitems*{f21d4f55-1b28-4783-ad95-286a5e87f060}*SharedItemsImports = 13
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{071E329F-4674-4E5F-A6CA-BCD4C7BE594D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{071E329F-4674-4E5F-A6CA-BCD4C7BE594D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{071E329F-4674-4E5F-A6CA-BCD4C7BE594D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{071E329F-4674-4E5F-A6CA-BCD4C7BE594D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C27D7CA8-0023-49D9-A003-188B856B97B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C27D7CA8-0023-49D9-A003-188B856B97B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C27D7CA8-0023-49D9-A003-188B856B97B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C27D7CA8-0023-49D9-A003-188B856B97B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF04B3DE-5A3C-44E2-9222-4C2CA5170B31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF04B3DE-5A3C-44E2-9222-4C2CA5170B31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF04B3DE-5A3C-44E2-9222-4C2CA5170B31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF04B3DE-5A3C-44E2-9222-4C2CA5170B31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C0F2E8B-E47B-4581-9D0A-A90BD88D204E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C0F2E8B-E47B-4581-9D0A-A90BD88D204E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C0F2E8B-E47B-4581-9D0A-A90BD88D204E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C0F2E8B-E47B-4581-9D0A-A90BD88D204E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5AC58F9-7F0C-4235-9F78-5CCCEB01A99D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5AC58F9-7F0C-4235-9F78-5CCCEB01A99D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5AC58F9-7F0C-4235-9F78-5CCCEB01A99D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5AC58F9-7F0C-4235-9F78-5CCCEB01A99D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2BE7BE86-2CF4-4B63-B591-E0DAF943B0B9} = {28FD4AB4-BA0D-4BB8-99EE-81638FF7EBB0}
+		{D603E271-9555-4F3A-811A-B21F74A09902} = {28FD4AB4-BA0D-4BB8-99EE-81638FF7EBB0}
+		{A1E7AE8A-98A6-4B45-AE9B-03CC204A7060} = {28FD4AB4-BA0D-4BB8-99EE-81638FF7EBB0}
+		{46EEEB23-FAE6-4074-AF47-686F33EE9817} = {28FD4AB4-BA0D-4BB8-99EE-81638FF7EBB0}
+		{F21D4F55-1B28-4783-AD95-286A5E87F060} = {28FD4AB4-BA0D-4BB8-99EE-81638FF7EBB0}
+		{6316C617-3963-4DC1-85F8-9F8309533ACA} = {28FD4AB4-BA0D-4BB8-99EE-81638FF7EBB0}
+		{2A9399D7-AA05-4D92-A95A-074CBBBB5F5E} = {28FD4AB4-BA0D-4BB8-99EE-81638FF7EBB0}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {75FB217B-F6B0-48B8-96BD-9F40FFBF8D12}
+	EndGlobalSection
+EndGlobal

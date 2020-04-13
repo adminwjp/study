@@ -1,0 +1,8 @@
+2020-02-15 18:34:46.994 +08:00 [INF] Tracing dispatcher started
+2020-02-15 18:34:47.030 +08:00 [INF] HighResolutionDateTime is not available
+2020-02-15 18:35:13.380 +08:00 [INF] Tracing dispatcher stopped
+2020-02-15 18:46:21.344 +08:00 [INF] Tracing dispatcher started
+2020-02-15 18:46:21.379 +08:00 [INF] HighResolutionDateTime is not available
+2020-02-15 18:53:51.784 +08:00 [INF] Tracing dispatcher started
+2020-02-15 18:53:51.820 +08:00 [INF] HighResolutionDateTime is not available
+2020-02-15 18:55:43.938 +08:00 [INF] Tracing dispatcher stopped

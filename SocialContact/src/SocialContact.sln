@@ -1,0 +1,102 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29519.87
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{365CFBBE-B40C-4765-94F2-91019F82001C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocialContact", "SocialContact\SocialContact.csproj", "{9AA24753-4EB6-4E9B-A4E7-368D39B84564}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{4B756A01-F906-4854-BF1D-01566ADF8B6A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utility", "..\..\Utility\Utility.csproj", "{9C4058A2-86B6-4EF4-BB87-2955ABB7A6BE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{B22AB55F-D16D-48D5-A897-785E8422BA1F}"
+	ProjectSection(SolutionItems) = preProject
+		build\build.bat = build\build.bat
+		build\build.sh = build\build.sh
+		build\elasticsearch.bat = build\elasticsearch.bat
+		build\estool.bat = build\estool.bat
+	EndProjectSection
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Utility.Dapper", "..\..\Shared\Utility.Dapper\Utility.Dapper.shproj", "{E4F0D6DD-CB63-4B70-9A8D-CEA5CC2CA578}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Utility.Nhibernate", "..\..\Shared\Utility.Nhibernate\Utility.Nhibernate.shproj", "{46EEEB23-FAE6-4074-AF47-686F33EE9817}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocialContact.Api", "SocialContact.Api\SocialContact.Api.csproj", "{A40E1385-262F-43F0-8030-206CA3BCCC25}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Utility.AspNetCore", "..\..\Shared\Utility.AspNetCore\Utility.AspNetCore.shproj", "{2BE7BE86-2CF4-4B63-B591-E0DAF943B0B9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocialContact.Domain", "SocialContact.Domain\SocialContact.Domain.csproj", "{7A6D8EBB-2867-4894-8EF2-CD446F7E3703}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocialContact.Infrastructure", "SocialContact.Infrastructure\SocialContact.Infrastructure.csproj", "{44F75550-99C1-4E58-A1D8-4E6008673D75}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialContact.UI", "SocialContact.UI\SocialContact.UI.csproj", "{5383DDAD-8AF8-4997-83F1-BB76EB431381}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		..\..\Shared\Utility.AspNetCore\Utility.AspNetCore.projitems*{2be7be86-2cf4-4b63-b591-e0daf943b0b9}*SharedItemsImports = 13
+		..\..\Shared\Utility.Dapper\Utility.Dapper.projitems*{44f75550-99c1-4e58-a1d8-4e6008673d75}*SharedItemsImports = 5
+		..\..\Shared\Utility.Nhibernate\Utility.Nhibernate.projitems*{46eeeb23-fae6-4074-af47-686f33ee9817}*SharedItemsImports = 13
+		..\..\Shared\Utility.Attribute\Utility.Attribute.projitems*{9c4058a2-86b6-4ef4-bb87-2955abb7a6be}*SharedItemsImports = 5
+		..\..\Shared\Utility.Base64\Utility.Base64.projitems*{9c4058a2-86b6-4ef4-bb87-2955abb7a6be}*SharedItemsImports = 5
+		..\..\Shared\Utility.Cache\Utility.Cache.projitems*{9c4058a2-86b6-4ef4-bb87-2955abb7a6be}*SharedItemsImports = 5
+		..\..\Shared\Utility.Cmd\Utility.Cmd.projitems*{9c4058a2-86b6-4ef4-bb87-2955abb7a6be}*SharedItemsImports = 5
+		..\..\Shared\Utility.Common\Utility.Common.projitems*{9c4058a2-86b6-4ef4-bb87-2955abb7a6be}*SharedItemsImports = 5
+		..\..\Shared\Utility.Elasticsearch\Utility.Elasticsearch.projitems*{9c4058a2-86b6-4ef4-bb87-2955abb7a6be}*SharedItemsImports = 5
+		..\..\Shared\Utility.File\Utility.File.projitems*{9c4058a2-86b6-4ef4-bb87-2955abb7a6be}*SharedItemsImports = 5
+		..\..\Shared\Utility.Http\Utility.Http.projitems*{9c4058a2-86b6-4ef4-bb87-2955abb7a6be}*SharedItemsImports = 5
+		..\..\Shared\Utility.AspNetCore\Utility.AspNetCore.projitems*{a40e1385-262f-43f0-8030-206ca3bccc25}*SharedItemsImports = 5
+		..\..\Shared\Utility.Nhibernate\Utility.Nhibernate.projitems*{a40e1385-262f-43f0-8030-206ca3bccc25}*SharedItemsImports = 5
+		..\..\Shared\Utility.Dapper\Utility.Dapper.projitems*{e4f0d6dd-cb63-4b70-9a8d-cea5cc2ca578}*SharedItemsImports = 13
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9AA24753-4EB6-4E9B-A4E7-368D39B84564}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9AA24753-4EB6-4E9B-A4E7-368D39B84564}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9AA24753-4EB6-4E9B-A4E7-368D39B84564}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9AA24753-4EB6-4E9B-A4E7-368D39B84564}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C4058A2-86B6-4EF4-BB87-2955ABB7A6BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C4058A2-86B6-4EF4-BB87-2955ABB7A6BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C4058A2-86B6-4EF4-BB87-2955ABB7A6BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C4058A2-86B6-4EF4-BB87-2955ABB7A6BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A40E1385-262F-43F0-8030-206CA3BCCC25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A40E1385-262F-43F0-8030-206CA3BCCC25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A40E1385-262F-43F0-8030-206CA3BCCC25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A40E1385-262F-43F0-8030-206CA3BCCC25}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A6D8EBB-2867-4894-8EF2-CD446F7E3703}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A6D8EBB-2867-4894-8EF2-CD446F7E3703}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A6D8EBB-2867-4894-8EF2-CD446F7E3703}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A6D8EBB-2867-4894-8EF2-CD446F7E3703}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44F75550-99C1-4E58-A1D8-4E6008673D75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44F75550-99C1-4E58-A1D8-4E6008673D75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44F75550-99C1-4E58-A1D8-4E6008673D75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44F75550-99C1-4E58-A1D8-4E6008673D75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5383DDAD-8AF8-4997-83F1-BB76EB431381}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5383DDAD-8AF8-4997-83F1-BB76EB431381}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5383DDAD-8AF8-4997-83F1-BB76EB431381}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5383DDAD-8AF8-4997-83F1-BB76EB431381}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9AA24753-4EB6-4E9B-A4E7-368D39B84564} = {365CFBBE-B40C-4765-94F2-91019F82001C}
+		{4B756A01-F906-4854-BF1D-01566ADF8B6A} = {365CFBBE-B40C-4765-94F2-91019F82001C}
+		{9C4058A2-86B6-4EF4-BB87-2955ABB7A6BE} = {365CFBBE-B40C-4765-94F2-91019F82001C}
+		{B22AB55F-D16D-48D5-A897-785E8422BA1F} = {365CFBBE-B40C-4765-94F2-91019F82001C}
+		{E4F0D6DD-CB63-4B70-9A8D-CEA5CC2CA578} = {4B756A01-F906-4854-BF1D-01566ADF8B6A}
+		{46EEEB23-FAE6-4074-AF47-686F33EE9817} = {4B756A01-F906-4854-BF1D-01566ADF8B6A}
+		{A40E1385-262F-43F0-8030-206CA3BCCC25} = {365CFBBE-B40C-4765-94F2-91019F82001C}
+		{2BE7BE86-2CF4-4B63-B591-E0DAF943B0B9} = {4B756A01-F906-4854-BF1D-01566ADF8B6A}
+		{7A6D8EBB-2867-4894-8EF2-CD446F7E3703} = {365CFBBE-B40C-4765-94F2-91019F82001C}
+		{44F75550-99C1-4E58-A1D8-4E6008673D75} = {365CFBBE-B40C-4765-94F2-91019F82001C}
+		{5383DDAD-8AF8-4997-83F1-BB76EB431381} = {365CFBBE-B40C-4765-94F2-91019F82001C}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {51DBBF92-5221-43BA-BBD6-20CE7BB2F2D6}
+	EndGlobalSection
+EndGlobal

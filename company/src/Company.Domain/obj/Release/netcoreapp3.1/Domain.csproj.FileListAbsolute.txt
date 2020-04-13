@@ -1,0 +1,10 @@
+E:\work\program\company\src\Domain\bin\Release\netcoreapp3.1\Domain.deps.json
+E:\work\program\company\src\Domain\bin\Release\netcoreapp3.1\Domain.runtimeconfig.json
+E:\work\program\company\src\Domain\bin\Release\netcoreapp3.1\Domain.runtimeconfig.dev.json
+E:\work\program\company\src\Domain\bin\Release\netcoreapp3.1\Domain.dll
+E:\work\program\company\src\Domain\bin\Release\netcoreapp3.1\Domain.pdb
+E:\work\program\company\src\Domain\obj\Release\netcoreapp3.1\Domain.csprojAssemblyReference.cache
+E:\work\program\company\src\Domain\obj\Release\netcoreapp3.1\Domain.AssemblyInfoInputs.cache
+E:\work\program\company\src\Domain\obj\Release\netcoreapp3.1\Domain.AssemblyInfo.cs
+E:\work\program\company\src\Domain\obj\Release\netcoreapp3.1\Domain.dll
+E:\work\program\company\src\Domain\obj\Release\netcoreapp3.1\Domain.pdb

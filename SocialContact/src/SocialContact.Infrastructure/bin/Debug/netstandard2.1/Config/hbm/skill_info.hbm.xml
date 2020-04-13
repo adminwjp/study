@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" default-lazy="false">
+  <!-- start skill info -->
+  <class name="Domain.Core.SkillInfo,Domain"  table="skill_info" discriminator-value="0">
+    <id name="Id" column="id" unsaved-value="0">
+      <generator class="increment" />
+      <!-- unsaved-value used to be null and generator was increment in h2.0.3 -->
+    </id>
+    <property column="create_date" name="CreateDate" type="System.DateTime"/>
+    <property column="update_date" name="UpdateDate" type="System.DateTime"/>
+    <many-to-one name="User" column="user_id" foreign-key="fk_user_id" class="Domain.Core.UserInfo,Domain"/>
+    <many-to-one name="Category" column="skill_category_id" foreign-key="fk_skill_category_id" class="Domain.Core.SkillCategoryInfo,Domain"/>
+  </class>
+  <!-- end  skill info -->
+</hibernate-mapping>

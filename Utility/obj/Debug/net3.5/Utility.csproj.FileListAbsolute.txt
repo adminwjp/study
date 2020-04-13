@@ -1,0 +1,8 @@
+E:\work\program\Utility\obj\Debug\net3.5\Utility.AssemblyInfoInputs.cache
+E:\work\program\Utility\obj\Debug\net3.5\Utility.AssemblyInfo.cs
+e:\work\Package\Utility\net3.5\Utility.dll
+e:\work\Package\Utility\net3.5\Utility.pdb
+E:\work\program\Utility\obj\Debug\net3.5\Utility.csproj.CopyComplete
+E:\work\program\Utility\obj\Debug\net3.5\Utility.dll
+E:\work\program\Utility\obj\Debug\net3.5\Utility.pdb
+E:\work\program\Utility\obj\Debug\net3.5\Utility.csprojAssemblyReference.cache

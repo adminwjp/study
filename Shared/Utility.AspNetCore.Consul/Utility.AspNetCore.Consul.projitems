@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>f21d4f55-1b28-4783-ad95-286a5e87f060</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Utility.AspNetCore.Consul</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)ConsulServiceProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\AppBuilderExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HealthController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\ServiceEntity.cs" />
+  </ItemGroup>
+</Project>

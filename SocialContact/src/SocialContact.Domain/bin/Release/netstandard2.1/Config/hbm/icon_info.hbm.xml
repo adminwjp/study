@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" default-lazy="false">
+  <!-- start icon info -->
+  <class name="Domain.Core.IconInfo,Domain"  table="icon_info" discriminator-value="0">
+    <id name="Id" column="id" unsaved-value="0">
+      <generator class="increment" />
+    </id>
+    <property column="create_date" name="CreateDate" type="System.DateTime"/>
+    <property column="update_date" name="UpdateDate" type="System.DateTime"/>
+    <property  name="Name" column="name" length="20" type="System.String"/>
+    <property  name="Style" column="style" length="500" type="System.String"/>
+    <property  name="Description" column="description" length="500" type="System.String"/>
+    <many-to-one name="Admin" column="admin_id"  foreign-key="fk_admin_id"   class="Domain.Core.AdminInfo,Domain"/>
+    <!--<set name="Menus"  inverse="true" lazy="false" cascade="none">
+      <key column="icon_id" foreign-key="fk_icon_id" />
+      <one-to-many class="Domain.Core.MenuInfo,Domain"/>
+    </set>-->
+  </class>
+  <!-- end icon info -->
+</hibernate-mapping>

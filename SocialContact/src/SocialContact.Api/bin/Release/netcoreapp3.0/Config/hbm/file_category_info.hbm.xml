@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" default-lazy="false">
+  <!-- start file category info -->
+  <class name="Domain.Core.FileCategoryInfo,Domain"  table="file_category_info" discriminator-value="0">
+    <id name="Id" column="id" unsaved-value="0">
+      <generator class="increment" />
+    </id>
+    <property column="create_date" name="CreateDate" type="System.DateTime"/>
+    <property column="update_date" name="UpdateDate" type="System.DateTime"/>
+    <property  name="Category" column="category" length="20" type="System.String"/>
+    <property  name="Accept" column="accept" length="50" type="System.String"/>
+    <property  name="Description" column="description" length="500" type="System.String" />
+    <many-to-one name="Admin"  column="admin_id" foreign-key="fk_admin_id"  class="Domain.Core.AdminInfo,Domain"/>
+    <set name="Files"  inverse="true" lazy="false" cascade="none">
+      <key column="file_category_id" foreign-key="fk_file_category_id" />
+      <one-to-many class="Domain.Core.MenuInfo,Domain"/>
+    </set>
+  </class>
+  <!-- end file category info -->
+</hibernate-mapping>

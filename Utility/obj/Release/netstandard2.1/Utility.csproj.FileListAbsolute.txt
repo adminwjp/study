@@ -1,0 +1,7 @@
+e:\work\Package\Utility\netstandard2.1\Utility.deps.json
+e:\work\Package\Utility\netstandard2.1\Utility.dll
+e:\work\Package\Utility\netstandard2.1\Utility.pdb
+E:\work\program\Utility\obj\Release\netstandard2.1\Utility.AssemblyInfoInputs.cache
+E:\work\program\Utility\obj\Release\netstandard2.1\Utility.AssemblyInfo.cs
+E:\work\program\Utility\obj\Release\netstandard2.1\Utility.dll
+E:\work\program\Utility\obj\Release\netstandard2.1\Utility.pdb

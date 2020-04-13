@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" default-lazy="false">
+  <!-- start file info -->
+  <class name="Domain.Core.FileInfo,Domain"  table="file_info" discriminator-value="0">
+    <id name="Id" column="id" unsaved-value="0">
+      <generator class="increment" />
+    </id>
+    <property column="create_date" name="CreateDate" type="System.DateTime"/>
+    <property column="update_date" name="UpdateDate" type="System.DateTime"/>
+    <property  name="Src" column="src" length="100" type="System.String"/>
+    <!--<property  name="Base64" column="base64"  type="System.Byte[]"/>-->
+    <property  name="Base64" column="base64" length="10485760"  type="System.String"/>
+    <property  name="Description" column="description" length="500" type="System.String" />
+    <many-to-one name="FileCategory" column="file_category_id" foreign-key="fk_file_category_id" class="Domain.Core.FileCategoryInfo,Domain"/>
+    <many-to-one name="Admin"  column="admin_id" foreign-key="fk_admin_id"  class="Domain.Core.AdminInfo,Domain"/>
+    <many-to-one name="User" column="user_id" foreign-key="fk_user_id" class="Domain.Core.UserInfo,Domain"/>
+    <property  name="EsIndex" column="es_index" length="50" type="System.String"/>
+    <property  name="EsType" column="es_type" length="50" type="System.String"/>
+    <property  name="EsId" column="es_id" length="50"  type="System.String"/>
+    <property  name="Flag" column="flag"  type="System.Boolean"/>
+  </class>
+  <!-- end file info -->
+</hibernate-mapping>

@@ -1,0 +1,85 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29613.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Company.Api", "Company.Api\Company.Api.csproj", "{7E05DB17-EBC6-4A93-848E-2E10478F002E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Company.UI", "Company.UI\Company.UI.csproj", "{67ADE76E-8A7E-4C90-B491-4132286D46A0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utility", "..\..\Utility\Utility.csproj", "{971E726A-C5E2-4B65-83DD-6C5E98A66984}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shard", "Shard", "{43A9BF68-3956-4E08-92DC-0C140519E889}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Utility.EF", "..\..\Shared\Utility.EF\Utility.EF.shproj", "{ED6F7A97-40D1-4086-B958-D3F66586BE4E}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Utility.Dapper", "..\..\Shared\Utility.Dapper\Utility.Dapper.shproj", "{E4F0D6DD-CB63-4B70-9A8D-CEA5CC2CA578}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Utility.AspNetCore", "..\..\Shared\Utility.AspNetCore\Utility.AspNetCore.shproj", "{2BE7BE86-2CF4-4B63-B591-E0DAF943B0B9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication1", "WebApplication1\WebApplication1.csproj", "{B3ABB39B-56C4-43BF-AA7C-4BB7DD7242DD}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Utility.AspNetCore.Consul", "..\..\Shared\Utility.AspNetCore.Consul\Utility.AspNetCore.Consul.shproj", "{F21D4F55-1B28-4783-AD95-286A5E87F060}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Utility.Common", "..\..\Shared\Utility.Common\Utility.Common.shproj", "{A1E7AE8A-98A6-4B45-AE9B-03CC204A7060}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Utility.AspNetCore.Zipkin", "..\..\Shared\Utility.AspNetCore.Zipkin\Utility.AspNetCore.Zipkin.shproj", "{6316C617-3963-4DC1-85F8-9F8309533ACA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "identity", "identity\identity.csproj", "{AE9DF196-9CC4-4C40-9E65-25ADA5881587}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Company.Domain", "Company.Domain\Company.Domain.csproj", "{1B970FCF-6423-4EF2-B55B-1F0DF47D1637}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		..\..\Shared\Utility.AspNetCore\Utility.AspNetCore.projitems*{2be7be86-2cf4-4b63-b591-e0daf943b0b9}*SharedItemsImports = 13
+		..\..\Shared\Utility.AspNetCore.Zipkin\Utility.AspNetCore.Zipkin.projitems*{6316c617-3963-4dc1-85f8-9f8309533aca}*SharedItemsImports = 13
+		..\..\Shared\Utility.Common\Utility.Common.projitems*{a1e7ae8a-98a6-4b45-ae9b-03cc204a7060}*SharedItemsImports = 13
+		..\..\Shared\Utility.Dapper\Utility.Dapper.projitems*{e4f0d6dd-cb63-4b70-9a8d-cea5cc2ca578}*SharedItemsImports = 13
+		..\..\Shared\Utility.EF\Utility.EF.projitems*{ed6f7a97-40d1-4086-b958-d3f66586be4e}*SharedItemsImports = 13
+		..\..\Shared\Utility.AspNetCore.Consul\Utility.AspNetCore.Consul.projitems*{f21d4f55-1b28-4783-ad95-286a5e87f060}*SharedItemsImports = 13
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7E05DB17-EBC6-4A93-848E-2E10478F002E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E05DB17-EBC6-4A93-848E-2E10478F002E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E05DB17-EBC6-4A93-848E-2E10478F002E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E05DB17-EBC6-4A93-848E-2E10478F002E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67ADE76E-8A7E-4C90-B491-4132286D46A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67ADE76E-8A7E-4C90-B491-4132286D46A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67ADE76E-8A7E-4C90-B491-4132286D46A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67ADE76E-8A7E-4C90-B491-4132286D46A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{971E726A-C5E2-4B65-83DD-6C5E98A66984}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{971E726A-C5E2-4B65-83DD-6C5E98A66984}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{971E726A-C5E2-4B65-83DD-6C5E98A66984}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{971E726A-C5E2-4B65-83DD-6C5E98A66984}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3ABB39B-56C4-43BF-AA7C-4BB7DD7242DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3ABB39B-56C4-43BF-AA7C-4BB7DD7242DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3ABB39B-56C4-43BF-AA7C-4BB7DD7242DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3ABB39B-56C4-43BF-AA7C-4BB7DD7242DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE9DF196-9CC4-4C40-9E65-25ADA5881587}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE9DF196-9CC4-4C40-9E65-25ADA5881587}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE9DF196-9CC4-4C40-9E65-25ADA5881587}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE9DF196-9CC4-4C40-9E65-25ADA5881587}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B970FCF-6423-4EF2-B55B-1F0DF47D1637}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B970FCF-6423-4EF2-B55B-1F0DF47D1637}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B970FCF-6423-4EF2-B55B-1F0DF47D1637}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B970FCF-6423-4EF2-B55B-1F0DF47D1637}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{ED6F7A97-40D1-4086-B958-D3F66586BE4E} = {43A9BF68-3956-4E08-92DC-0C140519E889}
+		{E4F0D6DD-CB63-4B70-9A8D-CEA5CC2CA578} = {43A9BF68-3956-4E08-92DC-0C140519E889}
+		{2BE7BE86-2CF4-4B63-B591-E0DAF943B0B9} = {43A9BF68-3956-4E08-92DC-0C140519E889}
+		{F21D4F55-1B28-4783-AD95-286A5E87F060} = {43A9BF68-3956-4E08-92DC-0C140519E889}
+		{A1E7AE8A-98A6-4B45-AE9B-03CC204A7060} = {43A9BF68-3956-4E08-92DC-0C140519E889}
+		{6316C617-3963-4DC1-85F8-9F8309533ACA} = {43A9BF68-3956-4E08-92DC-0C140519E889}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9A75FAAA-0F56-4A8F-8A3B-1A86F6364C40}
+	EndGlobalSection
+EndGlobal

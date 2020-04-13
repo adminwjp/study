@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" default-lazy="false">
+  <!-- start work info -->
+  <class name="SocialContact.Domain.Core.WorkInfo,SocialContact.Domain"  table="work_info" discriminator-value="0">
+    <id name="Id" column="id" unsaved-value="0">
+      <generator class="increment" />
+      <!-- unsaved-value used to be null and generator was increment in h2.0.3 -->
+    </id>
+    <property column="create_date" name="CreateDate" type="System.DateTime"/>
+    <property column="update_date" name="UpdateDate" type="System.DateTime"/>
+    <property  name="CompanyName" column="company_name" length="50" type="System.String"/>
+    <property  name="Job" column="job" length="50" type="System.String"/>
+    <property  name="Description" column="description" length="500" type="System.String" />
+    <property column="start_date" name="StartDate" type="System.DateTime"/>
+    <property column="end_date" name="EndDate" type="System.DateTime"/>
+    <many-to-one name="User" column="user_id" foreign-key="fk_user_id"   class="SocialContact.Domain.Core.UserInfo,SocialContact.Domain"/>
+    <many-to-one name="Category"  column="job_category_id" foreign-key="fk_job_category_id"  class="SocialContact.Domain.Core.JobCategoryInfo,SocialContact.Domain"/>
+  </class>
+  <!-- end  work info -->
+</hibernate-mapping>

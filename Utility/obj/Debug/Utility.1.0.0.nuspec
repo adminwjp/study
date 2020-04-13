@@ -1,0 +1,277 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>Utility</id>
+    <version>1.0.0</version>
+    <authors>Utility</authors>
+    <owners>Utility</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <projectUrl>file:///e:/work/Package/Utility/</projectUrl>
+    <description>支持redis,es,mongodb,nhibernate,automapper....</description>
+    <repository url="e:\work\Package\Utility\" />
+    <dependencies>
+      <group targetFramework=".NETCoreApp1.0">
+        <dependency id="Microsoft.NETCore.App" version="1.0.5" exclude="Build,Analyzers" />
+        <dependency id="Newtonsoft.Json" version="12.0.2" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETCoreApp1.1">
+        <dependency id="Microsoft.NETCore.App" version="1.1.2" exclude="Build,Analyzers" />
+        <dependency id="Newtonsoft.Json" version="12.0.2" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETFramework2.0">
+        <dependency id="Newtonsoft.Json" version="12.0.2" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETFramework3.0">
+        <dependency id="Newtonsoft.Json" version="12.0.2" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETFramework3.5">
+        <dependency id="BouncyCastle.NetCore" version="1.8.5" exclude="Build,Analyzers" />
+        <dependency id="Newtonsoft.Json" version="12.0.2" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETFramework4.0">
+        <dependency id="Newtonsoft.Json" version="12.0.2" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETFramework4.5">
+        <dependency id="Autofac" version="4.9.4" exclude="Build,Analyzers" />
+        <dependency id="BouncyCastle.NetCore" version="1.8.5" exclude="Build,Analyzers" />
+        <dependency id="Newtonsoft.Json" version="12.0.2" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETFramework4.5.1">
+        <dependency id="Autofac" version="4.9.4" exclude="Build,Analyzers" />
+        <dependency id="BouncyCastle.NetCore" version="1.8.5" exclude="Build,Analyzers" />
+        <dependency id="Newtonsoft.Json" version="12.0.2" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETFramework4.5.2">
+        <dependency id="Autofac" version="4.9.4" exclude="Build,Analyzers" />
+        <dependency id="BouncyCastle.NetCore" version="1.8.5" exclude="Build,Analyzers" />
+        <dependency id="Newtonsoft.Json" version="12.0.2" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETFramework4.6">
+        <dependency id="Autofac" version="4.9.4" exclude="Build,Analyzers" />
+        <dependency id="BouncyCastle.NetCore" version="1.8.5" exclude="Build,Analyzers" />
+        <dependency id="Newtonsoft.Json" version="12.0.2" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETFramework4.6.1">
+        <dependency id="AutoMapper" version="9.0.0" exclude="Build,Analyzers" />
+        <dependency id="Autofac" version="4.9.4" exclude="Build,Analyzers" />
+        <dependency id="BouncyCastle.NetCore" version="1.8.5" exclude="Build,Analyzers" />
+        <dependency id="Elasticsearch.Net" version="7.4.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Logging" version="3.0.0" exclude="Build,Analyzers" />
+        <dependency id="NEST" version="7.4.0" exclude="Build,Analyzers" />
+        <dependency id="NHibernate" version="5.2.6" exclude="Build,Analyzers" />
+        <dependency id="Newtonsoft.Json" version="12.0.2" exclude="Build,Analyzers" />
+        <dependency id="StackExchange.Redis" version="2.0.601" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETFramework4.6.2">
+        <dependency id="AutoMapper" version="9.0.0" exclude="Build,Analyzers" />
+        <dependency id="Autofac" version="4.9.4" exclude="Build,Analyzers" />
+        <dependency id="BouncyCastle.NetCore" version="1.8.5" exclude="Build,Analyzers" />
+        <dependency id="Elasticsearch.Net" version="7.4.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Logging" version="3.0.0" exclude="Build,Analyzers" />
+        <dependency id="NEST" version="7.4.0" exclude="Build,Analyzers" />
+        <dependency id="NHibernate" version="5.2.6" exclude="Build,Analyzers" />
+        <dependency id="Newtonsoft.Json" version="12.0.2" exclude="Build,Analyzers" />
+        <dependency id="StackExchange.Redis" version="2.0.601" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETFramework4.7">
+        <dependency id="AutoMapper" version="9.0.0" exclude="Build,Analyzers" />
+        <dependency id="Autofac" version="4.9.4" exclude="Build,Analyzers" />
+        <dependency id="BouncyCastle.NetCore" version="1.8.5" exclude="Build,Analyzers" />
+        <dependency id="Elasticsearch.Net" version="7.4.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Logging" version="3.0.0" exclude="Build,Analyzers" />
+        <dependency id="NEST" version="7.4.0" exclude="Build,Analyzers" />
+        <dependency id="NHibernate" version="5.2.6" exclude="Build,Analyzers" />
+        <dependency id="Newtonsoft.Json" version="12.0.2" exclude="Build,Analyzers" />
+        <dependency id="StackExchange.Redis" version="2.0.601" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETFramework4.7.1">
+        <dependency id="AutoMapper" version="9.0.0" exclude="Build,Analyzers" />
+        <dependency id="Autofac" version="4.9.4" exclude="Build,Analyzers" />
+        <dependency id="BouncyCastle.NetCore" version="1.8.5" exclude="Build,Analyzers" />
+        <dependency id="Elasticsearch.Net" version="7.4.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Logging" version="3.0.0" exclude="Build,Analyzers" />
+        <dependency id="NEST" version="7.4.0" exclude="Build,Analyzers" />
+        <dependency id="NHibernate" version="5.2.6" exclude="Build,Analyzers" />
+        <dependency id="Newtonsoft.Json" version="12.0.2" exclude="Build,Analyzers" />
+        <dependency id="StackExchange.Redis" version="2.0.601" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETFramework4.7.2">
+        <dependency id="AutoMapper" version="9.0.0" exclude="Build,Analyzers" />
+        <dependency id="Autofac" version="4.9.4" exclude="Build,Analyzers" />
+        <dependency id="BouncyCastle.NetCore" version="1.8.5" exclude="Build,Analyzers" />
+        <dependency id="Elasticsearch.Net" version="7.4.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Logging" version="3.0.0" exclude="Build,Analyzers" />
+        <dependency id="NEST" version="7.4.0" exclude="Build,Analyzers" />
+        <dependency id="NHibernate" version="5.2.6" exclude="Build,Analyzers" />
+        <dependency id="Newtonsoft.Json" version="12.0.2" exclude="Build,Analyzers" />
+        <dependency id="StackExchange.Redis" version="2.0.601" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETFramework4.8">
+        <dependency id="AutoMapper" version="9.0.0" exclude="Build,Analyzers" />
+        <dependency id="Autofac" version="4.9.4" exclude="Build,Analyzers" />
+        <dependency id="BouncyCastle.NetCore" version="1.8.5" exclude="Build,Analyzers" />
+        <dependency id="Elasticsearch.Net" version="7.4.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Logging" version="3.0.0" exclude="Build,Analyzers" />
+        <dependency id="NEST" version="7.4.0" exclude="Build,Analyzers" />
+        <dependency id="NHibernate" version="5.2.6" exclude="Build,Analyzers" />
+        <dependency id="Newtonsoft.Json" version="12.0.2" exclude="Build,Analyzers" />
+        <dependency id="StackExchange.Redis" version="2.0.601" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETStandard1.0">
+        <dependency id="NETStandard.Library" version="1.6.1" exclude="Build,Analyzers" />
+        <dependency id="Newtonsoft.Json" version="12.0.2" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETStandard1.1">
+        <dependency id="Autofac" version="4.9.4" exclude="Build,Analyzers" />
+        <dependency id="NETStandard.Library" version="1.6.1" exclude="Build,Analyzers" />
+        <dependency id="Newtonsoft.Json" version="12.0.2" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETStandard1.2">
+        <dependency id="Autofac" version="4.9.4" exclude="Build,Analyzers" />
+        <dependency id="NETStandard.Library" version="1.6.1" exclude="Build,Analyzers" />
+        <dependency id="Newtonsoft.Json" version="12.0.2" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETStandard1.3">
+        <dependency id="Autofac" version="4.9.4" exclude="Build,Analyzers" />
+        <dependency id="NETStandard.Library" version="1.6.1" exclude="Build,Analyzers" />
+        <dependency id="Newtonsoft.Json" version="12.0.2" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETStandard1.4">
+        <dependency id="Autofac" version="4.9.4" exclude="Build,Analyzers" />
+        <dependency id="NETStandard.Library" version="1.6.1" exclude="Build,Analyzers" />
+        <dependency id="Newtonsoft.Json" version="12.0.2" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETStandard1.5">
+        <dependency id="Autofac" version="4.9.4" exclude="Build,Analyzers" />
+        <dependency id="NETStandard.Library" version="1.6.1" exclude="Build,Analyzers" />
+        <dependency id="Newtonsoft.Json" version="12.0.2" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETStandard1.6">
+        <dependency id="Autofac" version="4.9.4" exclude="Build,Analyzers" />
+        <dependency id="NETStandard.Library" version="1.6.1" exclude="Build,Analyzers" />
+        <dependency id="Newtonsoft.Json" version="12.0.2" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETCoreApp2.0">
+        <dependency id="AutoMapper" version="9.0.0" exclude="Build,Analyzers" />
+        <dependency id="Autofac" version="4.9.4" exclude="Build,Analyzers" />
+        <dependency id="BouncyCastle.NetCore" version="1.8.5" exclude="Build,Analyzers" />
+        <dependency id="Elasticsearch.Net" version="7.4.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Logging" version="3.0.0" exclude="Build,Analyzers" />
+        <dependency id="NEST" version="7.4.0" exclude="Build,Analyzers" />
+        <dependency id="NHibernate" version="5.2.6" exclude="Build,Analyzers" />
+        <dependency id="Newtonsoft.Json" version="12.0.2" exclude="Build,Analyzers" />
+        <dependency id="StackExchange.Redis" version="2.0.601" exclude="Build,Analyzers" />
+        <dependency id="System.Text.Json" version="4.6.0" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETCoreApp2.1">
+        <dependency id="AutoMapper" version="9.0.0" exclude="Build,Analyzers" />
+        <dependency id="Autofac" version="4.9.4" exclude="Build,Analyzers" />
+        <dependency id="BouncyCastle.NetCore" version="1.8.5" exclude="Build,Analyzers" />
+        <dependency id="Elasticsearch.Net" version="7.4.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Logging" version="3.0.0" exclude="Build,Analyzers" />
+        <dependency id="NEST" version="7.4.0" exclude="Build,Analyzers" />
+        <dependency id="NHibernate" version="5.2.6" exclude="Build,Analyzers" />
+        <dependency id="Newtonsoft.Json" version="12.0.2" exclude="Build,Analyzers" />
+        <dependency id="StackExchange.Redis" version="2.0.601" exclude="Build,Analyzers" />
+        <dependency id="System.Text.Json" version="4.6.0" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETCoreApp2.2">
+        <dependency id="AutoMapper" version="9.0.0" exclude="Build,Analyzers" />
+        <dependency id="Autofac" version="4.9.4" exclude="Build,Analyzers" />
+        <dependency id="BouncyCastle.NetCore" version="1.8.5" exclude="Build,Analyzers" />
+        <dependency id="Elasticsearch.Net" version="7.4.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Logging" version="3.0.0" exclude="Build,Analyzers" />
+        <dependency id="NEST" version="7.4.0" exclude="Build,Analyzers" />
+        <dependency id="NHibernate" version="5.2.6" exclude="Build,Analyzers" />
+        <dependency id="Newtonsoft.Json" version="12.0.2" exclude="Build,Analyzers" />
+        <dependency id="StackExchange.Redis" version="2.0.601" exclude="Build,Analyzers" />
+        <dependency id="System.Text.Json" version="4.6.0" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETCoreApp3.0">
+        <dependency id="AutoMapper" version="9.0.0" exclude="Build,Analyzers" />
+        <dependency id="Autofac" version="4.9.4" exclude="Build,Analyzers" />
+        <dependency id="BouncyCastle.NetCore" version="1.8.5" exclude="Build,Analyzers" />
+        <dependency id="Elasticsearch.Net" version="7.4.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Logging" version="3.0.0" exclude="Build,Analyzers" />
+        <dependency id="NEST" version="7.4.0" exclude="Build,Analyzers" />
+        <dependency id="NHibernate" version="5.2.6" exclude="Build,Analyzers" />
+        <dependency id="Newtonsoft.Json" version="12.0.2" exclude="Build,Analyzers" />
+        <dependency id="StackExchange.Redis" version="2.0.601" exclude="Build,Analyzers" />
+        <dependency id="System.Text.Json" version="4.6.0" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETCoreApp3.1">
+        <dependency id="AutoMapper" version="9.0.0" exclude="Build,Analyzers" />
+        <dependency id="Autofac" version="4.9.4" exclude="Build,Analyzers" />
+        <dependency id="BouncyCastle.NetCore" version="1.8.5" exclude="Build,Analyzers" />
+        <dependency id="Elasticsearch.Net" version="7.4.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Logging" version="3.0.0" exclude="Build,Analyzers" />
+        <dependency id="NEST" version="7.4.0" exclude="Build,Analyzers" />
+        <dependency id="NHibernate" version="5.2.6" exclude="Build,Analyzers" />
+        <dependency id="Newtonsoft.Json" version="12.0.2" exclude="Build,Analyzers" />
+        <dependency id="StackExchange.Redis" version="2.0.601" exclude="Build,Analyzers" />
+        <dependency id="System.Text.Json" version="4.6.0" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETStandard2.0">
+        <dependency id="AutoMapper" version="9.0.0" exclude="Build,Analyzers" />
+        <dependency id="Autofac" version="4.9.4" exclude="Build,Analyzers" />
+        <dependency id="BouncyCastle.NetCore" version="1.8.5" exclude="Build,Analyzers" />
+        <dependency id="Elasticsearch.Net" version="7.4.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Logging" version="3.0.0" exclude="Build,Analyzers" />
+        <dependency id="NEST" version="7.4.0" exclude="Build,Analyzers" />
+        <dependency id="NHibernate" version="5.2.6" exclude="Build,Analyzers" />
+        <dependency id="Newtonsoft.Json" version="12.0.2" exclude="Build,Analyzers" />
+        <dependency id="StackExchange.Redis" version="2.0.601" exclude="Build,Analyzers" />
+        <dependency id="System.Text.Json" version="4.6.0" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETStandard2.1">
+        <dependency id="AutoMapper" version="9.0.0" exclude="Build,Analyzers" />
+        <dependency id="Autofac" version="4.9.4" exclude="Build,Analyzers" />
+        <dependency id="BouncyCastle.NetCore" version="1.8.5" exclude="Build,Analyzers" />
+        <dependency id="Elasticsearch.Net" version="7.4.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Logging" version="3.0.0" exclude="Build,Analyzers" />
+        <dependency id="NEST" version="7.4.0" exclude="Build,Analyzers" />
+        <dependency id="NHibernate" version="5.2.6" exclude="Build,Analyzers" />
+        <dependency id="Newtonsoft.Json" version="12.0.2" exclude="Build,Analyzers" />
+        <dependency id="StackExchange.Redis" version="2.0.601" exclude="Build,Analyzers" />
+        <dependency id="System.Text.Json" version="4.6.0" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="System.Configuration" targetFramework=".NETFramework3.5, .NETFramework4.5, .NETFramework4.5.1, .NETFramework4.5.2, .NETFramework4.6, .NETFramework4.6.1, .NETFramework4.6.2, .NETFramework4.7, .NETFramework4.7.1, .NETFramework4.7.2, .NETFramework4.8" />
+      <frameworkAssembly assemblyName="System.Web" targetFramework=".NETFramework3.5, .NETFramework4.5, .NETFramework4.5.1, .NETFramework4.5.2, .NETFramework4.6, .NETFramework4.6.1, .NETFramework4.6.2, .NETFramework4.7, .NETFramework4.7.1, .NETFramework4.7.2, .NETFramework4.8" />
+      <frameworkAssembly assemblyName="System.IO.Compression" targetFramework=".NETFramework4.7.2, .NETFramework4.8" />
+    </frameworkAssemblies>
+  </metadata>
+  <files>
+    <file src="e:\work\Package\Utility\net2\Utility.dll" target="lib\net20\Utility.dll" />
+    <file src="e:\work\Package\Utility\net3\Utility.dll" target="lib\net30\Utility.dll" />
+    <file src="e:\work\Package\Utility\net3.5\Utility.dll" target="lib\net35\Utility.dll" />
+    <file src="e:\work\Package\Utility\net4\Utility.dll" target="lib\net40\Utility.dll" />
+    <file src="e:\work\Package\Utility\net4.5\Utility.dll" target="lib\net45\Utility.dll" />
+    <file src="e:\work\Package\Utility\net4.5.1\Utility.dll" target="lib\net451\Utility.dll" />
+    <file src="e:\work\Package\Utility\net4.5.2\Utility.dll" target="lib\net452\Utility.dll" />
+    <file src="e:\work\Package\Utility\net4.6\Utility.dll" target="lib\net46\Utility.dll" />
+    <file src="e:\work\Package\Utility\net4.6.1\Utility.dll" target="lib\net461\Utility.dll" />
+    <file src="e:\work\Package\Utility\net4.6.2\Utility.dll" target="lib\net462\Utility.dll" />
+    <file src="e:\work\Package\Utility\net4.7\Utility.dll" target="lib\net47\Utility.dll" />
+    <file src="e:\work\Package\Utility\net4.7.1\Utility.dll" target="lib\net471\Utility.dll" />
+    <file src="e:\work\Package\Utility\net4.7.2\Utility.dll" target="lib\net472\Utility.dll" />
+    <file src="e:\work\Package\Utility\net4.8\Utility.dll" target="lib\net48\Utility.dll" />
+    <file src="e:\work\Package\Utility\netcoreapp1.0\Utility.dll" target="lib\netcoreapp1.0\Utility.dll" />
+    <file src="e:\work\Package\Utility\netcoreapp1.1\Utility.dll" target="lib\netcoreapp1.1\Utility.dll" />
+    <file src="e:\work\Package\Utility\netcoreapp2.0\Utility.dll" target="lib\netcoreapp2.0\Utility.dll" />
+    <file src="e:\work\Package\Utility\netcoreapp2.1\Utility.dll" target="lib\netcoreapp2.1\Utility.dll" />
+    <file src="e:\work\Package\Utility\netcoreapp2.2\Utility.dll" target="lib\netcoreapp2.2\Utility.dll" />
+    <file src="e:\work\Package\Utility\netcoreapp3.0\Utility.dll" target="lib\netcoreapp3.0\Utility.dll" />
+    <file src="e:\work\Package\Utility\netcoreapp3.1\Utility.dll" target="lib\netcoreapp3.1\Utility.dll" />
+    <file src="e:\work\Package\Utility\netstandard1.0\Utility.dll" target="lib\netstandard1.0\Utility.dll" />
+    <file src="e:\work\Package\Utility\netstandard1.1\Utility.dll" target="lib\netstandard1.1\Utility.dll" />
+    <file src="e:\work\Package\Utility\netstandard1.2\Utility.dll" target="lib\netstandard1.2\Utility.dll" />
+    <file src="e:\work\Package\Utility\netstandard1.3\Utility.dll" target="lib\netstandard1.3\Utility.dll" />
+    <file src="e:\work\Package\Utility\netstandard1.4\Utility.dll" target="lib\netstandard1.4\Utility.dll" />
+    <file src="e:\work\Package\Utility\netstandard1.5\Utility.dll" target="lib\netstandard1.5\Utility.dll" />
+    <file src="e:\work\Package\Utility\netstandard1.6\Utility.dll" target="lib\netstandard1.6\Utility.dll" />
+    <file src="e:\work\Package\Utility\netstandard2.0\Utility.dll" target="lib\netstandard2.0\Utility.dll" />
+    <file src="e:\work\Package\Utility\netstandard2.1\Utility.dll" target="lib\netstandard2.1\Utility.dll" />
+  </files>
+</package>

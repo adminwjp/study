@@ -1,0 +1,13 @@
+E:\work\program\SocialContact\src\Domain\bin\Release\netstandard2.0\Config\hbm\social_contact.hbm.xml
+E:\work\program\SocialContact\src\Domain\bin\Release\netstandard2.0\Domain.deps.json
+E:\work\program\SocialContact\src\Domain\bin\Release\netstandard2.0\Domain.dll
+E:\work\program\SocialContact\src\Domain\bin\Release\netstandard2.0\Domain.pdb
+E:\work\program\SocialContact\src\Domain\bin\Release\netstandard2.0\AutoMapper.dll
+E:\work\program\SocialContact\src\Domain\bin\Release\netstandard2.0\AutoMapper.pdb
+E:\work\program\SocialContact\src\Domain\bin\Release\netstandard2.0\AutoMapper.xml
+E:\work\program\SocialContact\src\Domain\obj\Release\netstandard2.0\Domain.csprojAssemblyReference.cache
+E:\work\program\SocialContact\src\Domain\obj\Release\netstandard2.0\Domain.AssemblyInfoInputs.cache
+E:\work\program\SocialContact\src\Domain\obj\Release\netstandard2.0\Domain.AssemblyInfo.cs
+E:\work\program\SocialContact\src\Domain\obj\Release\netstandard2.0\Domain.csproj.CopyComplete
+E:\work\program\SocialContact\src\Domain\obj\Release\netstandard2.0\Domain.dll
+E:\work\program\SocialContact\src\Domain\obj\Release\netstandard2.0\Domain.pdb

@@ -1,0 +1,93 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!--<TargetFrameworks>net2;net3;net3.5;net4;net4.5;net4.5.1;net4.5.2;net4.6;net4.6.1;net4.6.2;net4.7;net4.7.1;net4.7.2;net4.8;netcoreapp1.0;netcoreapp1.1;netcoreapp2.0;netcoreapp2.1;netcoreapp2.2;netcoreapp3.0;netcoreapp3.1;netstandard1.0;netstandard1.1;netstandard1.2;netstandard1.3;netstandard1.4;netstandard1.5;netstandard1.6;netstandard2.0;netstandard2.1;</TargetFrameworks>-->
+    <TargetFrameworks>netstandard2.0;netstandard2.1;netcoreapp3.1</TargetFrameworks>
+    <AssemblyName>Utility</AssemblyName>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <OutputPath>e:\work\Package\Utility\</OutputPath>
+    <ApplicationIcon />
+    <OutputType>Library</OutputType>
+    <StartupObject />
+    <RepositoryUrl>e:\work\Package\Utility\</RepositoryUrl>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <PackageProjectUrl>e:\work\Package\Utility\</PackageProjectUrl>
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <DocumentationFile></DocumentationFile>
+    <Version>1.0.0.2</Version>
+    <Description>支持redis,es,mongodb,nhibernate,automapper....</Description>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Regex\" />
+    <Folder Include="Remoting\" />
+
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net2.0' OR '$(TargetFramework)' == 'net3.0' OR '$(TargetFramework)' == 'net3.5' OR '$(TargetFramework)' == 'net4.0' OR '$(TargetFramework)' == 'net4.5' OR '$(TargetFramework)' == 'net4.5.1' OR '$(TargetFramework)' == 'net4.5.2' OR '$(TargetFramework)' == 'net4.6' OR '$(TargetFramework)' == 'net4.6.1' OR '$(TargetFramework)' == 'net4.6.2' OR '$(TargetFramework)' == 'net4.7' OR '$(TargetFramework)' == 'net4.7.1' OR '$(TargetFramework)' == 'net4.7.2' OR '$(TargetFramework)' == 'net4.8' OR '$(TargetFramework)' == 'net4.8.1' OR '$(TargetFramework)' == 'net4.8.2'  OR '$(TargetFramework)' == 'netcoreapp2.0' OR '$(TargetFramework)' == 'netcoreapp2.1' OR '$(TargetFramework)' == 'netcoreapp2.2' OR '$(TargetFramework)' == 'netcoreapp3.0' OR '$(TargetFramework)' == 'netcoreapp3.1' OR '$(TargetFramework)' == 'netcoreapp3.2' OR '$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'netstandard2.1'">
+    <PackageReference Include="BouncyCastle.NetCore" Version="1.8.5" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.0' OR '$(TargetFramework)' == 'netcoreapp2.1' OR '$(TargetFramework)' == 'netcoreapp2.2' OR '$(TargetFramework)' == 'netcoreapp3.0' OR '$(TargetFramework)' == 'netcoreapp3.1' OR '$(TargetFramework)' == 'netcoreapp3.2' OR '$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'netstandard2.1' ">
+    <PackageReference Include="System.Text.Json" Version="4.6.0" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net4.6.1' OR '$(TargetFramework)' == 'net4.6.2' OR '$(TargetFramework)' == 'net4.7' OR '$(TargetFramework)' == 'net4.7.1' OR '$(TargetFramework)' == 'net4.7.2' OR '$(TargetFramework)' == 'net4.8' OR '$(TargetFramework)' == 'net4.8.1' OR '$(TargetFramework)' == 'net4.8.2' OR '$(TargetFramework)' == 'netcoreapp2.0' OR '$(TargetFramework)' == 'netcoreapp2.1' OR '$(TargetFramework)' == 'netcoreapp2.2' OR '$(TargetFramework)' == 'netcoreapp3.0' OR '$(TargetFramework)' == 'netcoreapp3.1' OR '$(TargetFramework)' == 'netcoreapp3.2' OR '$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'netstandard2.1'">
+    <PackageReference Include="AutoMapper" Version="9.0.0" />
+    <PackageReference Include="StackExchange.Redis" Version="2.0.601" />
+    <PackageReference Include="Elasticsearch.Net" Version="7.4.0" />
+    <PackageReference Include="NEST" Version="7.4.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.0.0" />
+    <!--
+    <PackageReference Include="Microsoft.Azure.ServiceBus" Version="4.1.0" />-->
+
+    <!--    
+    <PackageReference Include="ZooKeeperNetEx" Version="3.4.12.1" />
+    <PackageReference Include="ZooKeeperNetEx.Recipes" Version="3.4.12.1" />
+    <PackageReference Include="NHibernate" Version="5.2.6" />
+    <PackageReference Include="NHibernate.Mapping.Attributes" Version="5.1.0" />
+    <PackageReference Include="Dapper" Version="1.60.6" />
+    <PackageReference Include="Dapper.SimpleCRUD" Version="2.1.0" />
+    -->
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net2.0' OR  '$(TargetFramework)' == 'net3.0' OR  '$(TargetFramework)' == 'net3.5' OR '$(TargetFramework)' == 'net4.0'  OR '$(TargetFramework)' == 'net4.5' OR '$(TargetFramework)' == 'net4.5.1' OR'$(TargetFramework)' == 'net4.5.2' OR '$(TargetFramework)' == 'net4.6' OR '$(TargetFramework)' == 'net4.6.1' OR '$(TargetFramework)' == 'net4.6.2' OR '$(TargetFramework)' == 'net4.7' OR '$(TargetFramework)' == 'net4.7.1' OR '$(TargetFramework)' == 'net4.7.2' OR '$(TargetFramework)' == 'net4.8' ">
+    <Reference Include="System.Web" />
+    <!--<Reference Include="System.Configuration" />-->
+  </ItemGroup>
+  <!-- window  core 使用 -->
+  <!--<ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'  OR '$(TargetFramework)' == 'netcoreapp3.1' OR '$(TargetFramework)' == 'netcoreapp3.2'  ">
+    <Reference Include="System.Configuration.ConfigurationManager" />
+  </ItemGroup>-->
+  <!--
+  <ItemGroup Condition="'$(TargetFramework)' == 'net2.0' OR  '$(TargetFramework)' == 'net3.0' OR  '$(TargetFramework)' == 'net3.5' OR '$(TargetFramework)' == 'net4.0'  OR '$(TargetFramework)' == 'net4.5' OR '$(TargetFramework)' == 'net4.5.1' OR'$(TargetFramework)' == 'net4.5.2' OR '$(TargetFramework)' == 'net4.6'  OR '$(TargetFramework)' == 'net4.7.2' OR '$(TargetFramework)' == 'net4.8' ">
+    <Reference Include="System.Net.Http" Version="4.0.0" />
+  </ItemGroup>
+  -->
+  <!--<ItemGroup Condition="'$(TargetFramework)' == 'net4.5.1' OR '$(TargetFramework)' == 'net4.5.2' OR '$(TargetFramework)' == 'net4.6' OR '$(TargetFramework)' == 'net4.6.1' OR '$(TargetFramework)' == 'net4.6.2' OR '$(TargetFramework)' == 'net4.7' OR '$(TargetFramework)' == 'net4.7.1' OR '$(TargetFramework)' == 'net4.7.2' OR '$(TargetFramework)' == 'net4.8' OR '$(TargetFramework)' == 'net4.8.1' OR '$(TargetFramework)' == 'net4.8.2' OR '$(TargetFramework)' == 'netcoreapp2.0' OR '$(TargetFramework)' == 'netcoreapp2.1' OR '$(TargetFramework)' == 'netcoreapp2.2' OR '$(TargetFramework)' == 'netcoreapp3.0' OR '$(TargetFramework)' == 'netcoreapp3.1' OR '$(TargetFramework)' == 'netcoreapp3.2' OR '$(TargetFramework)' == 'netstandard1.5' OR '$(TargetFramework)' == 'netstandard1.6' OR '$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'netstandard2.1'">
+    <PackageReference Include="MongoDB.Driver">
+      <Version>2.9.2</Version>
+    </PackageReference>
+    <PackageReference Include="RabbitMQ.Client" Version="5.1.2" />
+  </ItemGroup>-->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net4.5' OR '$(TargetFramework)' == 'net4.5.1' OR '$(TargetFramework)' == 'net4.5.2' OR '$(TargetFramework)' == 'net4.6' OR '$(TargetFramework)' == 'net4.6.1' OR '$(TargetFramework)' == 'net4.6.2' OR '$(TargetFramework)' == 'net4.7' OR '$(TargetFramework)' == 'net4.7.1' OR '$(TargetFramework)' == 'net4.7.2' OR '$(TargetFramework)' == 'net4.8' OR '$(TargetFramework)' == 'net4.8.1' OR '$(TargetFramework)' == 'net4.8.2' OR '$(TargetFramework)' == 'netcoreapp2.0' OR '$(TargetFramework)' == 'netcoreapp2.1' OR '$(TargetFramework)' == 'netcoreapp2.2' OR '$(TargetFramework)' == 'netcoreapp3.0' OR '$(TargetFramework)' == 'netcoreapp3.1' OR '$(TargetFramework)' == 'netcoreapp3.2' OR '$(TargetFramework)' == 'netstandard1.0' OR '$(TargetFramework)' == 'netstandard1.1' OR '$(TargetFramework)' == 'netstandard1.2' OR '$(TargetFramework)' == 'netstandard1.3' OR '$(TargetFramework)' == 'netstandard1.4' OR '$(TargetFramework)' == 'netstandard1.5' OR '$(TargetFramework)' == 'netstandard1.6' OR '$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'netstandard2.1'">
+    <!--<PackageReference Include="Polly" Version="7.1.1" />-->
+
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net4.5' OR '$(TargetFramework)' == 'net4.5.1' OR '$(TargetFramework)' == 'net4.5.2' OR '$(TargetFramework)' == 'net4.6' OR '$(TargetFramework)' == 'net4.6.1' OR '$(TargetFramework)' == 'net4.6.2' OR '$(TargetFramework)' == 'net4.7' OR '$(TargetFramework)' == 'net4.7.1' OR '$(TargetFramework)' == 'net4.7.2' OR '$(TargetFramework)' == 'net4.8' OR '$(TargetFramework)' == 'net4.8.1' OR '$(TargetFramework)' == 'net4.8.2' OR '$(TargetFramework)' == 'netcoreapp2.0' OR '$(TargetFramework)' == 'netcoreapp2.1' OR '$(TargetFramework)' == 'netcoreapp2.2' OR '$(TargetFramework)' == 'netcoreapp3.0' OR '$(TargetFramework)' == 'netcoreapp3.1' OR '$(TargetFramework)' == 'netcoreapp3.2' OR '$(TargetFramework)' == 'netstandard1.1' OR '$(TargetFramework)' == 'netstandard1.2' OR '$(TargetFramework)' == 'netstandard1.3' OR '$(TargetFramework)' == 'netstandard1.4' OR '$(TargetFramework)' == 'netstandard1.5' OR '$(TargetFramework)' == 'netstandard1.6' OR '$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'netstandard2.1'">
+    <PackageReference Include="Autofac" Version="4.9.4" />
+  </ItemGroup>
+  <Import Project="..\Shared\Utility.Common\Utility.Common.projitems" Label="Shared" />
+  <!--<Import Project="..\Shared\Utility.Database\Utility.Database.projitems" Label="Shared" />-->
+  <Import Project="..\Shared\Utility.Http\Utility.Http.projitems" Label="Shared" />
+  <Import Project="..\Shared\Utility.File\Utility.File.projitems" Label="Shared" />
+  <Import Project="..\Shared\Utility.Base64\Utility.Base64.projitems" Label="Shared" />
+  <Import Project="..\Shared\Utility.Cmd\Utility.Cmd.projitems" Label="Shared" />
+  <Import Project="..\Shared\Utility.Cache\Utility.Cache.projitems" Label="Shared" />
+  <Import Project="..\Shared\Utility.Attribute\Utility.Attribute.projitems" Label="Shared" />
+  <Import Project="..\Shared\Utility.Elasticsearch\Utility.Elasticsearch.projitems" Label="Shared" />
+  <!--<Import Project="..\Shared\Utility.Nhibernate\Utility.Nhibernate.projitems" Label="Shared" />-->
+</Project>

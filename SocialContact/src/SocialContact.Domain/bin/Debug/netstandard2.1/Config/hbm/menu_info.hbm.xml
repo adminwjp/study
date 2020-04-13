@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" default-lazy="false">
+  <!-- start menu info -->
+  <class name="SocialContact.Domain.Core.MenuInfo,SocialContact.Domain"  table="menu_info" discriminator-value="0">
+    <id name="Id" column="id" unsaved-value="0">
+      <generator class="increment" />
+    </id>
+    <property column="create_date" name="CreateDate" type="System.DateTime"/>
+    <property column="update_date" name="UpdateDate" type="System.DateTime"/>
+    <property  name="MenuName" column="menu_name" length="20" type="System.String"/>
+    <property  name="MenuGroup" column="menu_group" length="20" type="System.String"/>
+    <property  name="Href" column="href" length="50" type="System.String"/>
+    <property column="order_no" name="OrderNo" length="20" type="System.Int32"/>
+    <property  name="Description" column="description" length="500" type="System.String"/>
+    <many-to-one name="Parent" column="parent_id" foreign-key="fk_parent_id"  class="SocialContact.Domain.Core.MenuInfo,SocialContact.Domain"/>
+    <many-to-one name="Admin" column="admin_id"  foreign-key="fk_admin_id"   class="SocialContact.Domain.Core.AdminInfo,SocialContact.Domain"/>
+    <many-to-one name="Icon" column="icon_id" foreign-key="fk_icon_id" class="SocialContact.Domain.Core.IconInfo,SocialContact.Domain"/>
+    <property  name="Collpse" column="collpse"  type="System.Boolean"/>
+    <set name="Children"  inverse="true" lazy="false" cascade="none">
+      <key column="parent_id" foreign-key="fk_parent_id" />
+      <one-to-many class="SocialContact.Domain.Core.MenuInfo,SocialContact.Domain"/>
+    </set>
+    <one-to-one name="Menu"  class="SocialContact.Domain.Core.UserMenuInfo,SocialContact.Domain"/>
+  </class>
+  <!-- end menu info -->
+</hibernate-mapping>
