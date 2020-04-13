@@ -1,9 +1,0 @@
-E:\work\program\company\src\Company.Domain\bin\Debug\netcoreapp3.1\Company.Domain.deps.json
-E:\work\program\company\src\Company.Domain\bin\Debug\netcoreapp3.1\Company.Domain.runtimeconfig.json
-E:\work\program\company\src\Company.Domain\bin\Debug\netcoreapp3.1\Company.Domain.runtimeconfig.dev.json
-E:\work\program\company\src\Company.Domain\bin\Debug\netcoreapp3.1\Company.Domain.dll
-E:\work\program\company\src\Company.Domain\bin\Debug\netcoreapp3.1\Company.Domain.pdb
-E:\work\program\company\src\Company.Domain\obj\Debug\netcoreapp3.1\Company.Domain.AssemblyInfoInputs.cache
-E:\work\program\company\src\Company.Domain\obj\Debug\netcoreapp3.1\Company.Domain.AssemblyInfo.cs
-E:\work\program\company\src\Company.Domain\obj\Debug\netcoreapp3.1\Company.Domain.dll
-E:\work\program\company\src\Company.Domain\obj\Debug\netcoreapp3.1\Company.Domain.pdb
