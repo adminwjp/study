@@ -1,8 +1,0 @@
-E:\work\program\Utility\obj\Debug\net3\Utility.AssemblyInfoInputs.cache
-E:\work\program\Utility\obj\Debug\net3\Utility.AssemblyInfo.cs
-e:\work\Package\Utility\net3\Utility.dll
-e:\work\Package\Utility\net3\Utility.pdb
-E:\work\program\Utility\obj\Debug\net3\Utility.csproj.CopyComplete
-E:\work\program\Utility\obj\Debug\net3\Utility.dll
-E:\work\program\Utility\obj\Debug\net3\Utility.pdb
-E:\work\program\Utility\obj\Debug\net3\Utility.csprojAssemblyReference.cache

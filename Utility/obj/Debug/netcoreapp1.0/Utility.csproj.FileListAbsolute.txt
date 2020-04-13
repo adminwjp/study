@@ -1,8 +1,0 @@
-E:\work\program\Utility\obj\Debug\netcoreapp1.0\Utility.AssemblyInfoInputs.cache
-E:\work\program\Utility\obj\Debug\netcoreapp1.0\Utility.AssemblyInfo.cs
-e:\work\Package\Utility\netcoreapp1.0\Utility.deps.json
-e:\work\Package\Utility\netcoreapp1.0\Utility.dll
-e:\work\Package\Utility\netcoreapp1.0\Utility.pdb
-E:\work\program\Utility\obj\Debug\netcoreapp1.0\Utility.dll
-E:\work\program\Utility\obj\Debug\netcoreapp1.0\Utility.pdb
-E:\work\program\Utility\obj\Debug\netcoreapp1.0\Utility.csprojAssemblyReference.cache

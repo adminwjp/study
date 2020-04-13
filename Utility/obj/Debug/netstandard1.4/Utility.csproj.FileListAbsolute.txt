@@ -1,8 +1,0 @@
-E:\work\program\Utility\obj\Debug\netstandard1.4\Utility.AssemblyInfoInputs.cache
-E:\work\program\Utility\obj\Debug\netstandard1.4\Utility.AssemblyInfo.cs
-e:\work\Package\Utility\netstandard1.4\Utility.deps.json
-e:\work\Package\Utility\netstandard1.4\Utility.dll
-e:\work\Package\Utility\netstandard1.4\Utility.pdb
-E:\work\program\Utility\obj\Debug\netstandard1.4\Utility.dll
-E:\work\program\Utility\obj\Debug\netstandard1.4\Utility.pdb
-E:\work\program\Utility\obj\Debug\netstandard1.4\Utility.csprojAssemblyReference.cache

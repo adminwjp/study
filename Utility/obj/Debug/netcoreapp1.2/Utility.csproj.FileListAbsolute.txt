@@ -1,3 +1,0 @@
-E:\work\program\Utility\obj\Debug\netcoreapp1.2\Utility.csprojAssemblyReference.cache
-E:\work\program\Utility\obj\Debug\netcoreapp1.2\Utility.AssemblyInfoInputs.cache
-E:\work\program\Utility\obj\Debug\netcoreapp1.2\Utility.AssemblyInfo.cs

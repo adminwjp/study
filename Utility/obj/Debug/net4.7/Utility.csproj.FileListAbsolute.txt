@@ -1,7 +1,0 @@
-E:\work\program\Utility\obj\Debug\net4.7\Utility.AssemblyInfoInputs.cache
-E:\work\program\Utility\obj\Debug\net4.7\Utility.AssemblyInfo.cs
-e:\work\Package\Utility\net4.7\Utility.dll
-e:\work\Package\Utility\net4.7\Utility.pdb
-E:\work\program\Utility\obj\Debug\net4.7\Utility.csproj.CopyComplete
-E:\work\program\Utility\obj\Debug\net4.7\Utility.dll
-E:\work\program\Utility\obj\Debug\net4.7\Utility.pdb
