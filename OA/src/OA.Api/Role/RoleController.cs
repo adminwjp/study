@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Utility;
+using Utility.Domain.Repositories;
+using Utility.Response;
 
 namespace OA.Api.Famous
 {
@@ -25,13 +27,13 @@ namespace OA.Api.Famous
         protected override ResponseApi Edited(RoleInfo obj)
         {
             base.Repository.Update(it => it.Id == obj.Id, it => new RoleInfo() { Name = obj.Name, UpdateDate = DateTime.Now });
-            return ResponseApiUtils.Success();
+            return ResponseApi.CreateSuccess();
         }
         [HttpGet("category")]
         public ResponseApi Category()
         {
             var data=base.Repository.Find(null).Select(it=>new { it.Id,it.Name}).ToList();
-            return ResponseApiUtils.Success().SetData(data);
+            return ResponseApi.CreateSuccess().SetData(data);
         }
     }
 }

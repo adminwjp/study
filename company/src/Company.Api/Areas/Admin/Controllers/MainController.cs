@@ -14,6 +14,11 @@ using System.IO;
 using Company.Api.Data;
 using System;
 using System.Xml.Serialization;
+using Utility.Randoms;
+using Utility.Domain.Repositories;
+using Utility.Response;
+using Utility.Enums;
+using Utility.Ef.Repositories;
 
 namespace Company.Api.Areas.Admin.Controllers
 {
@@ -40,24 +45,22 @@ namespace Company.Api.Areas.Admin.Controllers
                     byte[] buffer = new byte[stream.Length];
                     stream.Read(buffer, 0, buffer.Length);
                     string suffix = file.FileName.Split('.').LastOrDefault();
-                    var name = $"{RandomUtils.Instance.Id}.{suffix}";
+                    var name = $"{RandomHelper.Id}.{suffix}";
                     System.IO.File.WriteAllBytes(Core.UploadDirectory + "\\" + Core.UploadBackgroundImage + "\\" + name, buffer);
                     obj.BackgroundImage = new ImageInfo()
                     {
-                        Name = RandomUtils.Instance.Id,
-                        Href = $"{RandomUtils.Instance.Id}.{suffix}",
+                        Name = RandomHelper.Id,
+                        Href = $"{RandomHelper.Id}.{suffix}",
                         Src = name,
                         Create = true,
                         Type = Core.Bg
                     };
-                    base.Repository.Save();
                 }
             }
             this.AddMiddleExecet(obj);
             obj.CreateDate = DateTime.Now;
-            base.Repository.Add(obj);
-            base.Repository.Save();
-            return await Task.FromResult(ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.AddSuccess));
+            base.Repository.Insert(obj);
+            return await Task.FromResult(ResponseApi.Create(GetLanguage(), Code.AddSuccess));
         }
         [HttpPost("edit")]
         public override async Task<ResponseApi> Edit([FromForm] MainInfo obj)
@@ -88,7 +91,7 @@ namespace Company.Api.Areas.Admin.Controllers
                     byte[] buffer = new byte[stream.Length];
                     stream.Read(buffer, 0, buffer.Length);
                     string suffix = file.FileName.Split('.').LastOrDefault();
-                    var name = $"{RandomUtils.Instance.Id}.{suffix}";
+                    var name = $"{RandomHelper.Id}.{suffix}";
                     System.IO.File.WriteAllBytes(Environment.CurrentDirectory + "\\" + Core.UploadBackgroundImage + "\\" + name, buffer);
                     var old = base.Repository.Find(it => it.Id == obj.Id).Include(it => it.BackgroundImage).FirstOrDefault();
                     if (obj.BackgroundImage == null || !obj.BackgroundImage.Id.HasValue)
@@ -99,24 +102,23 @@ namespace Company.Api.Areas.Admin.Controllers
                     if (obj.BackgroundImage != null)
                     {
                         System.IO.File.Delete(Environment.CurrentDirectory + "\\" + Core.UploadBackgroundImage + "\\" + obj.BackgroundImage.Src);
-                        obj.BackgroundImage.Name = RandomUtils.Instance.Id;
-                        obj.BackgroundImage.Href = $"{RandomUtils.Instance.Id}.{suffix}";
+                        obj.BackgroundImage.Name = RandomHelper.Id;
+                        obj.BackgroundImage.Href = $"{RandomHelper.Id}.{suffix}";
                         obj.BackgroundImage.Src = name;
-                        (base.Repository.DbContext as Company.Domain.CompanyDbContext).Images.Update(obj.BackgroundImage);
+                        (((BaseEfRepository<MainInfo>)base.Repository).DbContext as Company.Domain.CompanyDbContext).Images.Update(obj.BackgroundImage);
                     }
                     else
                     {
                         obj.BackgroundImage = new ImageInfo()
                         {
-                            Name = RandomUtils.Instance.Id,
-                            Href = $"{RandomUtils.Instance.Id}.{suffix}",
+                            Name = RandomHelper.Id,
+                            Href = $"{RandomHelper.Id}.{suffix}",
                             Src = name,
                             Type = Core.Bg,
                             Create = true
                         };
-                        (base.Repository.DbContext as Company.Domain.CompanyDbContext).Images.Add(obj.BackgroundImage);
+                        (((BaseEfRepository<MainInfo>)base.Repository).DbContext as Company.Domain.CompanyDbContext).Images.Add(obj.BackgroundImage);
                     }
-                    base.Repository.Save();
                 }
             }
             else
@@ -133,8 +135,7 @@ namespace Company.Api.Areas.Admin.Controllers
             
             obj.ModifyDate = DateTime.Now;
             base.Repository.Update(obj);
-            base.Repository.Save();
-            return await Task.FromResult(ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.ModifySuccess));
+            return await Task.FromResult(ResponseApi.Create(GetLanguage(), Code.ModifySuccess));
         }
         protected override void AddMiddleExecet(MainInfo obj)
         {

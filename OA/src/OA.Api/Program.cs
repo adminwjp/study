@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Utility;
 using Utility.AspNetCore;
+using Utility.IO;
 
 namespace OA.Api
 {
@@ -16,8 +17,8 @@ namespace OA.Api
        public readonly  static string UploadImg = Environment.CurrentDirectory + "\\imgs";
         public static void Main(string[] args)
         {
-            FileUtils.CreateDirectory(UploadImg);
-            StartUtils.Init<Startup>("OA Api",args);
+            FileHelper.CreateDirectory(UploadImg);
+            StartHelper.Start<Startup>("OA Api",args);
         }
     }
 }

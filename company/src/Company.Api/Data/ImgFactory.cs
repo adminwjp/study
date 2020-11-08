@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Utility;
+using Utility.Domain.Repositories;
 
 namespace Company.Api.Data
 {

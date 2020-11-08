@@ -98,9 +98,10 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
+    <!--<PackageReference Include="Utility" Version="1.0.0.0" />-->
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Utility\Utility.csproj" />
+    <ProjectReference Include="..\..\..\..\csharp\src\Utility\Utility\Utility.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="Config\address.xml">

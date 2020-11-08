@@ -11,6 +11,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Utility;
+using Utility.Domain.Repositories;
+using Utility.Ef.Repositories;
+using Utility.Ef.Uow;
+using Utility.Enums;
+using Utility.Randoms;
+using Utility.Response;
 using Z.EntityFramework.Plus;
 
 namespace Company.Api.Areas.Admin.Controllers
@@ -37,25 +43,23 @@ namespace Company.Api.Areas.Admin.Controllers
                     byte[] buffer = new byte[stream.Length];
                     stream.Read(buffer, 0, buffer.Length);
                     string suffix = file.FileName.Split('.').LastOrDefault();
-                    var name = $"{RandomUtils.Instance.Id}.{suffix}";
+                    var name = $"{RandomHelper.Id}.{suffix}";
                     System.IO.File.WriteAllBytes(Core.UploadDirectory + "\\" + Core.UploadTeam + "\\" + name, buffer);
                     obj.Img = new ImageInfo()
                     {
-                        Name = RandomUtils.Instance.Id,
-                        Href = $"{RandomUtils.Instance.Id}.{suffix}",
+                        Name = RandomHelper.Id,
+                        Href = $"{RandomHelper.Id}.{suffix}",
                         Src = name,
                         Create = true,
                         Type = Core.Team
                     };
-                    base.Repository.Save();
                 }
             }
             this.AddMiddleExecet(obj);
             obj.CreateDate = DateTime.Now;
          
-            base.Repository.Add(obj);
-            base.Repository.Save();
-            return await Task.FromResult(ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.AddSuccess));
+            base.Repository.Insert(obj);
+            return await Task.FromResult(ResponseApi.Create(GetLanguage(), Code.AddSuccess));
         }
         [HttpPost("edit")]
         public override async Task<ResponseApi> Edit([FromForm] TeamInfo obj)
@@ -87,7 +91,7 @@ namespace Company.Api.Areas.Admin.Controllers
                     byte[] buffer = new byte[stream.Length];
                     stream.Read(buffer, 0, buffer.Length);
                     string suffix = file.FileName.Split('.').LastOrDefault();
-                    var name = $"{RandomUtils.Instance.Id}.{suffix}";
+                    var name = $"{RandomHelper.Id}.{suffix}";
                     System.IO.File.WriteAllBytes(Environment.CurrentDirectory + "\\" + Core.UploadTeam + "\\" + name, buffer);
                     old = base.Repository.Find(it => it.Id == obj.Id).Include(it => it.Img).Include(it=>it.TeamSources).FirstOrDefault();
                     if (obj.Img == null || !obj.Img.Id.HasValue)
@@ -98,24 +102,23 @@ namespace Company.Api.Areas.Admin.Controllers
                     if (obj.Img != null)
                     {
                         System.IO.File.Delete(Environment.CurrentDirectory + "\\" + Core.UploadTeam + "\\" + obj.Img.Src);
-                        obj.Img.Name = RandomUtils.Instance.Id;
-                        obj.Img.Href = $"{RandomUtils.Instance.Id}.{suffix}";
+                        obj.Img.Name = RandomHelper.Id;
+                        obj.Img.Href = $"{RandomHelper.Id}.{suffix}";
                         obj.Img.Src = name;
-                        (base.Repository.DbContext as Company.Domain.CompanyDbContext).Images.Update(obj.Img);
+                        (((BaseEfRepository<TeamInfo>)base.Repository).DbContext as Company.Domain.CompanyDbContext).Images.Update(obj.Img);
                     }
                     else
                     {
                         obj.Img = new ImageInfo()
                         {
-                            Name = RandomUtils.Instance.Id,
-                            Href = $"{RandomUtils.Instance.Id}.{suffix}",
+                            Name = RandomHelper.Id,
+                            Href = $"{RandomHelper.Id}.{suffix}",
                             Src = name,
                             Type = Core.Team,
                             Create = true
                         };
-                        (base.Repository.DbContext as Company.Domain.CompanyDbContext).Images.Add(obj.Img);
+                        (((BaseEfRepository<TeamInfo>)base.Repository).DbContext as Company.Domain.CompanyDbContext).Images.Add(obj.Img);
                     }
-                    base.Repository.Save();
                 }
             }
             else
@@ -130,7 +133,7 @@ namespace Company.Api.Areas.Admin.Controllers
             if (obj.Sources != null && obj.Sources.Length > 0)
             {
                 old ??= base.Repository.Find(it => it.Id == obj.Id).Include(it => it.Img).Include(it => it.TeamSources).FirstOrDefault();
-                var context = (base.Repository.DbContext as Company.Domain.CompanyDbContext);
+                var context = (((BaseEfRepository<TeamInfo>)base.Repository).DbContext as Company.Domain.CompanyDbContext);
                 var temps = context.TeamSourceInfos.Where(it => it.Team.Id == obj.Id).Include(it=>it.Social).ToList();
                 foreach (var item in obj.Sources)
                 {
@@ -144,7 +147,6 @@ namespace Company.Api.Areas.Admin.Controllers
                             Team =context.Teams.Find(new object[] { obj.Id})
                         };
                         context.TeamSourceInfos.Add(aa);
-                        base.Repository.Save();
                         context.Entry(aa).State = EntityState.Detached;
                     }
                     else
@@ -154,26 +156,24 @@ namespace Company.Api.Areas.Admin.Controllers
                         {
                             if (!temp.Enable.HasValue || (temp.Enable.HasValue && !temp.Enable.Value))
                             {
-                                (base.Repository.DbContext as Company.Domain.CompanyDbContext).TeamSourceInfos.Where(it => it.Id == temp.Id).Update(it => new TeamSourceInfo { Enable = true });
-                                 base.Repository.Save();
+                                (((BaseEfRepository<TeamInfo>)base.Repository).DbContext as Company.Domain.CompanyDbContext).TeamSourceInfos.Where(it => it.Id == temp.Id).Update(it => new TeamSourceInfo { Enable = true });
+                      
                             }
                         }
                         else
                         {
                             var aa = new TeamSourceInfo()
                             {
-                                Social = (base.Repository.DbContext as Company.Domain.CompanyDbContext).Socials.Find(new object[] { item }),
+                                Social = (((BaseEfRepository<TeamInfo>)base.Repository).DbContext as Company.Domain.CompanyDbContext).Socials.Find(new object[] { item }),
                                 Enable = true,
                                 Create = true,
                                 Team = context.Teams.Find(new object[] { obj.Id })
                             };
                             context.TeamSourceInfos.Add(aa);
-                            base.Repository.Save();
                             context.Entry(aa).State = EntityState.Detached;
                         }
                     }
                 }
-                base.Repository.Save();
                 if (temps != null || temps.Count > 0)
                 {
                     foreach (var temp in temps)
@@ -189,9 +189,8 @@ namespace Company.Api.Areas.Admin.Controllers
                         }
                         if (!exists)
                         {
-                            (base.Repository.DbContext as Company.Domain.CompanyDbContext).TeamSourceInfos.Where(it=>it.Id==temp.Id).Update(it=>new TeamSourceInfo{ Enable=false});
-                            base.Repository.Save();
-                            // base.Repository.Save();
+                            (((BaseEfRepository<TeamInfo>)base.Repository).DbContext as Company.Domain.CompanyDbContext).TeamSourceInfos.Where(it=>it.Id==temp.Id).Update(it=>new TeamSourceInfo{ Enable=false});
+                     
                         }
                     }
                 }
@@ -202,8 +201,7 @@ namespace Company.Api.Areas.Admin.Controllers
             obj.ModifyDate = DateTime.Now;
             //此更改可能出现异常 团队来源 添加时 受影响  
             base.Repository.Update(obj);
-            base.Repository.Save();
-            return await Task.FromResult(ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.ModifySuccess));
+            return await Task.FromResult(ResponseApi.Create(GetLanguage(), Code.ModifySuccess));
         }
         protected override void AddMiddleExecet(TeamInfo obj)
         {
@@ -216,7 +214,7 @@ namespace Company.Api.Areas.Admin.Controllers
                 {
                     obj.TeamSources.Add(new TeamSourceInfo()
                     {
-                        Social = (base.Repository.DbContext as Company.Domain.CompanyDbContext).Socials.Find(new object[] { item }),
+                        Social = (((BaseEfRepository<TeamInfo>)base.Repository).DbContext as Company.Domain.CompanyDbContext).Socials.Find(new object[] { item }),
                         Enable = true,
                         Create = true,
                         Team = obj
@@ -228,11 +226,11 @@ namespace Company.Api.Areas.Admin.Controllers
         {
             if (obj.Category != null && obj.Category.Id.HasValue)
             {
-                obj.Category = (base.Repository.DbContext as Company.Domain.CompanyDbContext).Categories.Find(new object[] { obj.Category.Id });
+                obj.Category = (((BaseEfRepository<TeamInfo>)base.Repository).DbContext as Company.Domain.CompanyDbContext).Categories.Find(new object[] { obj.Category.Id });
             }
             if (obj.Service != null && obj.Service.Id.HasValue)
             {
-                obj.Service = (base.Repository.DbContext as Company.Domain.CompanyDbContext).Services.Find(new object[] { obj.Service.Id });
+                obj.Service = (((BaseEfRepository<TeamInfo>)base.Repository).DbContext as Company.Domain.CompanyDbContext).Services.Find(new object[] { obj.Service.Id });
             }
             
         }
@@ -242,7 +240,7 @@ namespace Company.Api.Areas.Admin.Controllers
         }
         protected override List<TeamInfo> QueryList(TeamInfo obj, int? page, int? size)
         {
-            var context = base.Repository.DbContext as Company.Domain.CompanyDbContext;
+            var context = (((BaseEfRepository<TeamInfo>)base.Repository).DbContext as Company.Domain.CompanyDbContext);
             //没有全连接 手动查询2次
             var data = (
                 from it in context.Teams

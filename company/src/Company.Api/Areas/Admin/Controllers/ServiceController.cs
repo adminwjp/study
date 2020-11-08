@@ -11,6 +11,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Utility;
+using Utility.Domain.Repositories;
+using Utility.Ef.Repositories;
+using Utility.Enums;
+using Utility.Randoms;
+using Utility.Response;
 
 namespace Company.Api.Areas.Admin.Controllers
 {
@@ -32,33 +37,31 @@ namespace Company.Api.Areas.Admin.Controllers
                 var file = Request.Form.Files[0];
                 if (file.Name != "img")
                 {
-                    return await Task.FromResult(ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.UploadFileFail));
+                    return await Task.FromResult(ResponseApi.Create(GetLanguage(), Code.UploadFileFail));
                 }
                 using Stream stream= file.OpenReadStream();
                 byte[] buffer = new byte[stream.Length];
                 stream.Read(buffer, 0, buffer.Length);
                 string suffix = file.FileName.Split('.').LastOrDefault();
-                var name = $"{RandomUtils.Instance.Id}.{suffix}";
+                var name = $"{RandomHelper.Id}.{suffix}";
                 System.IO.File.WriteAllBytes(Core.UploadDirectory+"\\"+Core.UploadService + "\\" + name, buffer);
                 obj.Img = new ImageInfo()
                 {
-                    Name = RandomUtils.Instance.Id,
-                    Href = $"{RandomUtils.Instance.Id}.{suffix}",
+                    Name = RandomHelper.Id,
+                    Href = $"{RandomHelper.Id}.{suffix}",
                     Src = name,
                     Create= true,
                     Type = Core.Service
                 }; 
-                base.Repository.Save();
             }
             else
             {
-                return await Task.FromResult(ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.UploadFileFail));
+                return await Task.FromResult(ResponseApi.Create(GetLanguage(), Code.UploadFileFail));
             }
             this.AddMiddleExecet(obj);
             obj.CreateDate = DateTime.Now;
-            base.Repository.Add(obj);
-            base.Repository.Save();
-            return await Task.FromResult(ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.AddSuccess));
+            base.Repository.Insert(obj);
+            return await Task.FromResult(ResponseApi.Create(GetLanguage(), Code.AddSuccess));
         }
         [HttpPost("edit")]
         public override async Task<ResponseApi> Edit([FromForm] ServiceInfo obj)
@@ -85,13 +88,13 @@ namespace Company.Api.Areas.Admin.Controllers
                 var file = Request.Form.Files[0];
                 if (file.Name != "img")
                 {
-                    return await Task.FromResult(ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.UploadFileFail));
+                    return await Task.FromResult(ResponseApi.Create(GetLanguage(), Code.UploadFileFail));
                 }
                 using Stream stream = file.OpenReadStream();
                 byte[] buffer = new byte[stream.Length];
                 stream.Read(buffer, 0, buffer.Length);
                 string suffix = file.FileName.Split('.').LastOrDefault();
-                var name = $"{RandomUtils.Instance.Id}.{suffix}";
+                var name = $"{RandomHelper.Id}.{suffix}";
                 System.IO.File.WriteAllBytes(Environment.CurrentDirectory+"\\"+Core.UploadService + "\\" + name, buffer);
                 var old = base.Repository.Find(it => it.Id == obj.Id).Include(it => it.Img).FirstOrDefault();
                 if (obj.Img == null || !obj.Img.Id.HasValue)
@@ -102,24 +105,23 @@ namespace Company.Api.Areas.Admin.Controllers
                 if (obj.Img != null)
                 {
                     System.IO.File.Delete(Environment.CurrentDirectory + "\\" + Core.UploadService + "\\" + obj.Img.Src);
-                    obj.Img.Name = RandomUtils.Instance.Id;
-                    obj.Img.Href = $"{RandomUtils.Instance.Id}.{suffix}";
+                    obj.Img.Name = RandomHelper.Id;
+                    obj.Img.Href = $"{RandomHelper.Id}.{suffix}";
                     obj.Img.Src = name;
-                    (base.Repository.DbContext as Company.Domain.CompanyDbContext).Images.Update(obj.Img);
+                    (((BaseEfRepository<ServiceInfo>)base.Repository).DbContext as Company.Domain.CompanyDbContext).Images.Update(obj.Img);
                 }
                 else
                 {
                     obj.Img = new ImageInfo()
                     {
-                        Name = RandomUtils.Instance.Id,
-                        Href = $"{RandomUtils.Instance.Id}.{suffix}",
+                        Name = RandomHelper.Id,
+                        Href = $"{RandomHelper.Id}.{suffix}",
                         Src = name,
                         Type = Core.Service,
                         Create = true
                     };
-                    (base.Repository.DbContext as Company.Domain.CompanyDbContext).Images.Add(obj.Img);
+                    (((BaseEfRepository<ServiceInfo>)base.Repository).DbContext as Company.Domain.CompanyDbContext).Images.Add(obj.Img);
                 }
-                base.Repository.Save();
             }
             else
             {
@@ -134,14 +136,13 @@ namespace Company.Api.Areas.Admin.Controllers
             // this.ActionParamParse(Request, ref obj);
             obj.ModifyDate = DateTime.Now;
             base.Repository.Update(obj);
-            base.Repository.Save();
-            return await Task.FromResult(ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.ModifySuccess));
+            return await Task.FromResult(ResponseApi.Create(GetLanguage(), Code.ModifySuccess));
         }
         protected override void AddMiddleExecet(ServiceInfo obj)
         {
             if (obj.Category != null && obj.Category.Id.HasValue)
             {
-                obj.Category = ((Company.Domain.CompanyDbContext)base.Repository.DbContext).Categories.Find(new object[] { obj.Category.Id });
+                obj.Category = (((BaseEfRepository<ServiceInfo>)base.Repository).DbContext as Company.Domain.CompanyDbContext).Categories.Find(new object[] { obj.Category.Id });
             }
         }
         protected override void EditMiddleExecet(ServiceInfo obj)
@@ -153,9 +154,9 @@ namespace Company.Api.Areas.Admin.Controllers
             return base.Query(base.QueryFilter(null, obj)).Include(it=>it.Category).Include(it=>it.Img)/*.Skip((page.Value - 1) * size.Value).Take(size.Value)*/.ToList();
         }
         [HttpGet("category")]
-        public virtual async Task<Utility.ResponseApi> Category()
+        public virtual async Task<ResponseApi> Category()
         {
-            Utility.ResponseApi responseApi = ResponseApiUtils.Success(GetLanguage());
+            ResponseApi responseApi = ResponseApi.CreateSuccess(GetLanguage());
             var data = base.Repository.Find(it => it.Enable.HasValue && it.Enable.Value).Select(it => new ServiceInfo()
             {
                 Id=it.Id,
@@ -163,7 +164,7 @@ namespace Company.Api.Areas.Admin.Controllers
                 EnglishName=it.EnglishName
             });
             responseApi.Data = data;
-            return await Task.FromResult<Utility.ResponseApi>(responseApi);
+            return await Task.FromResult<ResponseApi>(responseApi);
         }
     }
 }

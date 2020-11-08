@@ -1,35 +1,33 @@
 using System;
 using System.IO;
-using System.Linq;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using SocialContact.Domain.Core;
 using SocialContact.Domain.ViewModel;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Models;
-using Newtonsoft.Json;
 using NHibernate.Tool.hbm2ddl;
-using SocialContact.Api.Areas.Admin.Controllers;
 using SocialContact.Api.Data;
 using SocialContact.Api.Filter;
-using Utility;
 using Utility.AspNetCore.Extensions;
 using Utility.Nhibernate;
 using Utility.Nhibernate.Infrastructure;
+using Utility.ObjectMapping;
+using Utility.Domain.Uow;
+using Utility.Nhibernate.Uow;
+using Utility.Json;
+using Utility.Redis;
+using Utility.Es;
+using Utility.Consul;
 
 namespace SocialContact.Api
 {
@@ -59,18 +57,19 @@ namespace SocialContact.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<ConsulEntity>(Configuration.GetSection("Service"));
             // services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                // .AddScheme<AuthenticationSchemeOptions, ApiAuthHandler>("Api", o => { })
-                // .AddCookie(options =>
-                // {
-                    // // Foward any requests that start with /api to that scheme
-                    // options.ForwardDefaultSelector = ctx =>
-                    // {
-                        // return ctx.Request.Path.StartsWithSegments("/api") ? "Api" : null;
-                    // };
-                    // options.AccessDeniedPath = "/account/denied";
-                    // options.LoginPath = "/account/login";
-                // });
+            // .AddScheme<AuthenticationSchemeOptions, ApiAuthHandler>("Api", o => { })
+            // .AddCookie(options =>
+            // {
+            // // Foward any requests that start with /api to that scheme
+            // options.ForwardDefaultSelector = ctx =>
+            // {
+            // return ctx.Request.Path.StartsWithSegments("/api") ? "Api" : null;
+            // };
+            // options.AccessDeniedPath = "/account/denied";
+            // options.LoginPath = "/account/login";
+            // });
             //https://docs.microsoft.com/zh-cn/aspnet/core/security/cookie-sharing?view=aspnetcore-2.2
             //services.AddDataProtection()
             ////.PersistKeysToFileSystem("{PATH TO COMMON KEY RING FOLDER}")
@@ -83,23 +82,22 @@ namespace SocialContact.Api
             // services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
             // services.Configure<CookiePolicyOptions>(options =>
             // {
-                // options.CheckConsentNeeded = context => true;
-                // options.MinimumSameSitePolicy = SameSiteMode.None;
+            // options.CheckConsentNeeded = context => true;
+            // options.MinimumSameSitePolicy = SameSiteMode.None;
 
-                // //options.MinimumSameSitePolicy = (SameSiteMode)(-1);
-                // //options.OnAppendCookie = cookieContext =>
-                // //    CheckSameSite(cookieContext.Context, cookieContext.CookieOptions);
-                // //options.OnDeleteCookie = cookieContext =>
-                // //    CheckSameSite(cookieContext.Context, cookieContext.CookieOptions);
+            // //options.MinimumSameSitePolicy = (SameSiteMode)(-1);
+            // //options.OnAppendCookie = cookieContext =>
+            // //    CheckSameSite(cookieContext.Context, cookieContext.CookieOptions);
+            // //options.OnDeleteCookie = cookieContext =>
+            // //    CheckSameSite(cookieContext.Context, cookieContext.CookieOptions);
             // });
-            services.AddHttpClientV1();
+            ServiceCollectionExtensions.AddHttpClient(services);
             //https://www.cnblogs.com/cmt/p/11347507.html
-            services.AddIISServerOptionsV1();
-       
+            ServiceCollectionExtensions.AddIISServerOptions(services);
             services.AddMemoryCache(options=> {
                 options.ExpirationScanFrequency = TimeSpan.FromHours(2);
             });
-            AutoMapperUtils.Init(config=>
+            AutoMapperObjectMapper.Empty.Init(config=>
             {
                 config.CreateMap<AdminInfo, QueryAdminInfoResultViewModel>()
                 .ForMember(it => it.HeadPic, options => options.MapFrom(src => src.HeadPic.FileId));
@@ -185,9 +183,12 @@ namespace SocialContact.Api
             });
             services.AddTransient<IStartupFilter,
                RequestSetOptionsStartupFilter>();
+            services.AddSingleton<IObjectMapper>(it=> AutoMapperObjectMapper.Empty);
+
             services.AddSingleton<Models.AuthrizeValidator>();
             //services.AddCorsV1(); 
-            NhibernateHelper.Init(config => {
+
+            services.AddSingleton<AppSessionFactory>(new AppSessionFactory(config => {
                 config = config.Configure("Config/hibernate.cfg.xml");
                 //config.AddXmlFile("Config/hbm/social_contact.hbm.xml");
                 config.Interceptor = new SQLWatcher(_loggerFactory);
@@ -199,11 +200,9 @@ namespace SocialContact.Api
                 export.SetOutputFile(Path.Combine(Directory.GetCurrentDirectory(), "sql.sql")); //设置输出目录
                 // export.Drop(true, true);//设置生成表结构存在性判断,并删除
                 export.Create(false, false);//设置是否生成脚本,是否导出来
-            });
-
-            services.AddSingleton<AppSessionFactory>();
-            services.AddScoped(it => it.GetService<AppSessionFactory>().Session());
-            services.AddScoped<IUnitWork, UnitNhibernateWork>();
+            })) ;
+            services.AddScoped(it => it.GetService<AppSessionFactory>().OpenSession());
+            services.AddScoped<IUnitWork, NhibernateUnitWork>();
             services.AddScoped<IUserFileService,DefaultUserFileService>();
             services.AddSingleton<Data.Core>();
             // services.AddSingleton<Data.EsService>();
@@ -215,16 +214,14 @@ namespace SocialContact.Api
             //    options.Configuration = redisHost;
             //    options.InstanceName = "Demo";
             //});
-            string[] elasticsearchHosts =JsonUtils.Instance.ToObject<string[]>(elasticsearchHost);
-            services.AddSingleton<RedisCache>(it=>new RedisCache(redisHost));
-            services.AddSingleton<ElasticsearchDatabase>(it => new ElasticsearchDatabase(elasticsearchHosts));
-            services.AddControllers(); 
-      
-            services.AddApiVersioningV1();
-            services.AddSingleton(new System.Text.Json.JsonSerializerOptions() { MaxDepth=0, PropertyNamingPolicy=Utility.JsonPropertyNamingPolicy.ObjectResolverJson });
-     
-            services.AddMvcV1(new Type[] { typeof(ActionAuthFilter) }).AddJsonV1()
-          .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            string[] elasticsearchHosts =JsonHelper.ToObject<string[]>(elasticsearchHost);
+            services.AddSingleton<IRedisCache>(it=>new StackExchangeCache(redisHost));
+            services.AddSingleton<ElasticsearchHelper>(it => new ElasticsearchHelper(elasticsearchHosts));
+            services.AddControllers();
+            ServiceCollectionExtensions.AddApiVersioning(services);
+            services.AddSingleton(new System.Text.Json.JsonSerializerOptions() { MaxDepth=0, PropertyNamingPolicy=JsonPropertyNamingPolicy.ObjectResolverJson });
+            ServiceCollectionExtensions.AddFilter(services,new Type[] { typeof(ActionAuthFilter) }).AddJson()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
             //全局配置Json序列化处理
             //  .AddJsonOptions(options =>
             //  {
@@ -233,8 +230,7 @@ namespace SocialContact.Api
 
             //  }
             //)
-            services.AddSwaggerErrorV1();
-            services.AddSwaggerV1<SwaggerOperationFilter>("v1", "SocialContact API");
+            ServiceCollectionExtensions.AddSwagger<SwaggerOperationFilter>(services, "V1", "SocialContact API");
             services.AddApiModelValidate();
         }
         private static void HandleMapTest(IApplicationBuilder app)
@@ -296,12 +292,18 @@ namespace SocialContact.Api
             //});
           
             app.UseForwardedHeaders();
-         
-           // app.UseCors("AllowAllOrigins");
+            //lifetime.ApplicationStarted.Register(() => {
+            //    Utility.AspNetCore.Consul.ConsulExtensions.RegisterConsul(app, Configuration);
+            //    Utility.AspNetCore.Zipkin.ZinkinExtensions.RegisterZipkin(app, loggerFactory, lifetime, Configuration["Zinkin:Address"], Configuration["Zinkin:Name"]);
+            //});
+            //lifetime.ApplicationStopped.Register(() => {
+            //    Utility.AspNetCore.Consul.ConsulExtensions.StopConsul(app);
+            //    Utility.AspNetCore.Zipkin.ZinkinExtensions.StopZipkin(app);
+            //});
+            // app.UseCors("AllowAllOrigins");
 
             // app.UseAuthorization();
-
-            app.UseV1(env, "SocialContact API V1");
+            Utility.AspNetCore.Extensions.ApplicationBuilderExtensions.Use(app, env,"SocialContact API V1");
         }
     }
     public class ApiAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions>

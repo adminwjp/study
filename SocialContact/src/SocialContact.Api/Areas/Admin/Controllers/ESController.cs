@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Utility;
+using Utility.Enums;
+using Utility.Es;
+using Utility.Response;
 
 namespace SocialContact.Api.Areas.Admin.Controllers
 {
@@ -14,28 +17,28 @@ namespace SocialContact.Api.Areas.Admin.Controllers
     [Route("admin/api/v1/[controller]")]
     [Produces("application/json")]
     [ApiController]
-    [ProducesResponseType(typeof(Utility.ResponseApi), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ResponseApi), StatusCodes.Status200OK)]
     public class ESController : ControllerBase
     {
-        private readonly ElasticsearchDatabase _elasticsearchDatabase;
+        private readonly ElasticsearchHelper _elasticsearchDatabase;
         private readonly ILogger<ESController> _logger;
-        public ESController( ElasticsearchDatabase elasticsearchDatabase, ILogger<ESController> Logger) 
+        public ESController(ElasticsearchHelper elasticsearchDatabase, ILogger<ESController> Logger) 
         {
             this._logger = Logger;
             this._elasticsearchDatabase = elasticsearchDatabase;
         }
         [HttpGet("delete")]
-        public async Task<Utility.ResponseApi> Delete([FromQuery] string index,[FromQuery]string type,[FromQuery] string id)
+        public async Task<ResponseApi> Delete([FromQuery] string index,[FromQuery]string type,[FromQuery] string id)
         {
             if (string.IsNullOrEmpty(index))
             {
-                return await Task.FromResult(ResponseApiUtils.GetResponse(Language.Chinese,Utility.Code.ParamNotNull));
+                return await Task.FromResult(ResponseApi.Create(Language.Chinese,Code.ParamNotNull));
             }
             else
             {
                 if (string.IsNullOrEmpty(type) && string.IsNullOrEmpty(id))
                 {
-                    this._elasticsearchDatabase.Delete(index);
+                    this._elasticsearchDatabase.DeleteDatabase(index);
                 }
                 else if (string.IsNullOrEmpty(type) && !string.IsNullOrEmpty(id))
                 {
@@ -43,13 +46,13 @@ namespace SocialContact.Api.Areas.Admin.Controllers
                 }
                 else if (!string.IsNullOrEmpty(type) && string.IsNullOrEmpty(id))
                 {
-                    this._elasticsearchDatabase.DeleteUseType(index, type);
+                    this._elasticsearchDatabase.Delete(index, type, "{\"query\":{\"match_all\":{}}}");
                 }
                 else
                 {
                      this._elasticsearchDatabase.Delete(index,type, id);
                 }
-                Utility.ResponseApi response = ResponseApiUtils.GetResponse(Language.Chinese,Utility.Code.DeleteSuccess);
+                ResponseApi response = ResponseApi.Create(Language.Chinese,Code.DeleteSuccess);
                 return await Task.FromResult(response);
             }
         }

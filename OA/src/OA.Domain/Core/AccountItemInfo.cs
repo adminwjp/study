@@ -11,12 +11,27 @@ namespace OA.Domain.Core
     [Class(Table = "account_item_info", NameType = typeof(AccountItemInfo), Lazy = false)]
     public class AccountItemInfo:BaseEntity
     {
+        private string _name;
+        private string _type;//1 考勤 / 2 账套
+        private string _utit;
         [Property(Column = "name", Length = 20)]
-        public string Name { get; set; }
+        public string Name
+        {
+            get { return this._name; }
+            set { Set(ref _name, value, "Name"); }
+        }
         [Property(Column = "type", Length = 4)]
         ///1 考勤 / 2 账套
-        public string Type { get; set; }
+        public string Type
+        {
+            get { return this._type; }
+            set { Set(ref _type, value, "Type"); }
+        }
         [Property(Column = "utit", Length = 20)]
-        public string Utit { get; set; }
+        public string Utit
+        {
+            get { return this._utit; }
+            set { Set(ref _utit, value, "Utit"); }
+        }
     }
 }

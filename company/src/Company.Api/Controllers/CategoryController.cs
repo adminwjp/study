@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Company.Domain;
 using Company.Domain.Core;
 using Company.Domain.ViewModel;
 using Microsoft.AspNetCore.Http;
@@ -9,6 +10,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Utility;
+using Utility.Domain.Repositories;
+using Utility.Ef.Repositories;
+using Utility.Enums;
+using Utility.Response;
 
 namespace Company.Api.Controllers
 {
@@ -19,15 +24,17 @@ namespace Company.Api.Controllers
     {
         protected readonly IRepository<CategoryInfo> _repository;
         protected readonly ILogger<CategoryController> _logger;
+        protected CompanyDbContext CompanyDbContext;
         public CategoryController(IRepository<CategoryInfo> repository, ILogger<CategoryController> logger)
         {
             this._repository = repository;
             this._logger = logger;
+            CompanyDbContext=(((BaseEfRepository<CategoryInfo>)_repository).DbContext as Company.Domain.CompanyDbContext);
         }
         [HttpGet("testimonials")]
         public IActionResult Testimonial()
         {
-            var context = (this._repository.DbContext as Company.Domain.CompanyDbContext);
+            var context = CompanyDbContext;
             var data = context.TestimonialPersons.Where(it=>it.Enable.HasValue && it.Enable.Value).Include(it=>it.PersonPic).Join(context.Categories.Where(it=>it.Enable.HasValue && it.Enable.Value),it=>it.Category.Id,it=>it.Id,(it,it1)=>new
             {
                 CategoryInfo = (CategoryInfo)it1.Clone(),
@@ -46,14 +53,14 @@ namespace Company.Api.Controllers
                 }
                 it.Testimonials.Add(item.it);
             }
-            var respone = ResponseApiUtils.GetResponse(Language.Chinese,Code.QuerySuccess);
+            var respone = ResponseApi.Create(Language.Chinese,Code.QuerySuccess);
             respone.Data = temp.FirstOrDefault();
             return new JsonResult(respone);
         }
         [HttpGet("services")]
         public IActionResult Service()
         {
-            var context = (this._repository.DbContext as Company.Domain.CompanyDbContext);
+            var context = CompanyDbContext;
             var data = context.Services.Where(it=>it.Enable.HasValue&&it.Enable.Value).Include(it=>it.Img).Join(context.Categories.Where(it => it.Enable.HasValue && it.Enable.Value), it => it.Category.Id, it => it.Id, (it, it1) => new
             {
                 CategoryInfo = (CategoryInfo)it1.Clone(),
@@ -80,7 +87,7 @@ namespace Company.Api.Controllers
                 }
                 it.Services.Add(item.it);
             }
-            var respone = ResponseApiUtils.GetResponse(Language.Chinese, Code.QuerySuccess);
+            var respone = ResponseApi.Create(Language.Chinese, Code.QuerySuccess);
             respone.Data = temp.FirstOrDefault();
             return new JsonResult(respone);
         }
@@ -88,7 +95,7 @@ namespace Company.Api.Controllers
         [HttpGet("skills")]
         public IActionResult Skill()
         {
-            var context = (this._repository.DbContext as Company.Domain.CompanyDbContext);
+            var context = CompanyDbContext;
             var data = context.Skills.Where(it => it.Enable.HasValue && it.Enable.Value).Join(context.Categories.Where(it => it.Enable.HasValue && it.Enable.Value).Include(it=>it.BackgroundImage), it => it.Category.Id, it => it.Id, (it, it1) => new
             {
                 CategoryInfo = (CategoryInfo)it1.Clone(),
@@ -114,14 +121,14 @@ namespace Company.Api.Controllers
                 }
                 it.Skills.Add(item.it);
             }
-            var respone = ResponseApiUtils.GetResponse(Language.Chinese, Code.QuerySuccess);
+            var respone = ResponseApi.Create(Language.Chinese, Code.QuerySuccess);
             respone.Data = temp.FirstOrDefault();
             return new JsonResult(respone);
         }
         [HttpGet("themes")]
         public IActionResult Theme()
         {
-            var context = (this._repository.DbContext as Company.Domain.CompanyDbContext);
+            var context = CompanyDbContext;
             var data = context.Themes.Where(it => it.Enable.HasValue && it.Enable.Value).Join(context.Categories.Where(it => it.Enable.HasValue && it.Enable.Value), it => it.Category.Id, it => it.Id, (it, it1) => new
             {
                 CategoryInfo = (CategoryInfo)it1.Clone(),
@@ -146,14 +153,14 @@ namespace Company.Api.Controllers
                 }
                 it.Themes.Add(item.it);
             }
-            var respone = ResponseApiUtils.GetResponse(Language.Chinese, Code.QuerySuccess);
+            var respone = ResponseApi.Create(Language.Chinese, Code.QuerySuccess);
             respone.Data = temp;
             return new JsonResult(respone);
         }
         [HttpGet("partners")]
         public IActionResult Partners()
         {
-            var context = (this._repository.DbContext as Company.Domain.CompanyDbContext);
+            var context = CompanyDbContext;
             var data = context.Brands.Where(it => it.Enable.HasValue && it.Enable.Value && it.Feature==null).Include(it=>it.Logo)
                 .Join(context.Categories.Where(it => it.Enable.HasValue && it.Enable.Value).Include(it=>it.BackgroundImage), it => it.Category.Id, it => it.Id, (it, it1) => new
             {
@@ -178,14 +185,14 @@ namespace Company.Api.Controllers
                 }
                 it.OurPartners.Add(item.it);
             }
-            var respone = ResponseApiUtils.GetResponse(Language.Chinese, Code.QuerySuccess);
+            var respone = ResponseApi.Create(Language.Chinese, Code.QuerySuccess);
             respone.Data = temp.FirstOrDefault();
             return new JsonResult(respone);
         }
         [HttpGet("works")]
         public IActionResult Works()
         {
-            var context = (this._repository.DbContext as Company.Domain.CompanyDbContext);
+            var context = CompanyDbContext;
             var data = context.Works.Where(it => it.Enable.HasValue && it.Enable.Value).Include(it => it.Image)
                 .Join(context.Categories.Where(it => it.Enable.HasValue && it.Enable.Value), it => it.Category.Id, it => it.Id, (it, it1) => new
                 {
@@ -208,14 +215,14 @@ namespace Company.Api.Controllers
                 }
                 it.Works.Add(item.it);
             }
-            var respone = ResponseApiUtils.GetResponse(Language.Chinese, Code.QuerySuccess);
+            var respone = ResponseApi.Create(Language.Chinese, Code.QuerySuccess);
             respone.Data = temp.FirstOrDefault();
             return new JsonResult(respone);
         }
         [HttpGet("features")]
         public IActionResult Features()
         {
-            var context = (this._repository.DbContext as Company.Domain.CompanyDbContext);
+            var context = CompanyDbContext;
             var data = context.Brands.Where(it => it.Enable.HasValue && it.Enable.Value && it.Feature!=null)
                 .Join(context.Categories.Where(it => it.Enable.HasValue && it.Enable.Value), it => it.Category.Id, it => it.Id, (it, it1) => new
                 {
@@ -242,14 +249,14 @@ namespace Company.Api.Controllers
                 }
                 it.Features.Add(item.it);
             }
-            var respone = ResponseApiUtils.GetResponse(Language.Chinese, Code.QuerySuccess);
+            var respone = ResponseApi.Create(Language.Chinese, Code.QuerySuccess);
             respone.Data = temp.FirstOrDefault();
             return new JsonResult(respone);
         }
         [HttpGet("teams")]
         public IActionResult Teams()
         {
-            var context = (this._repository.DbContext as Company.Domain.CompanyDbContext);
+            var context = CompanyDbContext;
             var data = context.Teams.Where(it => it.Enable.HasValue && it.Enable.Value)
                 .Join(context.Categories.Where(it => it.Enable.HasValue && it.Enable.Value), it => it.Category.Id, it => it.Id, (it, it1) => new
                 {
@@ -305,14 +312,14 @@ namespace Company.Api.Controllers
                 it.Teams.Add(item.TeamInfo);
             }
             var firstData = temp.FirstOrDefault();
-            var respone = ResponseApiUtils.GetResponse(Language.Chinese, Code.QuerySuccess);
+            var respone = ResponseApi.Create(Language.Chinese, Code.QuerySuccess);
             respone.Data = firstData;
             return new JsonResult(respone);
         }
         [HttpGet("porworks")]
         public IActionResult PorWorks()
         {
-            var context = (this._repository.DbContext as Company.Domain.CompanyDbContext);
+            var context = CompanyDbContext;
             var data = context.WorkCategories.Include(it=>it.Parent)
                 .Join(context.Works.Include(it => it.Image).Include(it => it.Category), it => it.Work.Id, it => it.Id, (it, it1) => new WorkCategoryInfo() { Id = it.Id, Parent = it.Parent, Work = it1 })
                 //.GroupJoin(context.Works.Include(it=>it.Image).Include(it=>it.Category),it=>it.Work.Id,it=>it.Id,(it,it1)=> new { it,it1})
@@ -373,7 +380,7 @@ namespace Company.Api.Controllers
                     }
                 }
             }
-            var respone = ResponseApiUtils.GetResponse(Language.Chinese, Code.QuerySuccess);
+            var respone = ResponseApi.Create(Language.Chinese, Code.QuerySuccess);
             respone.Data =workCategoryResult;
             return new JsonResult(respone);
         }

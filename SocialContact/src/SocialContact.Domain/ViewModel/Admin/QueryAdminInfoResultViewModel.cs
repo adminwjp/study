@@ -1,10 +1,12 @@
-﻿using SocialContact.Domain.Core;
+﻿using AutoMapper;
+using SocialContact.Domain.Core;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace SocialContact.Domain.ViewModel
 {
+    [AutoMap(typeof(AdminInfo))]
     public class QueryAdminInfoResultViewModel : Entry
     {
         public  string Account { get; set; }

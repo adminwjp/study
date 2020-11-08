@@ -31,7 +31,7 @@ namespace Company.Api
         //        });
         public static void Main(string[] args)
         {
-            StartUtils.Init<Startup>("Company.Api", args);
+            StartHelper.Start<Startup>("Company.Api", args);
         }
     }
 }

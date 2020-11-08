@@ -18,6 +18,19 @@ using NHibernate.Criterion;
 using SocialContact.Api.Models;
 using Utility;
 using System.Xml.Serialization;
+using Utility.Redis;
+using Utility.Domain.Uow;
+using Utility.Response;
+using Utility.Enums;
+using Utility.Json.Extensions;
+using Utility.Json;
+using Utility.Base64;
+using Utility.Validate;
+using Utility.Page;
+using Utility.Model;
+using Utility.ObjectMapping;
+using Utility.Randoms;
+using Utility.Security.Extensions;
 
 namespace SocialContact.Api.Controllers
 {
@@ -30,14 +43,15 @@ namespace SocialContact.Api.Controllers
     [Route("api/v1/[controller]")]
     [Produces("application/json")]
     [ApiController]
-    [ProducesResponseType(typeof(Utility.ResponseApi), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ResponseApi), StatusCodes.Status200OK)]
     public  class BaseController<T,F,G> : ControllerBase where T:Entry,new() where F : QueryEntry where G : Entry,new() 
     {
         protected ILogger<BaseController<T,F, G>> Logger;
         protected IUnitWork UnitWork;
-        protected RedisCache RedisCache;
+        protected IRedisCache RedisCache;
         protected IConfiguration Configuration;
         protected IMemoryCache Cache;
+        protected IObjectMapper ObjectMapper;
         protected string PageName = string.Empty;
         protected bool IsCustomValidator { get; set; }
         /// <summary>
@@ -50,39 +64,39 @@ namespace SocialContact.Api.Controllers
             }
         }
         protected AuthrizeValidator AuthrizeValidator;
-        public BaseController(RedisCache redisCache, IUnitWork unitWork, IMemoryCache cache, ILogger<BaseController<T, F, G>> logger)
+        public BaseController(IRedisCache redisCache, IUnitWork unitWork, IMemoryCache cache, ILogger<BaseController<T, F, G>> logger)
         {
             this.RedisCache = redisCache;
             this.UnitWork = unitWork;
             this.Cache = cache;
             this.Logger = logger;
         }
-        public BaseController(RedisCache redisCache, IUnitWork unitWork, ILogger<BaseController<T, F, G>> logger)
+        public BaseController(IRedisCache redisCache, IUnitWork unitWork, ILogger<BaseController<T, F, G>> logger)
         {
             this.RedisCache = redisCache;
             this.UnitWork = unitWork;
             this.Logger = logger;
         }
-        public BaseController(RedisCache redisCache, IUnitWork unitWork, IMemoryCache cache, AuthrizeValidator authrize, ILogger<BaseController<T, F, G>> logger) : this(redisCache, unitWork, cache, logger)
+        public BaseController(IRedisCache redisCache, IUnitWork unitWork, IMemoryCache cache, AuthrizeValidator authrize, ILogger<BaseController<T, F, G>> logger) : this(redisCache, unitWork, cache, logger)
         {
             this.AuthrizeValidator = authrize;
         }
-        public BaseController(RedisCache redisCache, IUnitWork unitWork,  AuthrizeValidator authrize, ILogger<BaseController<T, F, G>> logger) : this(redisCache, unitWork, logger)
+        public BaseController(IRedisCache redisCache, IUnitWork unitWork,  AuthrizeValidator authrize, ILogger<BaseController<T, F, G>> logger) : this(redisCache, unitWork, logger)
         {
             this.AuthrizeValidator = authrize;
         }
-        public BaseController(RedisCache redisCache, IUnitWork unitWork, IConfiguration configuration, IMemoryCache cache,  ILogger<BaseController<T, F, G>> logger) : this(redisCache, unitWork, cache, logger)
+        public BaseController(IRedisCache redisCache, IUnitWork unitWork, IConfiguration configuration, IMemoryCache cache,  ILogger<BaseController<T, F, G>> logger) : this(redisCache, unitWork, cache, logger)
         {
             this.Configuration = configuration;
         }
-        public BaseController(RedisCache redisCache, IUnitWork unitWork, IConfiguration configuration, IMemoryCache cache, AuthrizeValidator authrize, ILogger<BaseController<T, F, G>> logger):this(redisCache,unitWork,cache,authrize,logger)
+        public BaseController(IRedisCache redisCache, IUnitWork unitWork, IConfiguration configuration, IMemoryCache cache, AuthrizeValidator authrize, ILogger<BaseController<T, F, G>> logger):this(redisCache,unitWork,cache,authrize,logger)
         {
             this.Configuration = configuration;
         }
         protected virtual AdminInfo GetAdminInfo()
         {
             string key = HttpContext.Request.Headers["token"];
-            if (string.IsNullOrEmpty(key)) return null;//throw new AuthNotFoundException(ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.AuthFail).Message);
+            if (string.IsNullOrEmpty(key)) return null;//throw new AuthNotFoundException(ResponseApi.Create((GetLanguage(), Code.AuthFail).Message);
             //string value = key.AesDecrypt(Core.AesKey, Core.AesIv);
             //string account = value.Split('_')[0];
             var data = this.Cache.Get<AdminInfo>(key);
@@ -91,12 +105,12 @@ namespace SocialContact.Api.Controllers
 				var tokenStr = RedisCache.GetString(key);
                 if (string.IsNullOrEmpty(tokenStr))
                 {
-                 throw new AuthNotFoundException(ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.AuthFail).Message);
+                 throw new AuthNotFoundException(ResponseApi.Create(GetLanguage(), Code.AuthFail).Message);
                 }
                 data = tokenStr.ToObject<AdminInfo>();
                 if (data.LoginDate.Value.AddHours(24) < DateTime.Now.AddMinutes(-5))
                 {  
-				    throw new AuthNotFoundException(ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.TokenExpires).Message);
+				    throw new AuthNotFoundException(ResponseApi.Create(GetLanguage(), Code.TokenExpires).Message);
                 }
                 Cache.Set<AdminInfo>(key, data, data.LoginDate.Value.AddHours(24));
             }
@@ -122,7 +136,7 @@ namespace SocialContact.Api.Controllers
             obj.Parent = obj.Parent == null || !obj.Parent.Id.HasValue ? obj : obj.Parent;
         }
         [HttpPost("add")]
-        public virtual async Task<Utility.ResponseApi> Add([FromForm,FromBody]T obj)
+        public virtual async Task<ResponseApi> Add([FromForm,FromBody]T obj)
         {
 			if (Request.ContentType.Contains("application/json"))
             {	
@@ -155,12 +169,12 @@ namespace SocialContact.Api.Controllers
         {
             return Language.Chinese;
         }
-        protected virtual async Task<Utility.ResponseApi> AddMiddlewareExecuted(T obj)
+        protected virtual async Task<ResponseApi> AddMiddlewareExecuted(T obj)
         {
             obj = this.AddMiddlewareExecute(obj);
             obj.CreateDate = DateTime.Now;
-            this.UnitWork.Add(obj);
-            Utility.ResponseApi response = ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.AddSuccess);
+            this.UnitWork.Insert(obj);
+            ResponseApi response = ResponseApi.Create(GetLanguage(), Code.AddSuccess);
             return await Task.FromResult(response);
         }
         /// <summary>
@@ -185,14 +199,14 @@ namespace SocialContact.Api.Controllers
             obj.UpdateDate = DateTime.Now;
             return obj;
         }
-        protected virtual async Task<Utility.ResponseApi> EditMiddlewareExecuted(T obj)
+        protected virtual async Task<ResponseApi> EditMiddlewareExecuted(T obj)
         {
             this.EditMiddlewareExecute(obj);
             obj.UpdateDate = DateTime.Now;
             var oldObj = this.UnitWork.FindSingle<T>(it => it.Id == obj.Id);
             obj = this.UpdateOldObject(obj, ref oldObj);
             UnitWork.Update(obj);
-            Utility.ResponseApi response = ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.ModifySuccess);
+            ResponseApi response = ResponseApi.Create(GetLanguage(), Code.ModifySuccess);
             return await Task.FromResult(response);
         }
         /// <summary>
@@ -201,7 +215,7 @@ namespace SocialContact.Api.Controllers
         /// <param name="obj"></param>
         /// <returns></returns>
         [HttpPost("edit")]
-        public virtual async Task<Utility.ResponseApi> Edit([FromForm, FromBody]T obj)
+        public virtual async Task<ResponseApi> Edit([FromForm, FromBody]T obj)
         {
 			if (Request.ContentType.Contains("application/json"))
             {	
@@ -248,11 +262,11 @@ namespace SocialContact.Api.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("delete/{id}")]
-        public virtual async Task<Utility.ResponseApi> Delete(int? id)
+        public virtual async Task<ResponseApi> Delete(int? id)
         {
             if (!id.HasValue)
             {
-                Utility.ResponseApi response = ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.ParamNotNull,false);
+                ResponseApi response = ResponseApi.Create(GetLanguage(), Code.ParamNotNull,false);
                 response.Message = $"id {response.Message}";
                 return await Task.FromResult(response);
             }
@@ -261,7 +275,7 @@ namespace SocialContact.Api.Controllers
                 this.DeleteBefore(id.Value);
                 this.UnitWork.Delete<T>(it => it.Id == id);
                 this.DeleteAfter(id.Value);
-                Utility.ResponseApi response = ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.DeleteSuccess);
+                ResponseApi response = ResponseApi.Create(GetLanguage(), Code.DeleteSuccess);
                 return await Task.FromResult(response);
             }
         }
@@ -289,9 +303,9 @@ namespace SocialContact.Api.Controllers
         /// <param name="size"></param>
         /// <returns></returns>
         [HttpPost("query")]
-        public virtual async Task<Utility.ResponseApi> Query([FromForm,FromBody]F query, int? page, int? size)
+        public virtual async Task<ResponseApi> Query([FromForm,FromBody]F query, int? page, int? size)
         {
-			PageUtils.Set(ref page,ref size);
+			PageHelper.Set(ref page,ref size);
             //Request.EnableBuffering();
            	if (Request.ContentType.Contains("application/json"))
             {	
@@ -312,7 +326,7 @@ namespace SocialContact.Api.Controllers
 		   // ActionParam(HttpContext.Request,ref query);
             return await DefaultQuery(query,page,size);
         }
-        protected virtual async Task<Utility.ResponseApi> DefaultQuery(F query, int? page, int? size)
+        protected virtual async Task<ResponseApi> DefaultQuery(F query, int? page, int? size)
         {
             IQueryable<T> queryable = this.Query();
             //树形列表查询 无条件则可以 树形列表查询 有条件取消
@@ -356,9 +370,9 @@ namespace SocialContact.Api.Controllers
                 data = this.DataParseIfWhileReference(data);
             }
             ResultModel<G> result = new ResultModel<G>();
-            result.Data = data.Any() ? AutoMapperUtils.Mapper.Map<List<G>>(data) : null;
+            result.Data = data.Any() ? ObjectMapper.Map<List<G>>(data) : null;
             result.Result = new PageModel() { Total = total, Size = size.Value, Page = total == 0 ? 0 : total % size.Value == 0 ? total / size.Value : (total / size.Value + 1) };
-            Utility.ResponseApi response = ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.QuerySuccess);
+            ResponseApi response = ResponseApi.Create(GetLanguage(), Code.QuerySuccess);
             response.Data = result;
             return await Task.FromResult(response);
         }
@@ -376,7 +390,7 @@ namespace SocialContact.Api.Controllers
         /// <param name="deleteEntry"></param>
         /// <returns></returns>
         [HttpPost("delete")]
-        public virtual async Task<Utility.ResponseApi> Delete([/*Bind("ids"),*/ FromForm,FromBody] DeleteEntry deleteEntry)
+        public virtual async Task<ResponseApi> Delete([/*Bind("ids"),*/ FromForm,FromBody] DeleteEntry deleteEntry)
         {
 			if (Request.ContentType.Contains("application/json"))
             {	
@@ -396,7 +410,7 @@ namespace SocialContact.Api.Controllers
             //this.ActionParam(HttpContext.Request,ref deleteEntry);//无效 作用域可能 绑定模型失败
             if (!deleteEntry.Ids.Any())
             {
-                Utility.ResponseApi response = ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.ParamNotNull, false);
+                ResponseApi response = ResponseApi.Create(GetLanguage(), Code.ParamNotNull, false);
                 response.Message = $"id {response.Message}";
                 return await Task.FromResult(response);
             }
@@ -411,7 +425,7 @@ namespace SocialContact.Api.Controllers
                     // UnitWork.Delete<T>(item);
                 }
                 this.DeleteAfter(deleteEntry.Ids);
-                Utility.ResponseApi response = ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.DeleteSuccess);
+                ResponseApi response = ResponseApi.Create(GetLanguage(), Code.DeleteSuccess);
                 return await Task.FromResult(response);
             }
         }
@@ -533,22 +547,22 @@ namespace SocialContact.Api.Controllers
         /// <param name="obj"></param>
         /// <param name="way"></param>
         /// <returns></returns>
-        protected virtual async Task<Utility.ResponseApi> Validate(T obj,int way=0)
+        protected virtual async Task<ResponseApi> Validate(T obj,int way=0)
         {
             if (IsCustomValidator)
             {
-                var error = Utility.ArgumentsUtils.CheckError(typeof(T), obj,way);
+                var error = ValidateHelper.ValidateError(typeof(T), obj,way);
                 if (error==null||error.Data == null)
                 {
                     Dictionary<string, List<string>> customErrors = new Dictionary<string, List<string>>();
                     customErrors = await this.CustomValidate(customErrors, obj, way);
                     if(customErrors.Count > 0)
                     {
-                        Utility.ResponseApi response = ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.ParamError,false);
+                        ResponseApi response = ResponseApi.Create(GetLanguage(), Code.ParamError,false);
                         response.Data = new { Error = customErrors };
                         return await Task.FromResult(response);
                     }
-                    return await Task.FromResult<Utility.ResponseApi>(null) ;
+                    return await Task.FromResult<ResponseApi>(null) ;
                 }
                 else
                 {
@@ -558,23 +572,23 @@ namespace SocialContact.Api.Controllers
                 }
                 return error;
             }
-            return await Task.FromResult<Utility.ResponseApi>(null);
+            return await Task.FromResult<ResponseApi>(null);
         }
         protected virtual void GetBase64(SocialContact.Domain.Core.UserFileInfo obj)
         {
             if (Request.Form.Files.Count == 1)
             {
                 string suffix = Request.Form.Files[0].FileName.Split('.').LastOrDefault();
-                obj.Src = $"{RandomUtils.Instance.OrderId.Sha1()}.{suffix}";
-                obj.FileId = RandomUtils.Instance.OrderId.Sha1();
+                obj.Src = $"{RandomHelper.OrderId.Sha1()}.{suffix}";
+                obj.FileId = RandomHelper.OrderId.Sha1();
                 using System.IO.Stream stream = Request.Form.Files[0].OpenReadStream();
                 byte[] buffer = new Byte[stream.Length];
                 stream.Read(buffer);
-                obj.Base64 = Base64Utils.Base64String(buffer);
+                obj.Base64 = Base64Helper.Base64String(buffer);
             }
             else
             {
-                var src = obj.FileId==null?null: this.RedisCache.HashGet("file", obj.FileId);
+                var src = obj.FileId==null?null: this.RedisCache.GetHashValue("file", obj.FileId);
                 if (string.IsNullOrEmpty(src))
                 {
                     var temp = this.Cache.Get<List<UserFileEntry>>(Core.FileChannel).Find(it => it.FileName == obj.FileId);
@@ -591,7 +605,7 @@ namespace SocialContact.Api.Controllers
                 //obj.Base64 = Base64Utils.Base64String(System.IO.File.ReadAllBytes(buffer));
                 if (System.IO.File.Exists($"{AddressConfig.UploadImgDirectory}//{ src}"))
                 {
-                    obj.Base64 =  Base64Utils.Base64String(System.IO.File.ReadAllBytes($"{AddressConfig.UploadImgDirectory}//{ src}"));
+                    obj.Base64 =  Base64Helper.Base64String(System.IO.File.ReadAllBytes($"{AddressConfig.UploadImgDirectory}//{ src}"));
                 }
             }
         }
@@ -613,7 +627,7 @@ namespace SocialContact.Api.Controllers
         /// <param name="str"></param>
         protected void Ref<M>(ref M obj, string str)where M:class
         {
-            obj = JsonUtils.Instance.ToObject<M>(str, JsonUtils.JsonSerializerSettings);
+            obj = JsonHelper.ToObject<M>(str, JsonHelper.JsonSerializerSettings);
         }
         private IQueryable<T> Query()
         {
@@ -711,10 +725,10 @@ namespace SocialContact.Api.Controllers
         }
         [HttpGet("category")]
 
-        public virtual async Task<Utility.ResponseApi> Category()
+        public virtual async Task<ResponseApi> Category()
         {
             List<CategoryEntry> categoryEntries = UnitWork.Find<T>(null).Select(Select()).ToList();
-            Utility.ResponseApi response = ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.QuerySuccess);
+            ResponseApi response = ResponseApi.Create(GetLanguage(), Code.QuerySuccess);
             response.Data = categoryEntries;
             return await Task.FromResult(response);
         }
@@ -728,9 +742,9 @@ namespace SocialContact.Api.Controllers
         }
         [HttpGet("operator")]
 
-        public virtual async Task<Utility.ResponseApi> Operator()
+        public virtual async Task<ResponseApi> Operator()
         {
-            Utility.ResponseApi response = ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.QuerySuccess);
+            ResponseApi response = ResponseApi.Create(GetLanguage(), Code.QuerySuccess);
             response.Data = AuthrizeValidator.GetOperatorAuthrize(GetUserId(), this.PageName);
             return await Task.FromResult(response);
         }

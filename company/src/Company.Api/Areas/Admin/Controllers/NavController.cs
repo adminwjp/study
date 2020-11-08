@@ -9,6 +9,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Company.Domain;
+using Utility.Ef.Repositories;
+using Utility.Domain.Repositories;
+using Utility.Response;
 
 namespace Company.Api.Areas.Admin.Controllers
 {
@@ -33,7 +36,7 @@ namespace Company.Api.Areas.Admin.Controllers
                 }
                 else
                 {
-                    obj.Parent = (base.Repository.DbContext as Company.Domain.CompanyDbContext).NavInfos.Find(new object[] { obj.Parent.Id });
+                    obj.Parent = (((BaseEfRepository<NavInfo>)base.Repository).DbContext as Company.Domain.CompanyDbContext).NavInfos.Find(new object[] { obj.Parent.Id });
                 }
             }
             else if (obj.ParentId.HasValue)
@@ -44,7 +47,7 @@ namespace Company.Api.Areas.Admin.Controllers
                 }
                 else
                 {
-                    obj.Parent = (base.Repository.DbContext as Company.Domain.CompanyDbContext).NavInfos.Find(new object[] { obj.ParentId });
+                    obj.Parent = (((BaseEfRepository<NavInfo>)base.Repository).DbContext as Company.Domain.CompanyDbContext).NavInfos.Find(new object[] { obj.ParentId });
                 }
             }
             else
@@ -84,7 +87,7 @@ namespace Company.Api.Areas.Admin.Controllers
                 Name=it.Name,
                 EnglishName=it.EnglishName
             });
-            var result = ResponseApiUtils.Success();
+            var result = ResponseApi.CreateSuccess();
             result.Data = data;
             return result;
         }

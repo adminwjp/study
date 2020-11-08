@@ -1,14 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 using OA.Domain.Core;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Utility;
-using Microsoft.Extensions.DependencyInjection;
+using Utility.Response;
+using Utility.Domain.Repositories;
+using Utility.Extensions;
+using Utility.Json;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -47,11 +47,11 @@ namespace OA.Api
             }
             //if (!ModelState.IsValid)
             //{
-            //    return ResponseApiUtils.Fail();
+            //    return ResponseApi.Fail();
             //}
             obj.CreateDate = DateTime.Now;
-            this.Repository.Add(obj);
-            return ResponseApiUtils.Success();
+            this.Repository.Insert(obj);
+            return ResponseApi.CreateSuccess();
         }
         /// <summary>
         /// formform 数据转换
@@ -60,7 +60,7 @@ namespace OA.Api
         /// <param name="str"></param>
         protected virtual void Ref<M>(ref M obj, string str) where M : class
         {
-            obj = JsonUtils.Instance.ToObject<M>(str);
+            obj = JsonHelper.ToObject<M>(str);
         }
         [HttpPost("edit")]
         public virtual ResponseApi Edit([FromForm] T obj)
@@ -82,7 +82,7 @@ namespace OA.Api
             }
             //if (!ModelState.IsValid)
             //{
-            //    return ResponseApiUtils.Fail();
+            //    return ResponseApi.Fail();
             //}
             return Edited(obj);
         }
@@ -92,7 +92,7 @@ namespace OA.Api
             obj.CreateDate = old.CreateDate;
             obj.UpdateDate = DateTime.Now;
             this.Repository.Update(obj);
-            return ResponseApiUtils.Success();
+            return ResponseApi.CreateSuccess();
         }
         [HttpPost("delete")]
         public virtual ResponseApi Delete([FromForm]DelEntry delEntry)
@@ -131,20 +131,20 @@ namespace OA.Api
                     //}
                 }
                 //criteria.Add(abstractCriterion);
-                return ResponseApiUtils.Success();
+                return ResponseApi.CreateSuccess();
             }
             else
             {
-                return ResponseApiUtils.Fail();
+                return ResponseApi.CreateFail();
             }
             this.Repository.Delete(where);
-            return ResponseApiUtils.Success();
+            return ResponseApi.CreateSuccess();
         }
         [HttpPost("get")]
         public virtual ResponseApi Get()
         {
             var data = this.Repository.Find(null).ToList();
-            return ResponseApiUtils.Success().SetData(data);
+            return ResponseApi.CreateSuccess().SetData(data);
         }
     }
     public class DelEntry

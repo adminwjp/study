@@ -11,6 +11,11 @@ using SocialContact.Api.Models;
 using NHibernate.Criterion;
 using System.Collections.Generic;
 using System;
+using Utility.Response;
+using Utility.Domain.Uow;
+using Utility.Redis;
+using Utility.ObjectMapping;
+using Utility.Enums;
 
 namespace SocialContact.Api.Areas.Admin.Controllers
 {
@@ -18,12 +23,13 @@ namespace SocialContact.Api.Areas.Admin.Controllers
     [Route("admin/api/v1/[controller]")]
     [Produces("application/json")]
     [ApiController]
-    [ProducesResponseType(typeof(Utility.ResponseApi), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ResponseApi), StatusCodes.Status200OK)]
 
     public class SkillCategoryController : SocialContact.Api.Controllers.BaseController<SkillCategoryInfo, QuerySkillCategoryFormViewModel, QuerySkillCategoryInfoResultViewModel>
     {
-        public SkillCategoryController(RedisCache redisCache, IUnitWork unitWork, IMemoryCache cache, AuthrizeValidator authrize, ILogger<SkillCategoryController> logger) : base(redisCache, unitWork,cache, authrize, logger)
+        public SkillCategoryController(IRedisCache redisCache,IObjectMapper objectMapper, IUnitWork unitWork, IMemoryCache cache, AuthrizeValidator authrize, ILogger<SkillCategoryController> logger) : base(redisCache, unitWork,cache, authrize, logger)
         {
+            base.ObjectMapper = objectMapper;
             base.IsCustomValidator = true;
             base.PageName = "skill_category";
         }
@@ -61,12 +67,12 @@ namespace SocialContact.Api.Areas.Admin.Controllers
         }
         [HttpGet("parent_category")]
 
-        public async Task<Utility.ResponseApi> QueryCategory()
+        public async Task<ResponseApi> QueryCategory()
         {
             List<SkillCategoryInfo> skillCategoryInfos = UnitWork.Find<SkillCategoryInfo>(null).ToList();
             skillCategoryInfos = this.DataParseIfWhileReference(skillCategoryInfos);
-            List<CategoryViewModel> categoryViewModels = AutoMapperUtils.MapTo<List<CategoryViewModel>>(skillCategoryInfos);
-            Utility.ResponseApi response = ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.QuerySuccess);
+            List<CategoryViewModel> categoryViewModels = ObjectMapper.Map<List<CategoryViewModel>>(skillCategoryInfos);
+            ResponseApi response = ResponseApi.Create(GetLanguage(), Code.QuerySuccess);
             response.Data = categoryViewModels;
             return await Task.FromResult(response);
         }

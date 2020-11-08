@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Utility;
+using Utility.Domain.Repositories;
+using Utility.Enums;
+using Utility.Response;
 
 namespace Company.Api.Controllers
 {
@@ -27,7 +30,7 @@ namespace Company.Api.Controllers
         [HttpGet("get")]
         public IActionResult Get()
         {
-            var response = ResponseApiUtils.GetResponse(Language.Chinese, Code.QuerySuccess);
+            var response = ResponseApi.Create(Language.Chinese, Code.QuerySuccess);
             var data = this._repository.Find(it => it.Enable.HasValue && it.Enable.Value).ToList();
             response.Data = data;
             return new JsonResult(response);

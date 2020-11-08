@@ -13,6 +13,11 @@ using System.Collections.Generic;
 using NHibernate.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using NHibernate.Criterion;
+using Utility.Enums;
+using Utility.Response;
+using Utility.Redis;
+using Utility.Domain.Uow;
+using Utility.ObjectMapping;
 
 namespace SocialContact.Api.Areas.Admin.Controllers
 {
@@ -20,12 +25,13 @@ namespace SocialContact.Api.Areas.Admin.Controllers
     [Route("admin/api/v1/[controller]")]
     [Produces("application/json")]
     [ApiController]
-    [ProducesResponseType(typeof(Utility.ResponseApi), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ResponseApi), StatusCodes.Status200OK)]
 
     public class UserMenuController : SocialContact.Api.Controllers.BaseController<UserMenuInfo, QueryUserMneuFormViewModel, QueryUserMneuInfoResultViewModel>
     {
-        public UserMenuController(RedisCache redisCache, IUnitWork unitWork, IMemoryCache cache, AuthrizeValidator authrize, ILogger<UserMenuController> logger) : base(redisCache, unitWork,cache, authrize, logger)
+        public UserMenuController(IRedisCache redisCache,IObjectMapper objectMapper, IUnitWork unitWork, IMemoryCache cache, AuthrizeValidator authrize, ILogger<UserMenuController> logger) : base(redisCache, unitWork,cache, authrize, logger)
         {
+            base.ObjectMapper = objectMapper;
             base.IsCustomValidator = true;
             base.PageName = "user_menu";
         }
@@ -33,7 +39,7 @@ namespace SocialContact.Api.Areas.Admin.Controllers
         public  async Task<ResponseApi> Init()
         {
             AdminInfo admin = base.Test ? null : GetAdminInfo();
-            using NHibernate.ISession session = HttpContext.RequestServices.GetService<Utility.Nhibernate.Infrastructure.AppSessionFactory>().Session();
+            using NHibernate.ISession session = HttpContext.RequestServices.GetService<Utility.Nhibernate.Infrastructure.AppSessionFactory>().OpenSession();
             NHibernate.ITransaction transaction = session.BeginTransaction();
             foreach (var item in session.Query<AdminRoleInfo>().Select(it=>it.Id))
             {
@@ -73,7 +79,7 @@ namespace SocialContact.Api.Areas.Admin.Controllers
                 }
             }
             transaction.Commit();
-            return await Task.FromResult(ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.OperatorSuccess));
+            return await Task.FromResult(ResponseApi.Create(GetLanguage(), Code.OperatorSuccess));
         }
         protected override Func<UserMenuInfo, CategoryEntry> Select()
         {
@@ -111,7 +117,7 @@ namespace SocialContact.Api.Areas.Admin.Controllers
         [HttpPost("add")]
         public override async Task<ResponseApi> Add([ FromForm,FromBody] UserMenuInfo obj)
         {
-            return await Task.FromResult(ResponseApiUtils.GetResponse(GetLanguage(),Utility.Code.NotSupport,false));
+            return await Task.FromResult(ResponseApi.Create(GetLanguage(),Code.NotSupport,false));
         }
         protected override async Task<ResponseApi> EditMiddlewareExecuted(UserMenuInfo obj)
         {
@@ -156,14 +162,14 @@ namespace SocialContact.Api.Areas.Admin.Controllers
                         Query = obj.Val,
                     });
                     break;
-                default: return await Task.FromResult(ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.NotSupportOperator)); 
+                default: return await Task.FromResult(ResponseApi.Create(GetLanguage(), Code.NotSupportOperator)); 
             }
-           return await Task.FromResult(ResponseApiUtils.GetResponse(GetLanguage(),res>0?Utility.Code.OperatorSuccess:Utility.Code.OperatorFail,res>0));
+           return await Task.FromResult(ResponseApi.Create(GetLanguage(),res>0?Code.OperatorSuccess:Code.OperatorFail,res>0));
         }
         [HttpPost("category")]
         public override async Task<ResponseApi> Category()
         {
-            return await Task.FromResult(ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.NotSupport, false));
+            return await Task.FromResult(ResponseApi.Create(GetLanguage(), Code.NotSupport, false));
         }
     }
 }

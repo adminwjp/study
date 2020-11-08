@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Utility;
+using Utility.Domain.Repositories;
 
 namespace Company.Api.Areas.Admin.Controllers
 {

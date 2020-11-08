@@ -9,20 +9,11 @@
   <ItemGroup>
     <Folder Include="Repository\" />
     <Folder Include="Config\" />
-    <PackageReference Include="Autofac" Version="5.1.2" />
     <PackageReference Include="MySql.Data" Version="8.0.19" />
-    <!--<PackageReference Include="Z.EntityFramework.Plus.EFCore" Version="2.0" />
-    <PackageReference Include="Z.EntityFramework.Plus.EF6" Version="1.12.3" />-->
-    <PackageReference Include="NHibernate" Version="5.2.6" />
-    <PackageReference Include="NHibernate.Mapping.Attributes" Version="5.1.0" />
+   <PackageReference Include="Utility" Version="1.0.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Utility\Utility.csproj" />
   </ItemGroup>
-
-  <Import Project="..\..\..\Shared\Utility.Nhibernate\Utility.Nhibernate.projitems" Label="Shared" />
-
-  <Import Project="..\..\..\Shared\Utility.Autofac\Utility.Autofac.projitems" Label="Shared" />
 
 </Project>

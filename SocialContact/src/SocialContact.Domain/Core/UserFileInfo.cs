@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using Utility;
 using System.Linq;
 using SocialContact.Domain.Interfaces;
+using Utility.Randoms;
+using Utility.Security.Extensions;
 
 namespace SocialContact.Domain.Core
 {
@@ -15,8 +14,8 @@ namespace SocialContact.Domain.Core
 
         //public virtual byte[] Base64 { get; set; }
         public virtual string Base64 { get; set; }
-        [Utility.Required(Message = "请输入描述")]
-        [Utility.Range(Min = 10, Max = 500, Message = "长度在 10 到 500 个字符描述")]
+        [Utility.Attributes.Required(Message = "请输入描述")]
+        [Utility.Attributes.Range(Min = 10, Max = 500, Message = "长度在 10 到 500 个字符描述")]
         public virtual string Description { get; set; } = "这个人很懒,什么也没留下!";
         
         public virtual FileCategoryInfo Category { get; set; }
@@ -41,8 +40,8 @@ namespace SocialContact.Domain.Core
                 Parent = this,
                 Admin=this.Admin,
                 User=this.User,
-                FileId = RandomUtils.Instance.OrderId.Sha1(),
-                Src=$"{ RandomUtils.Instance.OrderId.Sha1()}.{this.Src.Split('.').LastOrDefault()}",
+                FileId = RandomHelper.OrderId.Sha1(),
+                Src=$"{ RandomHelper.OrderId.Sha1()}.{this.Src.Split('.').LastOrDefault()}",
                 Type=this.Type,
                 Category=this.Category
             };

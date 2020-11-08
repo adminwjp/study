@@ -6,18 +6,11 @@
 
   <ItemGroup>
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="6.0.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="4.0.0" />
-    <PackageReference Include="Serilog.AspNetCore" Version="3.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.0.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0-rc4" />
-    <PackageReference Include="zipkin4net" Version="1.3.0" />
-    <PackageReference Include="zipkin4net.middleware.aspnetcore" Version="1.3.0" />
-    <PackageReference Include="Consul" Version="0.7.2.6" />
+    <!--<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />-->
+    <PackageReference Include="Utility.AspNet" Version="1.0.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Utility\Utility.csproj" />
     <ProjectReference Include="..\OA.Domain\OA.Domain.csproj" />
   </ItemGroup>
 
@@ -26,12 +19,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-
-  <Import Project="..\..\..\Shared\Utility.AspNetCore\Utility.AspNetCore.projitems" Label="Shared" />
-
-  <Import Project="..\..\..\Shared\Utility.AspNetCore.Consul\Utility.AspNetCore.Consul.projitems" Label="Shared" />
-
-  <Import Project="..\..\..\Shared\Utility.AspNetCore.Zipkin\Utility.AspNetCore.Zipkin.projitems" Label="Shared" />
 
 
 </Project>

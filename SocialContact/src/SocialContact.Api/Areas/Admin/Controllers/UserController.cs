@@ -5,13 +5,20 @@ using SocialContact.Domain.ViewModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Utility;
 using Microsoft.Extensions.Caching.Memory;
 using System.Collections.Generic;
 using System;
 using SocialContact.Api.Data;
 using SocialContact.Api.Models;
 using NHibernate.Criterion;
+using Utility.Response;
+using Utility.Enums;
+using Utility.Randoms;
+using Utility.Security.Extensions;
+using Utility.Base64;
+using Utility.Domain.Uow;
+using Utility.Redis;
+using Utility.ObjectMapping;
 
 namespace SocialContact.Api.Areas.Admin.Controllers
 {
@@ -19,13 +26,14 @@ namespace SocialContact.Api.Areas.Admin.Controllers
     [Route("admin/api/v1/[controller]")]
     [Produces("application/json")]
     [ApiController]
-    [ProducesResponseType(typeof(Utility.ResponseApi), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ResponseApi), StatusCodes.Status200OK)]
 
     public class UserController : SocialContact.Api.Controllers.BaseController<UserInfo, QueryUserFormViewModel, QueryUserInfoResultViewModel>
     {
         private readonly IUserFileService _userFileService;
-        public UserController(RedisCache redisCache, IUnitWork unitWork, IMemoryCache cache, IUserFileService userFileService, AuthrizeValidator authrize, ILogger<UserController> logger) : base(redisCache, unitWork, cache,authrize, logger)
+        public UserController(IRedisCache redisCache, IObjectMapper objectMapper, IUnitWork unitWork, IMemoryCache cache, IUserFileService userFileService, AuthrizeValidator authrize, ILogger<UserController> logger) : base(redisCache, unitWork, cache,authrize, logger)
         {
+            base.ObjectMapper = objectMapper;
             this._userFileService = userFileService;
             base.IsCustomValidator = true;
             base.PageName = "user";
@@ -34,7 +42,7 @@ namespace SocialContact.Api.Areas.Admin.Controllers
         {
             obj = this.AddMiddlewareExecute(obj);
             AddOrUpdataUserFile(obj,true);
-            obj.Id=(int)base.UnitWork.Add(obj);
+            obj.Id=(int)base.UnitWork.Insert(obj);
 			obj.HeadPic.User=obj;
             base.UnitWork.Update(obj.HeadPic);
 			obj.CardPhoto1.User=obj;
@@ -45,7 +53,7 @@ namespace SocialContact.Api.Areas.Admin.Controllers
             base.UnitWork.Update(obj.HandCardPhoto1);
 			obj.HandCardPhoto2.User=obj;
             base.UnitWork.Update(obj.HandCardPhoto2);
-            Utility.ResponseApi response = ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.AddSuccess);
+            ResponseApi response = ResponseApi.Create(GetLanguage(), Code.AddSuccess);
             return await Task.FromResult(response);
         }
         protected override async Task<ResponseApi> EditMiddlewareExecuted(UserInfo obj)
@@ -55,7 +63,7 @@ namespace SocialContact.Api.Areas.Admin.Controllers
             obj = this.UpdateOldObject(obj, ref oldObj);
             AddOrUpdataUserFile(obj, false);
             base.UnitWork.Update(obj);
-            Utility.ResponseApi response = ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.ModifySuccess);
+            ResponseApi response = ResponseApi.Create(GetLanguage(), Code.ModifySuccess);
             return await Task.FromResult(response);
         }
         protected override bool QueryFilterByOr(ref List<AbstractCriterion> criterias, QueryUserFormViewModel obj)
@@ -155,7 +163,7 @@ namespace SocialContact.Api.Areas.Admin.Controllers
         UserFileInfo Set(UserFileInfo fileInfo,UserInfo user=null,bool add=true)
         {
             fileInfo.User =add?null: user;
-            string str = base.RedisCache.HashGet("file", fileInfo.FileId) ;
+            string str = base.RedisCache.GetHashValue("file", fileInfo.FileId) ;
             if (add)
             {
                 str = str ?? throw new Exception("用户文件不存在");
@@ -168,7 +176,7 @@ namespace SocialContact.Api.Areas.Admin.Controllers
                 int index = str.IndexOf("_");
                 fileInfo.Src = str.Substring(0, index);
                 fileInfo.Type = str.Substring(index + 1);
-                fileInfo.Base64 = Base64Utils.Base64String(System.IO.File.ReadAllBytes($"{AddressConfig.UploadImgDirectory}\\{fileInfo.Src}"));
+                fileInfo.Base64 = Base64Helper.Base64String(System.IO.File.ReadAllBytes($"{AddressConfig.UploadImgDirectory}\\{fileInfo.Src}"));
                 parent = base.UnitWork.FindSingle<UserFileInfo>(it => it.Base64 == fileInfo.Base64);
                 if (!add)
                 {
@@ -187,11 +195,11 @@ namespace SocialContact.Api.Areas.Admin.Controllers
             if (parent == null)
             {
                 parent = fileInfo;
-                parent.Id = (int)base.UnitWork.Add(parent);
+                parent.Id = (int)base.UnitWork.Insert(parent);
                 if (add)
                 {
                     pic = (UserFileInfo)parent.Clone();
-                    pic.Id = (int)base.UnitWork.Add(pic);
+                    pic.Id = (int)base.UnitWork.Insert(pic);
                 }
             }
             else
@@ -201,7 +209,7 @@ namespace SocialContact.Api.Areas.Admin.Controllers
                     pic = fileInfo;
                     pic.Parent = parent;
                     pic.Base64 = null;
-                    pic.Id = (int)base.UnitWork.Add(pic);
+                    pic.Id = (int)base.UnitWork.Insert(pic);
                 }
             }
             if (add)
@@ -220,8 +228,8 @@ namespace SocialContact.Api.Areas.Admin.Controllers
                     }
                 }
             }
-            pic.FileId = RandomUtils.Instance.OrderId.Sha1();
-            pic.Src = $"{RandomUtils.Instance.OrderId.Sha1()}.{pic.Parent.Src.Split('.').LastOrDefault()}";
+            pic.FileId = RandomHelper.OrderId.Sha1();
+            pic.Src = $"{RandomHelper.OrderId.Sha1()}.{pic.Parent.Src.Split('.').LastOrDefault()}";
             base.UnitWork.Update<UserFileInfo>(it => it.Id == pic.Id, it => new UserFileInfo()
             {
                 Parent = pic.Parent,

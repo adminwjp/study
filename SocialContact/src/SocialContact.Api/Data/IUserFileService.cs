@@ -5,8 +5,10 @@ using SocialContact.Api.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Utility;
+using Utility.Domain.Uow;
+using Utility.Json.Extensions;
+using Utility.Randoms;
+using Utility.Security.Extensions;
 
 namespace SocialContact.Api.Data
 {
@@ -121,7 +123,7 @@ namespace SocialContact.Api.Data
                 {
                     file.Base64 = null;
                     //修改文件时则更新 其他情况下 操作 不更新
-                    file.FileId =update? RandomUtils.Instance.OrderId.Sha1():(oldfile.Parent ?? oldfile).FileId;
+                    file.FileId =update? RandomHelper.OrderId.Sha1():(oldfile.Parent ?? oldfile).FileId;
                     file.Parent = oldfile.Parent ?? oldfile;
                     publish(file);
                     channge = update;
@@ -137,7 +139,7 @@ namespace SocialContact.Api.Data
         }
         int DML<T>(T obj) where T : class
         {
-            object result = this.UnitWork.Add(obj);
+            object result = this.UnitWork.Insert(obj);
             int num = (int)result;
             return num;
         }

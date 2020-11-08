@@ -11,9 +11,19 @@ namespace OA.Domain.Core
     [Class(Table = "reckoning_list_info", NameType = typeof(ReckoningListInfo), Lazy = false)]
     public class ReckoningListInfo:BaseEntity
     {
+        private RecordInfo _record;
+        private ReckoningNameInfo _reckoningName;
         [ManyToOne(Column ="record_id")]
-        public RecordInfo Record { get; set; }
+        public RecordInfo Record
+        {
+            get { return this._record; }
+            set { Set(ref _record, value, "Record"); }
+        }
         [ManyToOne(Column = "reckoning_name_id")]
-        public ReckoningNameInfo ReckoningName { get; set; }
+        public ReckoningNameInfo ReckoningName
+        {
+            get { return this._reckoningName; }
+            set { Set(ref _reckoningName, value, "ReckoningName"); }
+        }
     }
 }

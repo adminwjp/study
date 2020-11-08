@@ -7,6 +7,8 @@ using Company.Domain.Core;
 using Utility;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using Utility.Domain.Repositories;
+using Utility.Response;
 
 namespace Company.Api.Areas.Admin.Controllers
 {
@@ -25,11 +27,11 @@ namespace Company.Api.Areas.Admin.Controllers
             return base.Query(base.QueryFilter(null,obj))/*.Skip((page.Value - 1) * size.Value).Take(size.Value)*/.ToList();
         }
         [HttpGet("get")]
-        public virtual async Task<Utility.ResponseApi> Get()
+        public virtual async Task<ResponseApi> Get()
         {
-            Utility.ResponseApi ResponseApi = ResponseApiUtils.Success(GetLanguage());
+            ResponseApi ResponseApi = ResponseApi.CreateSuccess(GetLanguage());
             ResponseApi.Data = this.Query().ToList();
-            return await Task.FromResult<Utility.ResponseApi>(ResponseApi);
+            return await Task.FromResult<ResponseApi>(ResponseApi);
         }
     }
 }

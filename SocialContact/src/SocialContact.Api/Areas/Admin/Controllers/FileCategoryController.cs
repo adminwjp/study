@@ -13,6 +13,11 @@ using NHibernate.Transform;
 using SocialContact.Api.Data;
 using SocialContact.Api.Models;
 using System.Collections.Generic;
+using Utility.Response;
+using Utility.Redis;
+using Utility.Domain.Uow;
+using Utility.Enums;
+using Utility.ObjectMapping;
 
 namespace SocialContact.Api.Areas.Admin.Controllers
 {
@@ -20,12 +25,13 @@ namespace SocialContact.Api.Areas.Admin.Controllers
     [Route("admin/api/v1/[controller]")]
     [Produces("application/json")]
     [ApiController]
-    [ProducesResponseType(typeof(Utility.ResponseApi), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ResponseApi), StatusCodes.Status200OK)]
 
     public class FileCategoryController : SocialContact.Api.Controllers.BaseController<FileCategoryInfo, QueryFileCategoryFormViewModel, QueryFileCategoryInfoResultViewModel>
     {
-        public FileCategoryController(RedisCache redisCache, IUnitWork unitWork,IMemoryCache cache, AuthrizeValidator authrize, ILogger<FileCategoryController> logger) : base(redisCache, unitWork,cache, authrize, logger)
+        public FileCategoryController(IRedisCache redisCache, IObjectMapper objectMapper, IUnitWork unitWork,IMemoryCache cache, AuthrizeValidator authrize, ILogger<FileCategoryController> logger) : base(redisCache, unitWork,cache, authrize, logger)
         {
+            base.ObjectMapper = objectMapper;
             base.IsCustomValidator = true;
             base.PageName = "file_category";
         }
@@ -56,15 +62,15 @@ namespace SocialContact.Api.Areas.Admin.Controllers
                 var result = session.CreateCriteria<FileCategoryInfo>().SetProjection(new IProjection[] { Projections.Property("Id").As("Id"),
                     Projections.Property("Category").As("Category"),  Projections.Property("Accept").As("Accept") })
                     .SetResultTransformer(new AliasToBeanResultTransformer(typeof(FileCategoryEntry))).List<FileCategoryEntry>();
-                Utility.ResponseApi response = ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.QuerySuccess);
+                ResponseApi response = ResponseApi.Create(GetLanguage(), Code.QuerySuccess);
                 response.Data = result;
                 return await Task.FromResult(response);
             }
         }
         [HttpGet("getdata")]
-        public Utility.ResponseApi GetData()
+        public ResponseApi GetData()
         {
-            return Test ? new Utility.ResponseApi()
+            return Test ? new ResponseApi()
             {
                 Message = "≤È—Ø≥…π¶!",
                 Success = true,

@@ -1,10 +1,5 @@
-﻿using Company.Domain.Core;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Utility;
 
 namespace Company.Api.Data
 {

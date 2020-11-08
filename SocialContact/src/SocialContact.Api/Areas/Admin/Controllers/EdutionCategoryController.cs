@@ -12,6 +12,10 @@ using NHibernate.Criterion;
 using NHibernate.Transform;
 using SocialContact.Api.Models;
 using System;
+using Utility.Domain.Uow;
+using Utility.Redis;
+using Utility.Response;
+using Utility.ObjectMapping;
 
 namespace SocialContact.Api.Areas.Admin.Controllers
 {
@@ -19,12 +23,13 @@ namespace SocialContact.Api.Areas.Admin.Controllers
     [Route("admin/api/v1/[controller]")]
     [Produces("application/json")]
     [ApiController]
-    [ProducesResponseType(typeof(Utility.ResponseApi), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ResponseApi), StatusCodes.Status200OK)]
 
     public class EdutionCategoryController : SocialContact.Api.Controllers.BaseController<EdutionCategoryInfo, QueryEdutionCategoryFormViewModel, QueryEdutionCategoryInfoResultViewModel>
     {
-        public EdutionCategoryController(RedisCache redisCache, IUnitWork unitWork,IMemoryCache cache, AuthrizeValidator authrize, ILogger<EdutionCategoryController> logger) : base(redisCache, unitWork,cache, authrize, logger)
+        public EdutionCategoryController(IRedisCache redisCache, IObjectMapper objectMapper, IUnitWork unitWork,IMemoryCache cache, AuthrizeValidator authrize, ILogger<EdutionCategoryController> logger) : base(redisCache, unitWork,cache, authrize, logger)
         {
+            base.ObjectMapper = objectMapper;
             base.IsCustomValidator = true;
             base.PageName = "edution_category";
         }

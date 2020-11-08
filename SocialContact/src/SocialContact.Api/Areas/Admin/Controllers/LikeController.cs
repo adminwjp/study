@@ -12,6 +12,10 @@ using System.Collections.Generic;
 using NHibernate.Criterion;
 using NHibernate.Linq;
 using System;
+using Utility.Domain.Uow;
+using Utility.Redis;
+using Utility.Response;
+using Utility.ObjectMapping;
 
 namespace SocialContact.Api.Areas.Admin.Controllers
 {
@@ -19,12 +23,13 @@ namespace SocialContact.Api.Areas.Admin.Controllers
     [Route("admin/api/v1/[controller]")]
     [Produces("application/json")]
     [ApiController]
-    [ProducesResponseType(typeof(Utility.ResponseApi), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ResponseApi), StatusCodes.Status200OK)]
 
     public class LikeController : SocialContact.Api.Controllers.BaseController<LikeInfo, QueryLikeFormViewModel, QueryLikeInfoResultViewModel>
     {
-        public LikeController(RedisCache redisCache, IUnitWork unitWork, IMemoryCache cache, AuthrizeValidator authrize, ILogger<LikeController> logger) : base(redisCache, unitWork,cache, authrize, logger)
+        public LikeController(IRedisCache redisCache, IObjectMapper objectMapper, IUnitWork unitWork, IMemoryCache cache, AuthrizeValidator authrize, ILogger<LikeController> logger) : base(redisCache, unitWork,cache, authrize, logger)
         {
+            base.ObjectMapper = objectMapper;
             base.IsCustomValidator = true;
             base.PageName = "like";
         }

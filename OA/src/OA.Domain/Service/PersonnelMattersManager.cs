@@ -2,7 +2,7 @@
 using OA.Domain.Core;
 using System;
 using System.Linq.Expressions;
-using Utility;
+using Utility.Domain.Uow;
 
 namespace Repository.Service
 {
@@ -19,12 +19,12 @@ namespace Repository.Service
         #region  档案管理
         public bool InsertPerson(PersonInfo personInfo)
         {
-            _unitWork.Add(personInfo);
+            _unitWork.Insert(personInfo);
             return true;
         }
         public bool InsertRecord(RecordInfo  recordInfo)
         {
-            _unitWork.Add(recordInfo);
+            _unitWork.Insert(recordInfo);
             return true;
         }
         public bool ModifyPerson(Expression<Func<PersonInfo, bool>> where, Expression<Func<PersonInfo, PersonInfo>> update)

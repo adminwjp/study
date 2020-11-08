@@ -6,22 +6,28 @@ using SocialContact.Domain.Core;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using StackExchange.Redis;
 using SocialContact.Domain.ViewModel;
-using Utility;
 using SocialContact.Api.Data;
 using Microsoft.Extensions.Caching.Memory;
 using SocialContact.Api.Models;
-using Microsoft.Extensions.Caching.Distributed;
 using NHibernate.Criterion;
 using System.Security.Cryptography;
 using System.Text;
 using System.Net.Http;
 using Microsoft.Extensions.Configuration;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using System.Security.Claims;
 using System.Xml.Serialization;
+using Utility.Domain.Uow;
+using Utility.Redis;
+using Utility.Response;
+using Utility.Json.Extensions;
+using Utility.Security.Extensions;
+using Utility.Enums;
+using Utility.Validate;
+using Utility.Randoms;
+using Utility.Base64;
+using Utility.Hex;
+using Utility.Security;
+using Utility.ObjectMapping;
 
 namespace SocialContact.Api.Areas.Admin.Controllers
 {
@@ -29,16 +35,17 @@ namespace SocialContact.Api.Areas.Admin.Controllers
     [Route("admin/api/v1/[controller]")]
     [Produces("application/json")]
     [ApiController]
-    [ProducesResponseType(typeof(Utility.ResponseApi), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Utility.Response.ResponseApi), StatusCodes.Status200OK)]
     public class AdminController : SocialContact.Api.Controllers.BaseController<AdminInfo, QueryAdminFormViewModel, QueryAdminInfoResultViewModel>
     {
         private readonly Core _core;
         private readonly IUserFileService _userFileService;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly string _fileAddress;
-        public AdminController(RedisCache redisCache, IUnitWork unitWork, IMemoryCache cache, Core core, IUserFileService userFileService,
+        public AdminController(IRedisCache redisCache,IObjectMapper objectMapper, IUnitWork unitWork, IMemoryCache cache, Core core, IUserFileService userFileService,
             AuthrizeValidator authrize, IHttpClientFactory httpClientFactory, IConfiguration configuration, ILogger<AdminController> Logger) : base(redisCache, unitWork, configuration,cache, authrize, Logger)
         {
+            base.ObjectMapper = objectMapper;
             this._core = core;
             this._userFileService = userFileService;
             this._httpClientFactory = httpClientFactory;
@@ -48,7 +55,7 @@ namespace SocialContact.Api.Areas.Admin.Controllers
         }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         [HttpPost("login")]
-        public async Task<Utility.ResponseApi> Login(string returnUrl, [FromForm]/*[FromBody]*/ LoginViewModel login)
+        public async Task<ResponseApi> Login(string returnUrl, [FromForm]/*[FromBody]*/ LoginViewModel login)
         {
 			if (Request.ContentType.Contains("application/json"))
             {	
@@ -66,14 +73,14 @@ namespace SocialContact.Api.Areas.Admin.Controllers
                 login = serializer.Deserialize(reader) as LoginViewModel;
             }
             //base.ActionParam(HttpContext.Request,ref login);//无效 作用域可能 绑定模型失败
-            var error = ArgumentsUtils.CheckError(typeof(LoginViewModel), login);
+            var error = ValidateHelper.ValidateError(typeof(LoginViewModel), login);
             if (error != null) return await Task.FromResult(error);
             login.Password = login.Password.Sha1();
             var admin = UnitWork.FindSingle<AdminInfo>(it => (it.Account == login.Account || it.Email == login.Account || it.Phone == login.Account)
              && it.Password == login.Password);
             if (admin == null)
             {
-                Utility.ResponseApi response = ResponseApiUtils.GetResponse(GetLanguage(),Utility.Code.LoginFail,false);
+                ResponseApi response = ResponseApi.Create(GetLanguage(),Code.LoginFail,false);
                 return await Task.FromResult(response);
             }
             else
@@ -81,7 +88,7 @@ namespace SocialContact.Api.Areas.Admin.Controllers
                 Logger.LogInformation("登录成功!");
                 var date = DateTime.Now;
                 var token = $"{admin.Account}{admin.Password}{date.ToString("yyyyMMddHHmmssfff")}".Sha1();
-                string key = $"{admin.Account}_{RandomUtils.Instance.OrderId}".AesEncrypt(Core.AesKey, Core.AesIv);
+                string key = $"{admin.Account}_{RandomHelper.OrderId}".AesEncrypt(Core.AesKey, Core.AesIv);
                 string ip = HttpContext.Connection.RemoteIpAddress.ToString();
                 admin.LoginIp = ip;
                 admin.LoginIps = admin.LoginIps ?? new HashSet<string>(50);
@@ -90,11 +97,11 @@ namespace SocialContact.Api.Areas.Admin.Controllers
                 admin.LoginDate = date;
                 admin.ExpressIn = 24 * 60 * 60;
                 UnitWork.Update(admin);
-                var value = RedisCache.HashGet("accounts", admin.Account);
+                var value = RedisCache.GetHashValue("accounts", admin.Account);
                 if (!string.IsNullOrEmpty(value))
                 {
                     Logger.LogInformation($"该账户{admin.Account}登录成功,之前token信息缓存过,目前移除之前token信息!");
-                    if (RedisCache.Remove(value))
+                    if (RedisCache.RemoveHash("accounts", admin.Account))
                     {
                         Logger.LogWarning($"该账户{admin.Account}之前已登录过,缓存未过期,移除成功,移除token为：{value}");
                     }
@@ -110,17 +117,17 @@ namespace SocialContact.Api.Areas.Admin.Controllers
                 string tokenJson = admin.ToJson();
                 //var cache = HttpContext.RequestServices.GetService<IDistributedCache>();
                 //cache.SetString(token, tokenJson, new DistributedCacheEntryOptions() { AbsoluteExpiration = DateTimeOffset.Now.AddHours(24) });
-                if (base.RedisCache.AddString(token, tokenJson, date.AddHours(24).TimeOfDay, When.NotExists))
+                if (base.RedisCache.AddString(token, tokenJson, date.AddHours(24)))
                 {
                     base.Logger.LogInformation($"该账户{admin.Account}登录成功,token {token}缓存成功,token信息为：{tokenJson}");
                 }
                 else
                 {
                     base.Logger.LogWarning($"该账户{admin.Account}登录成功,token {token}缓存失败,token信息为：{tokenJson}");
-                    Utility.ResponseApi response = ResponseApiUtils.Error(GetLanguage());
+                    ResponseApi response = ResponseApi.CreateError(GetLanguage());
                     return await Task.FromResult(response);
                 }
-                if (base.RedisCache.HashSet("accounts", new HashEntry[] { new HashEntry(admin.Account, token) }))
+                if (base.RedisCache.AddHash("accounts", admin.Account, token))
                 {
                     base.Logger.LogInformation($"该账户{admin.Account}登录成功,缓存token {token}成功,用于移除未过期的token信息");
                     //var data = base.Cache.Get<AdminInfo>(admin.Token);
@@ -135,7 +142,7 @@ namespace SocialContact.Api.Areas.Admin.Controllers
                     HttpContext.Response.Cookies.Append("token", token, new CookieOptions() { SameSite = SameSiteMode.Lax, IsEssential = true });
                     HttpContext.Response.Cookies.Append("userid", admin.Account.AesEncrypt(Core.AesKey, Core.AesIv), new CookieOptions() { SameSite = SameSiteMode.Lax, IsEssential = true });
                     HttpContext.Response.Cookies.Append("k", key.AesEncrypt(Core.AesKey, Core.AesIv), new CookieOptions() { SameSite = SameSiteMode.Lax,IsEssential=true });
-                    Utility.ResponseApi response = ResponseApiUtils.GetResponse(GetLanguage(),Utility.Code.LoginSuccess);
+                    ResponseApi response = ResponseApi.Create(GetLanguage(),Code.LoginSuccess);
                     response.Data = new { Token = token, ExpressIn = 24 * 3600 };
                     // var claims = new List<Claim>
                     // {
@@ -148,17 +155,17 @@ namespace SocialContact.Api.Areas.Admin.Controllers
                 else
                 {
                     Logger.LogWarning($"该账户{admin.Account}登录成功,缓存token {token}失败");
-                    Utility.ResponseApi response = ResponseApiUtils.Error(GetLanguage());
+                    ResponseApi response = ResponseApi.CreateError(GetLanguage());
                     return await Task.FromResult(response);
                 }
             }
         }
 
         [HttpPost("logout")]
-        public async Task<Utility.ResponseApi> Logout()
+        public async Task<ResponseApi> Logout()
         {
             AdminInfo admin = GetAdminInfo();
-            if (base.RedisCache.Remove(admin.Token))
+            if (base.RedisCache.RemoveKey(admin.Token))
             {
                 base.Logger.LogInformation($"该账户{admin.Account}退出成功,删除token {admin.Token}成功");
                 // return await Task.FromResult(new Utility.Response() { Message = "退出成功!", Code = (int)Code.退出成功 });
@@ -166,26 +173,26 @@ namespace SocialContact.Api.Areas.Admin.Controllers
             else
             {
                 base.Logger.LogWarning($"该账户{admin.Account}登录退出失败,删除token {admin.Token}失败");
-                Utility.ResponseApi response = ResponseApiUtils.Error(GetLanguage());
+                ResponseApi response = ResponseApi.CreateError(GetLanguage());
                 return await Task.FromResult(response);
             }
-            if (RedisCache.HashDelete("accounts", admin.Account))
+            if (RedisCache.RemoveHash("accounts", admin.Account))
             {
                 base.Logger.LogInformation($"该账户{admin.Account}退出成功,该账户{admin.Account}缓存删除成功,token {admin.Token}");
-                Utility.ResponseApi response = ResponseApiUtils.GetResponse(GetLanguage(),Utility.Code.LogoutSuccess);
+                ResponseApi response = ResponseApi.Create(GetLanguage(),Code.LogoutSuccess);
                 return await Task.FromResult(response);
             }
             else
             {
                 base.Logger.LogWarning($"登录退出失败,该账户{admin.Account}缓存删除失败,token {admin.Token}");
-                Utility.ResponseApi response = ResponseApiUtils.Error(GetLanguage());
+                ResponseApi response = ResponseApi.CreateError(GetLanguage());
                 return await Task.FromResult(response);
             }
         }
         [HttpGet("reqsk")]
-        public async Task<Utility.ResponseApi> Reqsk(string version,string cr,string callback)
+        public async Task<ResponseApi> Reqsk(string version,string cr,string callback)
         {
-            return await Task.FromResult<Utility.ResponseApi>(null );
+            return await Task.FromResult<ResponseApi>(null );
         }
         protected override async Task<ResponseApi> AddMiddlewareExecuted(AdminInfo obj)
         {
@@ -198,29 +205,29 @@ namespace SocialContact.Api.Areas.Admin.Controllers
                 fileInfo.FileId = obj.HeadPic.FileId;
                 adminHeadPic = base.UnitWork.FindSingle<UserFileInfo>(it => it.FileId == fileInfo.FileId&&it.Type=="head_pic");
                 if(adminHeadPic==null)
-                    return await Task.FromResult(ResponseApiUtils.GetResponse(GetLanguage(),Utility.Code.UploadFileFail));
-                adminHeadPic.FileId = RandomUtils.Instance.OrderId.Sha1();
-                adminHeadPic.Src = $"{RandomUtils.Instance.OrderId.Sha1()}.{adminHeadPic.Src.Split('.').LastOrDefault()}";
+                    return await Task.FromResult(ResponseApi.Create(GetLanguage(),Code.UploadFileFail));
+                adminHeadPic.FileId = RandomHelper.OrderId.Sha1();
+                adminHeadPic.Src = $"{RandomHelper.OrderId.Sha1()}.{adminHeadPic.Src.Split('.').LastOrDefault()}";
             }
             else
             {
                 var parent = base.UnitWork.FindSingle<UserFileInfo>(it => it.Base64 == fileInfo.Base64);
                 if (parent == null)
                 {
-                    fileInfo.Id = (int)base.UnitWork.Add(fileInfo);
-                    System.IO.File.WriteAllBytes($"{AddressConfig.UploadImgDirectory}\\{ fileInfo.Src}", Base64Utils.FromBase64String(fileInfo.Base64));
+                    fileInfo.Id = (int)base.UnitWork.Insert(fileInfo);
+                    System.IO.File.WriteAllBytes($"{AddressConfig.UploadImgDirectory}\\{ fileInfo.Src}", Base64Helper.FromBase64String(fileInfo.Base64));
                     parent = fileInfo;
                 }
                 adminHeadPic = (UserFileInfo)parent.Clone();
-                adminHeadPic.Id = (int)base.UnitWork.Add(adminHeadPic);
+                adminHeadPic.Id = (int)base.UnitWork.Insert(adminHeadPic);
             }
             obj = this.AddMiddlewareExecute(obj);
             var userFileEntry = this._userFileService.ToUserFileEntry(adminHeadPic);
             this._userFileService.Publish(userFileEntry);
             obj.HeadPic = adminHeadPic;
-            this.UnitWork.Add(obj);
+            this.UnitWork.Insert(obj);
             this.UnitWork.Update<UserFileInfo>(it => it.Id == adminHeadPic.Id, it => new UserFileInfo() { Admin = obj,Type="head_pic" ,FileId=adminHeadPic.FileId,Src=adminHeadPic.Src});
-            Utility.ResponseApi response = ResponseApiUtils.GetResponse(GetLanguage(),Utility.Code.AddSuccess);
+            ResponseApi response = ResponseApi.Create(GetLanguage(),Code.AddSuccess);
             return await Task.FromResult(response);
         }
         protected override AdminInfo EditMiddlewareExecute(AdminInfo obj)
@@ -248,40 +255,40 @@ namespace SocialContact.Api.Areas.Admin.Controllers
                 adminHeadPic = base.UnitWork.FindSingle<SocialContact.Domain.Core.UserFileInfo>(it => it.Admin.Id == obj.Id && it.FileId == fileInfo.FileId && it.Type == "head_pic");
                 if (Request.Form.Files.Count == 0 && adminHeadPic == null)
                 {
-                    return await Task.FromResult(ResponseApiUtils.GetResponse(GetLanguage(),Utility.Code.UploadFileFail));
+                    return await Task.FromResult(ResponseApi.Create(GetLanguage(),Code.UploadFileFail));
                 }
-                adminHeadPic.FileId = RandomUtils.Instance.OrderId.Sha1();
-                adminHeadPic.Src = $"{RandomUtils.Instance.OrderId.Sha1()}.{adminHeadPic.Parent.Src.Split('.').LastOrDefault()}";
+                adminHeadPic.FileId = RandomHelper.OrderId.Sha1();
+                adminHeadPic.Src = $"{RandomHelper.OrderId.Sha1()}.{adminHeadPic.Parent.Src.Split('.').LastOrDefault()}";
             }
             else
             {
                 adminHeadPic = base.UnitWork.FindSingle<SocialContact.Domain.Core.UserFileInfo>(it => it.Admin.Id == obj.Id && it.Type == "head_pic");
                 if (adminHeadPic == null)
                 {
-                    return await Task.FromResult(ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.UploadFileFail));
+                    return await Task.FromResult(ResponseApi.Create(GetLanguage(), Code.UploadFileFail));
                 }
                 if (adminHeadPic.Parent.Base64 != fileInfo.Base64)
                 {
                     var temp= base.UnitWork.FindSingle<SocialContact.Domain.Core.UserFileInfo>(it => it.Base64==fileInfo.Base64);
                     if(temp==null)
                     {
-                        adminHeadPic.Parent.Id = (int)base.UnitWork.Add(fileInfo);
-                        System.IO.File.WriteAllBytes($"{AddressConfig.UploadImgDirectory}\\{ fileInfo.Src}", Base64Utils.FromBase64String(fileInfo.Base64));
+                        adminHeadPic.Parent.Id = (int)base.UnitWork.Insert(fileInfo);
+                        System.IO.File.WriteAllBytes($"{AddressConfig.UploadImgDirectory}\\{ fileInfo.Src}", Base64Helper.FromBase64String(fileInfo.Base64));
                     }
                     else
                     {
                         adminHeadPic.Parent = temp;
                     }
                 }
-                adminHeadPic.FileId = RandomUtils.Instance.OrderId.Sha1();
-                adminHeadPic.Src = $"{RandomUtils.Instance.OrderId.Sha1()}.{adminHeadPic.Parent.Src.Split('.').LastOrDefault()}";
+                adminHeadPic.FileId = RandomHelper.OrderId.Sha1();
+                adminHeadPic.Src = $"{RandomHelper.OrderId.Sha1()}.{adminHeadPic.Parent.Src.Split('.').LastOrDefault()}";
                 base.UnitWork.Update<UserFileInfo>(it => it.Id == adminHeadPic.Id, it => new UserFileInfo() { Parent = adminHeadPic.Parent, FileId= adminHeadPic.FileId,Src= adminHeadPic.Src,UpdateDate=DateTime.Now });
             }
             obj.HeadPic = adminHeadPic;
             var userFileEntry = this._userFileService.ToUserFileEntry(adminHeadPic);
             this._userFileService.Publish(userFileEntry);
             base.UnitWork.Update(obj);
-            Utility.ResponseApi response = ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.ModifySuccess);
+            ResponseApi response = ResponseApi.Create(GetLanguage(), Code.ModifySuccess);
             return await Task.FromResult(response);
         }
         protected override AdminInfo AddMiddlewareExecute(AdminInfo obj)
@@ -337,9 +344,9 @@ namespace SocialContact.Api.Areas.Admin.Controllers
         }
         [HttpGet("role_required")]
 
-        public async Task<Utility.ResponseApi> RoleRequired()
+        public async Task<ResponseApi> RoleRequired()
         {
-            Utility.ResponseApi response = ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.QuerySuccess);
+            ResponseApi response = ResponseApi.Create(GetLanguage(), Code.QuerySuccess);
             response.Data = base.Test ? false : true;
             return await Task.FromResult(response);
         }
@@ -425,19 +432,19 @@ namespace SocialContact.Api.Areas.Admin.Controllers
         [HttpGet("base64")]
         public IActionResult HexToBase64(string key)
         {
-            return new JsonResult(new { key=Base64Utils.Base64String(HexUtils.ToByte(key)) });
+            return new JsonResult(new { key=Base64Helper.Base64String(HexHelper.ToByte(key)) });
         }
         [HttpGet("string")]
         public IActionResult HexToString(string key)
         {
-            return new JsonResult(new { key = Encoding.UTF8.GetString(HexUtils.ToByte(key)) });
+            return new JsonResult(new { key = Encoding.UTF8.GetString(HexHelper.ToByte(key)) });
         }
         [HttpGet("rsaencrypt")]
         public IActionResult RsaEncrypt(string hexKey,string val,string sign)
         {
             string publicXml = "<RSAKeyValue><Modulus>{0}</Modulus><Exponent>AQAB</Exponent></RSAKeyValue>";
-            publicXml = string.Format(publicXml, Base64Utils.Base64String(HexUtils.ToByte(hexKey)));
-            var res = SecurityUtils.RsaEncrypt(128,val,publicXml,sign);
+            publicXml = string.Format(publicXml, Base64Helper.Base64String(HexHelper.ToByte(hexKey)));
+            var res = SecurityHelper.RsaEncrypt(128,val,publicXml,sign);
             //var res = SecurityUtils.RsaEncryptToByte(val, RsaSecurity.RSAPublicKeyJava2DotNet(HexUtils.ToByte(hexKey)));
             return new JsonResult(new { en = res });
         }

@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Utility;
+using Utility.Response;
+using Utility.Domain.Repositories;
 
 namespace OA.Api.User
 {
@@ -25,13 +27,13 @@ namespace OA.Api.User
         protected override ResponseApi Edited(UserInfo obj)
         {
             this.Repository.Update(it => it.Id == obj.Id, it => new UserInfo() { UpdateDate = DateTime.Now, Role = obj.Role, Password = obj.Password });
-            return ResponseApiUtils.Success();
+            return ResponseApi.CreateSuccess();
         }
         [HttpGet("category")]
         public ResponseApi Category()
         {
             var data = base.Repository.Find(null).Select(it => new { it.Id, it.Account }).ToList();
-            return ResponseApiUtils.Success().SetData(data);
+            return ResponseApi.CreateSuccess().SetData(data);
         }
     }
 }

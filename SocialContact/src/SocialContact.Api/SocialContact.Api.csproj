@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <IsTestAssetProject>true</IsTestAssetProject>
     <!--<UserSecretsId>dff531fb-6b60-4392-93da-3f2373e401e4</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>-->
@@ -111,18 +111,15 @@
     <!--<PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />-->
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.9.10" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.0.0" />
+    <!--<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.0.0" />-->
     <PackageReference Include="MySql.Data" Version="8.0.18" />
-    <PackageReference Include="StackExchange.Redis" Version="2.0.601" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="4.0.0" />
-    <PackageReference Include="Serilog.AspNetCore" Version="3.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.0.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0-rc4" />
+    <!--<PackageReference Include="StackExchange.Redis" Version="2.0.601" />-->
     <!--<PackageReference Include="StackExchange.Redis" Version="2.0.601" />
     <PackageReference Include="Elasticsearch.Net" Version="7.4.0" />
     <PackageReference Include="AutoMapper" Version="9.0.0" />
   -->
-    <PackageReference Include="NHibernate" Version="5.2.6" />
+    <!--<PackageReference Include="NHibernate" Version="5.2.6" />-->
+     <!--<PackageReference Include="Utility.AspNet" Version="1.0.0.0" />-->
   </ItemGroup>
 
   <ItemGroup>
@@ -150,6 +147,8 @@
 
   <ItemGroup>
     <!--<ProjectReference Include="..\..\..\..\git\nhibernate-core\src\NHibernate\NHibernate.csproj" />-->
+    <!--<ProjectReference Include="..\..\..\Utility.AspNet.Core\Utility.AspNet.Core.csproj" />-->
+    <ProjectReference Include="..\..\..\..\csharp\src\Utility\Utility.AspNet\Utility.AspNet.csproj" />
     <ProjectReference Include="..\SocialContact.Domain\SocialContact.Domain.csproj" />
   </ItemGroup>
 
@@ -164,9 +163,7 @@
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 
-  <Import Project="..\..\..\Shared\Utility.Nhibernate\Utility.Nhibernate.projitems" Label="Shared" />
-
-  <Import Project="..\..\..\Shared\Utility.AspNetCore\Utility.AspNetCore.projitems" Label="Shared" />
+  <!--<Import Project="..\..\..\Shared\Utility.Nhibernate\Utility.Nhibernate.projitems" Label="Shared" />-->
 
   <!--<Import Project="..\..\..\Shared\Utility.Nhibernate\Utility.Nhibernate.projitems" Label="Shared" />-->
 

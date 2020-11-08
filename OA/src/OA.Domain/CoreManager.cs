@@ -4,8 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Utility;
+using Utility.Domain.Repositories;
+using Utility.Ioc;
 using Utility.Nhibernate;
 using Utility.Nhibernate.Infrastructure;
+using Utility.Nhibernate.Repositories;
 
 namespace OA.Domain
 {
@@ -15,11 +18,13 @@ namespace OA.Domain
         {
             if (!aspnetcore)
             {
-                AutofacUtils.Builder.RegisterType<Microsoft.Extensions.Logging.LoggerFactory>().As<Microsoft.Extensions.Logging.ILoggerFactory>().SingleInstance();
+                AutofacIocManager.Instance.Builder.RegisterType<Microsoft.Extensions.Logging.LoggerFactory>().As<Microsoft.Extensions.Logging.ILoggerFactory>().SingleInstance();
             }
-            AutofacUtils.Builder.RegisterType<AppSessionFactory>().SingleInstance();
-            AutofacUtils.Builder.Register<NHibernate.IStatelessSession>(it=>it.Resolve<AppSessionFactory>().OpenSession()).InstancePerLifetimeScope();
-            AutofacUtils.Builder.RegisterGeneric(typeof(NhibernateRepository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
+            AutofacIocManager.Instance.Builder.Register<AppSessionFactory>(it=> new AppSessionFactory(config=> {
+                OA.Domain.NhibernateManger.Initial(config, it.Resolve<Microsoft.Extensions.Logging.LoggerFactory>());
+            })).SingleInstance();
+            AutofacIocManager.Instance.Builder.Register<NHibernate.IStatelessSession>(it=>it.Resolve<AppSessionFactory>().OpenStatelessSession()).InstancePerLifetimeScope();
+            AutofacIocManager.Instance.Builder.RegisterGeneric(typeof(BaseNhibernateRepository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
         }
        
         //public void InitModule()

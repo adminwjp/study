@@ -9,6 +9,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Utility;
+using Utility.Domain.Repositories;
+using Utility.Response;
+using Utility.Enums;
+using Utility.IO;
 
 namespace OA.Api.Authority
 {
@@ -42,25 +46,25 @@ namespace OA.Api.Authority
             }
             //if (!ModelState.IsValid)
             //{
-            //    return ResponseApiUtils.Fail();
+            //    return ResponseApi.Fail();
             //}
             if (Request.Form.Files.Count != 1)
             {
-                return ResponseApiUtils.GetResponse( Language.Chinese,Code.UploadFileFail);
+                return ResponseApi.Create( Language.Chinese,Code.UploadFileFail);
             }
             var file = Request.Form.Files[0];
             if (file.Name.ToLower() != "photo")
             {
-                return ResponseApiUtils.GetResponse(Language.Chinese, Code.UploadFileFail);
+                return ResponseApi.Create(Language.Chinese, Code.UploadFileFail);
             }
             using Stream stream = file.OpenReadStream();
             byte[] buffer = new byte[stream.Length];
             stream.Read(buffer,0,buffer.Length);
-            FileUtils.WriteFile(Program.UploadImg + "\\" + file.FileName, buffer);
+            FileHelper.WriteFile(Program.UploadImg + "\\" + file.FileName, buffer);
             obj.Photo = "imgs\\" + file.FileName;
             obj.CreateDate = DateTime.Now;
-            this.Repository.Add(obj);
-            return ResponseApiUtils.Success();
+            this.Repository.Insert(obj);
+            return ResponseApi.CreateSuccess();
         }
         [HttpPost("edit")]
         public override ResponseApi Edit([FromForm] RecordInfo obj)
@@ -82,34 +86,34 @@ namespace OA.Api.Authority
             }
             if (Request.Form.Files.Count != 1)
             {
-                return ResponseApiUtils.GetResponse(Language.Chinese, Code.UploadFileFail);
+                return ResponseApi.Create(Language.Chinese, Code.UploadFileFail);
             }
             var file = Request.Form.Files[0];
             if (file.Name.ToLower() != "photo")
             {
-                return ResponseApiUtils.GetResponse(Language.Chinese, Code.UploadFileFail);
+                return ResponseApi.Create(Language.Chinese, Code.UploadFileFail);
             }
             using Stream stream = file.OpenReadStream();
             byte[] buffer = new byte[stream.Length];
             stream.Read(buffer, 0, buffer.Length);
-            FileUtils.WriteFile(Program.UploadImg + "\\" + file.FileName, buffer);
+            FileHelper.WriteFile(Program.UploadImg + "\\" + file.FileName, buffer);
             obj.Photo = "imgs\\" + file.FileName;
             obj.UpdateDate = DateTime.Now;
             this.Repository.Update(it=>it.Id==obj.Id,it=>obj);
-            return ResponseApiUtils.Success();
+            return ResponseApi.CreateSuccess();
         }
         [HttpGet("category")]
         public ResponseApi Category()
         {
             var data = base.Repository.Find(null).Select(it => new { it.Id, it.Name }).ToList();
-            return ResponseApiUtils.Success().SetData(data);
+            return ResponseApi.CreateSuccess().SetData(data);
         }
 		//批准人
 		[HttpGet("ratifier")]
         public ResponseApi Ratifier()
         {
             var data = base.Repository.Find(null).Select(it => new { it.Id, it.Name }).ToList();
-            return ResponseApiUtils.Success().SetData(data);
+            return ResponseApi.CreateSuccess().SetData(data);
         }
     }
 }

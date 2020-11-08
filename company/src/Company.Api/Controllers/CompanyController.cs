@@ -14,6 +14,9 @@ using System.IO;
 using Company.Api.Data;
 using System;
 using System.Xml.Serialization;
+using Utility.Domain.Repositories;
+using Utility.Response;
+using Utility.Enums;
 
 namespace Company.Api.Controllers
 {
@@ -32,7 +35,7 @@ namespace Company.Api.Controllers
         [HttpGet("get")]
         public IActionResult Get()
         {
-            var response = ResponseApiUtils.GetResponse(Language.Chinese, Code.QuerySuccess);
+            var response = ResponseApi.Create(Language.Chinese, Code.QuerySuccess);
             var data = this._repository.FindSingle(it => it.Enable.HasValue&&it.Enable.Value);
             response.Data = data;
             return new JsonResult(response);

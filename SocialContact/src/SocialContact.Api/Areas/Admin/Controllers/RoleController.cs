@@ -6,11 +6,15 @@ using SocialContact.Domain.ViewModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Utility;
 using Microsoft.Extensions.Caching.Memory;
 using NHibernate.Criterion;
 using SocialContact.Api.Models;
 using System;
+using Utility.Response;
+using Utility.Redis;
+using Utility.Domain.Uow;
+using Utility.Enums;
+using Utility.ObjectMapping;
 
 namespace SocialContact.Api.Areas.Admin.Controllers
 {
@@ -18,23 +22,24 @@ namespace SocialContact.Api.Areas.Admin.Controllers
     [Route("admin/api/v1/[controller]")]
     [Produces("application/json")]
     [ApiController]
-    [ProducesResponseType(typeof(Utility.ResponseApi), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ResponseApi), StatusCodes.Status200OK)]
 
     public class RoleController : SocialContact.Api.Controllers.BaseController<AdminRoleInfo,QueryRoleFormViewModel,QueryRoleInfoResultViewModel>
     {
-        public RoleController(RedisCache redisCache, IUnitWork unitWork, IMemoryCache cache, AuthrizeValidator authrize, ILogger<RoleController> logger):base(redisCache,unitWork,cache,authrize,logger)
+        public RoleController(IRedisCache redisCache,IObjectMapper objectMapper, IUnitWork unitWork, IMemoryCache cache, AuthrizeValidator authrize, ILogger<RoleController> logger):base(redisCache,unitWork,cache,authrize,logger)
         {
             base.IsCustomValidator = true;
+            base.ObjectMapper = objectMapper;
             base.PageName = "role";
         }
         [HttpGet("parent_category")]
 
-        public async Task<Utility.ResponseApi> QueryCategory()
+        public async Task<ResponseApi> QueryCategory()
         {
             List<AdminRoleInfo> roleInfos = UnitWork.Find<AdminRoleInfo>(it => it.Id == it.Parent.Id||!it.Id.HasValue).ToList();
             roleInfos = this.DataParseIfWhileReference(roleInfos);
-            List<RoleCategoryViewModel> roleCategories = AutoMapperUtils.MapTo<List<RoleCategoryViewModel>>(roleInfos);
-            Utility.ResponseApi response = ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.QuerySuccess);
+            List<RoleCategoryViewModel> roleCategories = ObjectMapper.Map<List<RoleCategoryViewModel>>(roleInfos);
+            ResponseApi response = ResponseApi.Create(GetLanguage(), Code.QuerySuccess);
             response.Data = roleCategories;
             return await Task.FromResult(response);
         }
@@ -55,9 +60,9 @@ namespace SocialContact.Api.Areas.Admin.Controllers
         }
         [HttpGet("required")]
 
-        public async Task<Utility.ResponseApi> Required()
+        public async Task<ResponseApi> Required()
         {
-            Utility.ResponseApi response = ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.QuerySuccess);
+            ResponseApi response = ResponseApi.Create(GetLanguage(), Code.QuerySuccess);
             response.Data  = base.Test ? false : base.AuthrizeValidator.RoleRequired(GetUserId());
             return await Task.FromResult(response);
         }

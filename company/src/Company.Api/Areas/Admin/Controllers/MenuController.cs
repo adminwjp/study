@@ -10,6 +10,9 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using Company.Domain;
 using Microsoft.Extensions.DependencyInjection;
+using Utility.Domain.Repositories;
+using Utility.Ef.Repositories;
+using Utility.Response;
 
 namespace Company.Api.Areas.Admin.Controllers
 {
@@ -30,11 +33,11 @@ namespace Company.Api.Areas.Admin.Controllers
                 if (obj.ParentId.HasValue&&obj.ParentId!=obj.Id)
                 {
                     obj.Category = null;
-                    obj.Parent =((Company.Domain.CompanyDbContext)base.Repository.DbContext).Menus.Find(new object[] { obj.ParentId});
+                    obj.Parent = (((BaseEfRepository<MenuInfo>)base.Repository).DbContext as Company.Domain.CompanyDbContext).Menus.Find(new object[] { obj.ParentId});
                 }
                 else
                 {
-                    obj.Category = ((Company.Domain.CompanyDbContext)base.Repository.DbContext).Categories.Find(new object[] { obj.Category.Id });
+                    obj.Category = (((BaseEfRepository<MenuInfo>)base.Repository).DbContext as Company.Domain.CompanyDbContext).Categories.Find(new object[] { obj.Category.Id });
                 }
             }
            
@@ -129,11 +132,11 @@ namespace Company.Api.Areas.Admin.Controllers
         }
 
         [HttpGet("get")]
-        public virtual async Task<Utility.ResponseApi> Get()
+        public virtual async Task<ResponseApi> Get()
         {
-            Utility.ResponseApi ResponseApi = ResponseApiUtils.Success(GetLanguage());
+            ResponseApi ResponseApi = ResponseApi.CreateSuccess(GetLanguage());
             ResponseApi.Data = this.Query().ToList();
-            return await Task.FromResult<Utility.ResponseApi>(ResponseApi);
+            return await Task.FromResult<ResponseApi>(ResponseApi);
         }
     }
 }

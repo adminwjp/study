@@ -14,6 +14,11 @@ using System.IO;
 using Company.Api.Data;
 using System;
 using System.Xml.Serialization;
+using Utility.Response;
+using Utility.Enums;
+using Utility.Randoms;
+using Utility.Ef.Repositories;
+using Utility.Domain.Repositories;
 
 namespace Company.Api.Areas.Admin.Controllers
 {
@@ -40,24 +45,22 @@ namespace Company.Api.Areas.Admin.Controllers
                     byte[] buffer = new byte[stream.Length];
                     stream.Read(buffer, 0, buffer.Length);
                     string suffix = file.FileName.Split('.').LastOrDefault();
-                    var name = $"{RandomUtils.Instance.Id}.{suffix}";
+                    var name = $"{RandomHelper.Id}.{suffix}";
                     System.IO.File.WriteAllBytes(Core.UploadDirectory + "\\" + Core.UploadBackgroundImage + "\\" + name, buffer);
                     obj.BackgroundImage = new ImageInfo()
                     {
-                        Name = RandomUtils.Instance.Id,
-                        Href = $"{RandomUtils.Instance.Id}.{suffix}",
+                        Name = RandomHelper.Id,
+                        Href = $"{RandomHelper.Id}.{suffix}",
                         Src = name,
                         Create = true,
                         Type = Core.Bg
                     };
-                    base.Repository.Save();
                 }
             }
             this.AddMiddleExecet(obj);
             obj.CreateDate = DateTime.Now;
-            base.Repository.Add(obj);
-            base.Repository.Save();
-            return await Task.FromResult(ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.AddSuccess));
+            base.Repository.Insert(obj);
+            return await Task.FromResult(ResponseApi.Create(GetLanguage(), Code.AddSuccess));
         }
         [HttpPost("edit")]
         public override async Task<ResponseApi> Edit([FromForm] CategoryInfo obj)
@@ -88,7 +91,7 @@ namespace Company.Api.Areas.Admin.Controllers
                     byte[] buffer = new byte[stream.Length];
                     stream.Read(buffer, 0, buffer.Length);
                     string suffix = file.FileName.Split('.').LastOrDefault();
-                    var name = $"{RandomUtils.Instance.Id}.{suffix}";
+                    var name = $"{RandomHelper.Id}.{suffix}";
                     System.IO.File.WriteAllBytes(Environment.CurrentDirectory + "\\" + Core.UploadBackgroundImage + "\\" + name, buffer);
                     var old = base.Repository.Find(it => it.Id == obj.Id).Include(it => it.BackgroundImage).FirstOrDefault();
                     if (obj.BackgroundImage == null || !obj.BackgroundImage.Id.HasValue)
@@ -99,24 +102,23 @@ namespace Company.Api.Areas.Admin.Controllers
                     if (obj.BackgroundImage != null)
                     {
                         System.IO.File.Delete(Environment.CurrentDirectory + "\\" + Core.UploadBackgroundImage + "\\" + obj.BackgroundImage.Src);
-                        obj.BackgroundImage.Name = RandomUtils.Instance.Id;
-                        obj.BackgroundImage.Href = $"{RandomUtils.Instance.Id}.{suffix}";
+                        obj.BackgroundImage.Name = RandomHelper.Id;
+                        obj.BackgroundImage.Href = $"{RandomHelper.Id}.{suffix}";
                         obj.BackgroundImage.Src = name;
-                        (base.Repository.DbContext as Company.Domain.CompanyDbContext).Images.Update(obj.BackgroundImage);
+                        (((BaseEfRepository<CategoryInfo>)base.Repository).DbContext as Company.Domain.CompanyDbContext).Images.Update(obj.BackgroundImage);
                     }
                     else
                     {
                         obj.BackgroundImage = new ImageInfo()
                         {
-                            Name = RandomUtils.Instance.Id,
-                            Href = $"{RandomUtils.Instance.Id}.{suffix}",
+                            Name = RandomHelper.Id,
+                            Href = $"{RandomHelper.Id}.{suffix}",
                             Src = name,
                             Type = Core.Bg,
                             Create = true
                         };
-                        (base.Repository.DbContext as Company.Domain.CompanyDbContext).Images.Add(obj.BackgroundImage);
+                        (((BaseEfRepository<CategoryInfo>)base.Repository).DbContext as Company.Domain.CompanyDbContext).Images.Add(obj.BackgroundImage);
                     }
-                    base.Repository.Save();
                 }
             }
             else
@@ -133,14 +135,13 @@ namespace Company.Api.Areas.Admin.Controllers
             
             obj.ModifyDate = DateTime.Now;
             base.Repository.Update(obj);
-            base.Repository.Save();
-            return await Task.FromResult(ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.ModifySuccess));
+            return await Task.FromResult(ResponseApi.Create(GetLanguage(), Code.ModifySuccess));
         }
         protected override void AddMiddleExecet(CategoryInfo obj)
         {
             if (obj.Category != null && obj.Category.Id.HasValue)
             {
-                obj.Category = (base.Repository.DbContext as Company.Domain.CompanyDbContext).BasicCategories.Find(new object[] { obj.Category.Id });
+                obj.Category = (((BaseEfRepository<CategoryInfo>)base.Repository).DbContext as Company.Domain.CompanyDbContext).BasicCategories.Find(new object[] { obj.Category.Id });
             }
             base.AddMiddleExecet(obj);
         }
@@ -169,52 +170,52 @@ namespace Company.Api.Areas.Admin.Controllers
             })/*.Skip((page.Value - 1) * size.Value).Take(size.Value)*/.ToList();
         }
         [HttpGet("service_category")]
-        public virtual async Task<Utility.ResponseApi> ServiceCategory()
+        public virtual async Task<ResponseApi> ServiceCategory()
         {
             return await this.GetCategory("service");
         }
         [HttpGet("skill_category")]
-        public virtual async Task<Utility.ResponseApi> SkillCategory()
+        public virtual async Task<ResponseApi> SkillCategory()
         {
             return await this.GetCategory("skill");
         }
         [HttpGet("testimonial_category")]
-        public virtual async Task<Utility.ResponseApi> TestimonialCategory()
+        public virtual async Task<ResponseApi> TestimonialCategory()
         {
             return await this.GetCategory("testimonials");
         }
         [HttpGet("theme_category")]
-        public virtual async Task<Utility.ResponseApi> ThemeCategory()
+        public virtual async Task<ResponseApi> ThemeCategory()
         {
             return await this.GetCategory("theme");
         }
-        private   async Task<Utility.ResponseApi> GetCategory(string name)
+        private   async Task<ResponseApi> GetCategory(string name)
         {
-            Utility.ResponseApi responseApi = ResponseApiUtils.Success(GetLanguage());
+            ResponseApi responseApi = ResponseApi.CreateSuccess(GetLanguage());
             string sql = $"select c.id Id,c.name Name,c.english_name  EnglishName from category_info c inner join basic_category_info b  on b.id=c.category_id and lower(b.english_name)='{name}' group by id";
-            var data = (base.Repository.DbContext as Company.Domain.CompanyDbContext).Database.GetDbConnection().Query(sql);
+            var data = (((BaseEfRepository<CategoryInfo>)base.Repository).DbContext as Company.Domain.CompanyDbContext).Database.GetDbConnection().Query(sql);
             responseApi.Data = data;
-            return await Task.FromResult<Utility.ResponseApi>(responseApi);
+            return await Task.FromResult<ResponseApi>(responseApi);
         }
         [HttpGet("brand_category")]
-        public virtual async Task<Utility.ResponseApi> BrandCategory()
+        public virtual async Task<ResponseApi> BrandCategory()
         {
             return await this.GetCategory("brand");
         }
         [HttpGet("work_category")]
-        public virtual async Task<Utility.ResponseApi> WorkCategory()
+        public virtual async Task<ResponseApi> WorkCategory()
         {
             return await this.GetCategory("work");
         }
         [HttpGet("team_category")]
-        public virtual async Task<Utility.ResponseApi> TeamCategory()
+        public virtual async Task<ResponseApi> TeamCategory()
         {
             return await this.GetCategory("team");
         }
         [HttpGet("menu_category")]
-        public virtual async Task<Utility.ResponseApi> MenuCategory()
+        public virtual async Task<ResponseApi> MenuCategory()
         {
-            Utility.ResponseApi responseApi = ResponseApiUtils.Success(GetLanguage());
+            ResponseApi responseApi = ResponseApi.CreateSuccess(GetLanguage());
             //var data = base.Repository.Find(null).Include(it => it.Menus).Select(it => new CategoryInfo()
             //{
             //    Id = it.Id,
@@ -235,7 +236,7 @@ namespace Company.Api.Areas.Admin.Controllers
             //    }
             //}
             //responseApi.Data = temp;
-            var context = (base.Repository.DbContext as Company.Domain.CompanyDbContext);
+            var context = (((BaseEfRepository<CategoryInfo>)base.Repository).DbContext as Company.Domain.CompanyDbContext);
             var data = context.Menus
                 .Join(context.Categories, it => it.Category.Id, it => it.Id, (it, it1) => new
                 {
@@ -261,15 +262,15 @@ namespace Company.Api.Areas.Admin.Controllers
                 it.Menus.Add(item.MenuInfo);
             }
             responseApi.Data = temp;
-            return await Task.FromResult<Utility.ResponseApi>(responseApi);
+            return await Task.FromResult<ResponseApi>(responseApi);
         }
         [HttpGet("menus")]
-        public virtual async Task<Utility.ResponseApi> Menu()
+        public virtual async Task<ResponseApi> Menu()
         {
-            Utility.ResponseApi responseApi = ResponseApiUtils.Success(GetLanguage());
+            ResponseApi responseApi = ResponseApi.CreateSuccess(GetLanguage());
             var data = GetDynamics();
             responseApi.Data = ParseData(data);
-            return await Task.FromResult<Utility.ResponseApi>(responseApi);
+            return await Task.FromResult<ResponseApi>(responseApi);
         }
         private IQueryable<dynamic> GetDynamics()
         {

@@ -12,6 +12,10 @@ using NHibernate.Criterion;
 using NHibernate.Transform;
 using SocialContact.Api.Models;
 using System;
+using Utility.Redis;
+using Utility.Domain.Uow;
+using Utility.Response;
+using Utility.ObjectMapping;
 
 namespace SocialContact.Api.Areas.Admin.Controllers
 {
@@ -19,12 +23,13 @@ namespace SocialContact.Api.Areas.Admin.Controllers
     [Route("admin/api/v1/[controller]")]
     [Produces("application/json")]
     [ApiController]
-    [ProducesResponseType(typeof(Utility.ResponseApi), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ResponseApi), StatusCodes.Status200OK)]
 
     public class UserStatusController : SocialContact.Api.Controllers.BaseController<UserStatusInfo, QueryUserStatusFormViewModel, QueryUserStatusInfoResultViewModel>
     {
-        public UserStatusController(RedisCache redisCache, IUnitWork unitWork, IMemoryCache cache, AuthrizeValidator authrize, ILogger<UserStatusController> logger) : base(redisCache, unitWork,cache, authrize, logger)
+        public UserStatusController(IRedisCache redisCache, IObjectMapper objectMapper, IUnitWork unitWork, IMemoryCache cache, AuthrizeValidator authrize, ILogger<UserStatusController> logger) : base(redisCache, unitWork,cache, authrize, logger)
         {
+            base.ObjectMapper = objectMapper;
             base.IsCustomValidator = true;
             base.PageName = "user_status";
         }

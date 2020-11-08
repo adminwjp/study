@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Utility;
+using Utility.Domain.Repositories;
+using Utility.Response;
 
 namespace OA.Api.Famous
 {
@@ -25,7 +27,7 @@ namespace OA.Api.Famous
         protected override ResponseApi Edited(FamousRaceInfo obj)
         {
             this.Repository.Update(it => it.Id == obj.Id, it => new FamousRaceInfo() { Name = obj.Name, UpdateDate = DateTime.Now });
-            return ResponseApiUtils.Success();
+            return ResponseApi.CreateSuccess();
         }
     }
 }

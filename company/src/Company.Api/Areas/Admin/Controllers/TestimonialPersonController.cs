@@ -11,6 +11,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Utility;
+using Utility.Domain.Repositories;
+using Utility.Ef.Repositories;
+using Utility.Enums;
+using Utility.Randoms;
+using Utility.Response;
 
 namespace Company.Api.Areas.Admin.Controllers
 {
@@ -33,18 +38,18 @@ namespace Company.Api.Areas.Admin.Controllers
                 var file = Request.Form.Files[0];
                 if (file.Name != "person_pic")
                 {
-                    return await Task.FromResult(ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.UploadFileFail));
+                    return await Task.FromResult(ResponseApi.Create(GetLanguage(), Code.UploadFileFail));
                 }
                 using Stream stream = file.OpenReadStream();
                 byte[] buffer = new byte[stream.Length];
                 stream.Read(buffer, 0, buffer.Length);
                 string suffix = file.FileName.Split('.').LastOrDefault();
-                var name = $"{RandomUtils.Instance.Id}.{suffix}";
+                var name = $"{RandomHelper.Id}.{suffix}";
                 System.IO.File.WriteAllBytes(Core.UploadDirectory + "\\" + Core.UploadTestimonial + "\\" + name, buffer);
                 obj.PersonPic = new ImageInfo()
                 {
-                    Name = RandomUtils.Instance.Id,
-                    Href = $"{RandomUtils.Instance.Id}.{suffix}",
+                    Name = RandomHelper.Id,
+                    Href = $"{RandomHelper.Id}.{suffix}",
                     Src = name,
                     Create = true,
                     Type = Core.Testimonial
@@ -52,14 +57,13 @@ namespace Company.Api.Areas.Admin.Controllers
             }
             else
             {
-                return await Task.FromResult(ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.UploadFileFail));
+                return await Task.FromResult(ResponseApi.Create(GetLanguage(), Code.UploadFileFail));
             }
             this.AddMiddleExecet(obj);
             // this.ActionParamParse(Request, ref obj);//作用域 不同 没用
             obj.CreateDate = DateTime.Now;
-            this.Repository.Add(obj);
-            this.Repository.Save();
-            return await Task.FromResult(ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.AddSuccess));
+            this.Repository.Insert(obj);
+            return await Task.FromResult(ResponseApi.Create(GetLanguage(), Code.AddSuccess));
         }
         [HttpPost("edit")]
         public override async Task<ResponseApi> Edit([FromForm] TestimonialPersonInfo obj)
@@ -86,13 +90,13 @@ namespace Company.Api.Areas.Admin.Controllers
                 var file = Request.Form.Files[0];
                 if (file.Name != "person_pic")
                 {
-                    return await Task.FromResult(ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.UploadFileFail));
+                    return await Task.FromResult(ResponseApi.Create(GetLanguage(), Code.UploadFileFail));
                 }
                 using Stream stream = file.OpenReadStream();
                 byte[] buffer = new byte[stream.Length];
                 stream.Read(buffer, 0, buffer.Length);
                 string suffix = file.FileName.Split('.').LastOrDefault();
-                var name = $"{RandomUtils.Instance.Id}.{suffix}";
+                var name = $"{RandomHelper.Id}.{suffix}";
                 System.IO.File.WriteAllBytes(Environment.CurrentDirectory + "\\" + Core.UploadTestimonial + "\\" + name, buffer);
                 var old = base.Repository.Find(it => it.Id == obj.Id).Include(it => it.PersonPic).FirstOrDefault();
                 if (obj.PersonPic == null || !obj.PersonPic.Id.HasValue)
@@ -103,24 +107,23 @@ namespace Company.Api.Areas.Admin.Controllers
                 if (obj.PersonPic != null)
                 {
                     System.IO.File.Delete(Environment.CurrentDirectory + "\\" + Core.UploadTestimonial + "\\" + obj.PersonPic.Src);
-                    obj.PersonPic.Name = RandomUtils.Instance.Id;
-                    obj.PersonPic.Href = $"{RandomUtils.Instance.Id}.{suffix}";
+                    obj.PersonPic.Name = RandomHelper.Id;
+                    obj.PersonPic.Href = $"{RandomHelper.Id}.{suffix}";
                     obj.PersonPic.Src = name;
-                    (base.Repository.DbContext as Company.Domain.CompanyDbContext).Images.Update(obj.PersonPic);
+                    (((BaseEfRepository<TestimonialPersonInfo>)base.Repository).DbContext as Company.Domain.CompanyDbContext).Images.Update(obj.PersonPic);
                 }
                 else
                 {
                     obj.PersonPic = new ImageInfo()
                     {
-                        Name = RandomUtils.Instance.Id,
-                        Href = $"{RandomUtils.Instance.Id}.{suffix}",
+                        Name = RandomHelper.Id,
+                        Href = $"{RandomHelper.Id}.{suffix}",
                         Src = name,
                         Type = Core.Testimonial,
                         Create = true
                     };
-                    (base.Repository.DbContext as Company.Domain.CompanyDbContext).Images.Add(obj.PersonPic);
+                    (((BaseEfRepository<TestimonialPersonInfo>)base.Repository).DbContext as Company.Domain.CompanyDbContext).Images.Add(obj.PersonPic);
                 }
-                this.Repository.Save();
             }
             else
             {
@@ -136,14 +139,13 @@ namespace Company.Api.Areas.Admin.Controllers
           
             obj.ModifyDate = DateTime.Now;
             this.Repository.Update(obj);
-            this.Repository.Save();
-            return await Task.FromResult(ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.ModifySuccess));
+            return await Task.FromResult(ResponseApi.Create(GetLanguage(), Code.ModifySuccess));
         }
         protected override void AddMiddleExecet(TestimonialPersonInfo obj)
         {
             if (obj.Category != null && obj.Category.Id.HasValue)
             {
-                obj.Category = ((Company.Domain.CompanyDbContext)base.Repository.DbContext).Categories.Find(new object[] { obj.Category.Id });
+                obj.Category = (((BaseEfRepository<TestimonialPersonInfo>)base.Repository).DbContext as Company.Domain.CompanyDbContext).Categories.Find(new object[] { obj.Category.Id });
             }
         }
         protected override void EditMiddleExecet(TestimonialPersonInfo obj)

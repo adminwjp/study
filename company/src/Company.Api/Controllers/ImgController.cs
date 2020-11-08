@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Utility;
+using Utility.Model;
+using Utility.Response;
 
 namespace Company.Api.Controllers
 {
@@ -33,7 +35,7 @@ namespace Company.Api.Controllers
         {
             throw new NotSupportedException();
         }
-        public override Task<ResponseApi> Query([FromBody, FromForm] ImageInfo obj, int? page, int? size)
+        public override  Task<ResponseApi<ResultModel<ImageInfo>>> Query([FromBody, FromForm] ImageInfo obj, int? page, int? size)
         {
             throw new NotSupportedException();
         }

@@ -7,6 +7,8 @@ using Company.Domain.Core;
 using Utility;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using Utility.Response;
+using Utility.Domain.Repositories;
 
 namespace Company.Api.Areas.Admin.Controllers
 {
@@ -25,9 +27,9 @@ namespace Company.Api.Areas.Admin.Controllers
             return base.Query(base.QueryFilter(null, obj))/*.Skip((page.Value - 1) * size.Value).Take(size.Value)*/.ToList();
         }
         [HttpGet("category")]
-        public virtual async Task<Utility.ResponseApi> Category()
+        public virtual async Task<ResponseApi> Category()
         {
-            Utility.ResponseApi responseApi = ResponseApiUtils.Success(GetLanguage());
+            ResponseApi responseApi = ResponseApi.CreateSuccess(GetLanguage());
             var data = base.Repository.Find(null).Select(it => new BasicCategoryInfo()
             {
                 Id = it.Id,
@@ -35,7 +37,7 @@ namespace Company.Api.Areas.Admin.Controllers
                 EnglishName = it.EnglishName
             });
             responseApi.Data = data;
-            return await Task.FromResult<Utility.ResponseApi>(responseApi);
+            return await Task.FromResult<ResponseApi>(responseApi);
         }
     }
 }

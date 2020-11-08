@@ -1,14 +1,15 @@
 ﻿using System;
 using SocialContact.Domain.Core;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using SocialContact.Api.Data;
 using SocialContact.Api.Exceptions;
-using Utility;
+using Utility.Enums;
+using Utility.Response;
+using Utility.Json.Extensions;
+using Utility.Redis;
 
 namespace SocialContact.Api.Filter
 {
@@ -29,7 +30,7 @@ namespace SocialContact.Api.Filter
                 | System.Reflection.BindingFlags.Default).Invoke(controllerBase, null);
             if (context.Exception is IdNotFoundException idNotFoundException)
             {
-                ResponseApi response = ResponseApiUtils.GetResponse(langeuage,Utility.Code.DeleteFail);
+                ResponseApi response = ResponseApi.Create(langeuage,Code.DeleteFail);
                 response.Message = idNotFoundException.Message;
                 context.Result = new ObjectResult(response);
                 context.ExceptionHandled = true;
@@ -37,7 +38,7 @@ namespace SocialContact.Api.Filter
             }
             if (context.Exception is AuthNotFoundException authNotFoundException)
             {
-                ResponseApi response = ResponseApiUtils.GetResponse(langeuage, Utility.Code.AuthFail);
+                ResponseApi response = ResponseApi.Create(langeuage, Code.AuthFail);
                 response.Message = authNotFoundException.Message;
                 context.Result = new ObjectResult(response);
                 context.ExceptionHandled = true;
@@ -45,7 +46,7 @@ namespace SocialContact.Api.Filter
             }
             if (context.Exception is CascadeException  cascadeException)
             {
-                ResponseApi response = ResponseApiUtils.GetResponse(langeuage, Utility.Code.CascadeDeleteFail);
+                ResponseApi response = ResponseApi.Create(langeuage, Code.CascadeDeleteFail);
                 response.Message = cascadeException.Message;
                 context.Result = new ObjectResult(response);
                 context.ExceptionHandled = true;
@@ -58,7 +59,7 @@ namespace SocialContact.Api.Filter
                 var logger = (ILogger)loggerField.GetValue(controllerBase);
                 var action = router["action"].ToString().ToLower();
                 logger.LogDebug($"controller {controller} action {action} 执行异常：{exception.Message} {exception.StackTrace} ");
-                ResponseApi response = ResponseApiUtils.GetResponse(langeuage, Utility.Code.Error);
+                ResponseApi response = ResponseApi.Create(langeuage, Code.Error);
                 response.Message = "系统繁忙!" + exception.Message + exception.StackTrace;
                 context.Result = new ObjectResult(response);
                 context.ExceptionHandled = true;
@@ -85,7 +86,7 @@ namespace SocialContact.Api.Filter
             var redisField = type.GetField("RedisCache", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.GetField
                 | System.Reflection.BindingFlags.Public
                 | System.Reflection.BindingFlags.Default | System.Reflection.BindingFlags.Instance);
-            var redisCache = (RedisCache)redisField.GetValue(controllerBase);
+            var redisCache = (IRedisCache)redisField.GetValue(controllerBase);
             //var unitWorkField = type.GetField("UnitWork", System.Reflection.BindingFlags.NonPublic
             // | System.Reflection.BindingFlags.Default | System.Reflection.BindingFlags.Instance);
             // var unitWork = (IUnitWork)unitWorkField.GetValue(controllerBase);
@@ -107,14 +108,14 @@ namespace SocialContact.Api.Filter
             }
             if (string.IsNullOrEmpty(token))
             {
-                ResponseApi response = ResponseApiUtils.GetResponse(langeuage,Utility.Code.TokenNotNull);
+                ResponseApi response = ResponseApi.Create(langeuage,Code.TokenNotNull);
                 context.Result = new JsonResult(response);
                 return;
             }
             //string key = ((ControllerBase)controllerBase).HttpContext.Request.Headers["key"];
             //if (string.IsNullOrEmpty(key))
             //{
-            //    ResponseApi response = ResponseApiUtils.GetResponse(langeuage, Utility.Code.AuthFail);
+            //    ResponseApi response = ResponseApi.Create(langeuage, Code.AuthFail);
             //    context.Result = new JsonResult(response);
             //    return;
             //}
@@ -126,14 +127,14 @@ namespace SocialContact.Api.Filter
                 var tokenStr = redisCache.GetString(token);
                 if (string.IsNullOrEmpty(tokenStr))
                 {
-                    ResponseApi response = ResponseApiUtils.GetResponse(langeuage, Utility.Code.AuthFail);
+                    ResponseApi response = ResponseApi.Create(langeuage, Code.AuthFail);
                     context.Result = new JsonResult(response);
                     return;
                 }
                 data = tokenStr.ToObject<AdminInfo>();
                 if (data.LoginDate.Value.AddHours(24) < DateTime.Now.AddMinutes(-5))
                 {
-                    ResponseApi response = ResponseApiUtils.GetResponse(langeuage, Utility.Code.TokenExpires);
+                    ResponseApi response = ResponseApi.Create(langeuage, Code.TokenExpires);
                     context.Result = new JsonResult(response);
                     return;
                 }

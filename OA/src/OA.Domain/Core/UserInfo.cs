@@ -10,13 +10,34 @@ namespace OA.Domain.Core
     [Class(Table = "user_info", NameType = typeof(UserInfo), Lazy = false)]
     public class UserInfo:BaseEntity, IValidatableObject
     {
+        private string _account;
+        private string _password;
+        private RoleInfo _role;
+        private  int? _roleId;
+
         [Property(Column = "account", NotNull = true, TypeType = typeof(string), Length = 20)]
-        public virtual string Account { get; set; }
+        public virtual string Account
+        {
+            get { return this._account; }
+            set { Set(ref _account, value, "Account"); }
+        }
         [Property(Column = "password", NotNull = true, TypeType = typeof(string), Length = 50)]
-        public virtual string Password { get; set; }
-        public virtual int? RoleId { get; set; }
+        public virtual string Password
+        {
+            get { return this._password; }
+            set { Set(ref _password, value, "Password"); }
+        }
+        public virtual int? RoleId
+        {
+            get { return this._roleId; }
+            set { Set(ref _roleId, value, "RoleId"); }
+        }
         [ManyToOne(Column = "role_id",ClassType =typeof(RoleInfo))]
-        public virtual RoleInfo Role { get; set; }
+        public virtual RoleInfo Role
+        {
+            get { return this._role; }
+            set { Set(ref _role, value, "Role"); }
+        }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

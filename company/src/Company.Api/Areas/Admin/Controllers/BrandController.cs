@@ -12,6 +12,11 @@ using Company.Domain;
 using System.IO;
 using Company.Api.Data;
 using System.Xml.Serialization;
+using Utility.Response;
+using Utility.Enums;
+using Utility.Randoms;
+using Utility.Ef.Repositories;
+using Utility.Domain.Repositories;
 
 namespace Company.Api.Areas.Admin.Controllers
 {
@@ -35,36 +40,34 @@ namespace Company.Api.Areas.Admin.Controllers
                 var file = Request.Form.Files[0];
                 if (file.Name != "logo")
                 {
-                    return await Task.FromResult(ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.UploadFileFail));
+                    return await Task.FromResult(ResponseApi.Create(GetLanguage(), Code.UploadFileFail));
                 }
                 using Stream stream = file.OpenReadStream();
                 byte[] buffer = new byte[stream.Length];
                 stream.Read(buffer, 0, buffer.Length);
                 string suffix = file.FileName.Split('.').LastOrDefault();
-                var name = $"{RandomUtils.Instance.Id}.{suffix}";
+                var name = $"{RandomHelper.Id}.{suffix}";
                 System.IO.File.WriteAllBytes(Core.UploadDirectory + "\\" + Core.UploadBrand + "\\" + name, buffer);
                 obj.Logo = new ImageInfo()
                 {
-                    Name = RandomUtils.Instance.Id,
-                    Href = $"{RandomUtils.Instance.Id}.{suffix}",
+                    Name = RandomHelper.Id,
+                    Href = $"{RandomHelper.Id}.{suffix}",
                     Src = name,
                     Create = true,
                     Type = Core.Brand
                 };
-                base.Repository.Save();
             }
             else
             {
                 if(string.IsNullOrWhiteSpace(obj.Feature))
                 {
-                    return await Task.FromResult(ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.UploadFileFail));
+                    return await Task.FromResult(ResponseApi.Create(GetLanguage(), Code.UploadFileFail));
                 }
             }
             this.AddMiddleExecet(obj);
             obj.CreateDate = DateTime.Now;
-            base.Repository.Add(obj);
-            base.Repository.Save();
-            return await Task.FromResult(ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.AddSuccess));
+            base.Repository.Insert(obj);
+            return await Task.FromResult(ResponseApi.Create(GetLanguage(), Code.AddSuccess));
         }
         [HttpPost("edit")]
         public override async Task<ResponseApi> Edit([FromForm] BrandInfo obj)
@@ -91,13 +94,13 @@ namespace Company.Api.Areas.Admin.Controllers
                 var file = Request.Form.Files[0];
                 if (file.Name != "logo")
                 {
-                    return await Task.FromResult(ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.UploadFileFail));
+                    return await Task.FromResult(ResponseApi.Create(GetLanguage(), Code.UploadFileFail));
                 }
                 using Stream stream = file.OpenReadStream();
                 byte[] buffer = new byte[stream.Length];
                 stream.Read(buffer, 0, buffer.Length);
                 string suffix = file.FileName.Split('.').LastOrDefault();
-                var name = $"{RandomUtils.Instance.Id}.{suffix}";
+                var name = $"{RandomHelper.Id}.{suffix}";
                 System.IO.File.WriteAllBytes(Environment.CurrentDirectory + "\\" + Core.UploadBrand + "\\" + name, buffer);
                 var old = base.Repository.Find(it => it.Id == obj.Id).Include(it => it.Logo).FirstOrDefault();
                 if (obj.Logo == null || !obj.Logo.Id.HasValue)
@@ -108,24 +111,23 @@ namespace Company.Api.Areas.Admin.Controllers
                 if (obj.Logo != null)
                 {
                     System.IO.File.Delete(Environment.CurrentDirectory + "\\" + Core.UploadBrand + "\\" + obj.Logo.Src);
-                    obj.Logo.Name = RandomUtils.Instance.Id;
-                    obj.Logo.Href = $"{RandomUtils.Instance.Id}.{suffix}";
+                    obj.Logo.Name = RandomHelper.Id;
+                    obj.Logo.Href = $"{RandomHelper.Id}.{suffix}";
                     obj.Logo.Src = name;
-                    (base.Repository.DbContext as Company.Domain.CompanyDbContext).Images.Update(obj.Logo);
+                    (((BaseEfRepository<AboutInfo>)base.Repository).DbContext as Company.Domain.CompanyDbContext).Images.Update(obj.Logo);
                 }
                 else
                 {
                     obj.Logo = new ImageInfo()
                     {
-                        Name = RandomUtils.Instance.Id,
-                        Href = $"{RandomUtils.Instance.Id}.{suffix}",
+                        Name = RandomHelper.Id,
+                        Href = $"{RandomHelper.Id}.{suffix}",
                         Src = name,
                         Type = Core.Brand,
                         Create = true
                     };
-                    (base.Repository.DbContext as Company.Domain.CompanyDbContext).Images.Add(obj.Logo);
+                    (((BaseEfRepository<AboutInfo>)base.Repository).DbContext as Company.Domain.CompanyDbContext).Images.Add(obj.Logo);
                 }
-                base.Repository.Save();
             }
             else
             {
@@ -141,14 +143,13 @@ namespace Company.Api.Areas.Admin.Controllers
           
             obj.ModifyDate = DateTime.Now;
             base.Repository.Update(obj);
-            base.Repository.Save();
-            return await Task.FromResult(ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.ModifySuccess));
+            return await Task.FromResult(ResponseApi.Create(GetLanguage(), Code.ModifySuccess));
         }
         protected override void AddMiddleExecet(BrandInfo obj)
         {
             if (obj.Category != null && obj.Category.Id.HasValue)
             {
-                obj.Category = ((Company.Domain.CompanyDbContext)base.Repository.DbContext).Categories.Find(new object[] { obj.Category.Id });
+                obj.Category = ((Company.Domain.CompanyDbContext)((BaseEfRepository<AboutInfo>)base.Repository).DbContext).Categories.Find(new object[] { obj.Category.Id });
             }
         }
         protected override void EditMiddleExecet(BrandInfo obj)

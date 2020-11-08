@@ -14,6 +14,11 @@ using SocialContact.Api.Exceptions;
 using NHibernate.Criterion;
 using NHibernate;
 using SocialContact.Api.Models;
+using Utility.Response;
+using Utility.Enums;
+using Utility.Domain.Uow;
+using Utility.Redis;
+using Utility.ObjectMapping;
 
 namespace SocialContact.Api.Areas.Admin.Controllers
 {
@@ -21,12 +26,13 @@ namespace SocialContact.Api.Areas.Admin.Controllers
     [Route("admin/api/v1/[controller]")]
     [Produces("application/json")]
     [ApiController]
-    [ProducesResponseType(typeof(Utility.ResponseApi), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ResponseApi), StatusCodes.Status200OK)]
 
     public class MenuController : SocialContact.Api.Controllers.BaseController<MenuInfo, QueryMenuFormViewModel, QueryMenuInfoResultViewModel>
     {
-        public MenuController(RedisCache redisCache, IUnitWork unitWork, IMemoryCache cache, AuthrizeValidator authrize, ILogger<MenuController> logger) : base(redisCache, unitWork,cache, authrize, logger)
+        public MenuController(IRedisCache redisCache,IObjectMapper objectMapper, IUnitWork unitWork, IMemoryCache cache, AuthrizeValidator authrize, ILogger<MenuController> logger) : base(redisCache, unitWork,cache, authrize, logger)
         {
+            base.ObjectMapper = objectMapper;
             base.IsCustomValidator = true;
             base.PageName = "menu";
         }
@@ -42,7 +48,7 @@ namespace SocialContact.Api.Areas.Admin.Controllers
                 {
                     OrderNo = it.OrderNo - 1
                 });
-                obj.OrderNo = UnitWork.GetCount<MenuInfo>(it=>it.Id==it.Parent.Id) + 1;
+                obj.OrderNo = UnitWork.Count<MenuInfo>(it=>it.Id==it.Parent.Id) + 1;
             }
             else
             {
@@ -50,12 +56,12 @@ namespace SocialContact.Api.Areas.Admin.Controllers
                 if (oldObj.Parent.Id != obj.Parent.Id)
                 {
                     MenuInfo parent = UnitWork.FindSingle<MenuInfo>(it => it.Id == obj.Parent.Id);
-                    int childCount = UnitWork.GetCount<MenuInfo>(it => it.Parent.Id == obj.Parent.Id);
+                    int childCount = UnitWork.Count<MenuInfo>(it => it.Parent.Id == obj.Parent.Id);
                     UnitWork.Find<MenuInfo>(it => it.OrderNo > oldObj.OrderNo).Update(it => new MenuInfo()
                     {
                         OrderNo = it.OrderNo + 1
                     });
-                    obj.OrderNo = UnitWork.GetCount<MenuInfo>(it => it.OrderNo < parent.OrderNo) + 1 + childCount + 1;
+                    obj.OrderNo = UnitWork.Count<MenuInfo>(it => it.OrderNo < parent.OrderNo) + 1 + childCount + 1;
                 }
             }
     
@@ -69,11 +75,11 @@ namespace SocialContact.Api.Areas.Admin.Controllers
             if (obj.Parent==null||(obj.Parent != null && !obj.Parent.Id.HasValue))
             {
                 obj.Parent = obj;
-                obj.OrderNo = UnitWork.GetCount<MenuInfo>(it=>it.Id==it.Parent.Id) + 1;
+                obj.OrderNo = UnitWork.Count<MenuInfo>(it=>it.Id==it.Parent.Id) + 1;
             }
             else
             {
-                obj.OrderNo = UnitWork.GetCount<MenuInfo>(it=>it.Parent.Id==it.Parent.Id) + 1;
+                obj.OrderNo = UnitWork.Count<MenuInfo>(it=>it.Parent.Id==it.Parent.Id) + 1;
             }
             if (obj.Icon != null && !obj.Icon.Id.HasValue) obj.Icon = null;
             return obj;
@@ -86,12 +92,12 @@ namespace SocialContact.Api.Areas.Admin.Controllers
         protected override void DeleteBefore(int id)
         {
             MenuInfo menu = UnitWork.FindSingle<MenuInfo>(it => it.Id == id);
-            if (menu==null) throw new IdNotFoundException(ResponseApiUtils.GetResponse(GetLanguage(),Utility.Code.IdNotFound,false).Message);
+            if (menu==null) throw new IdNotFoundException(ResponseApi.Create(GetLanguage(),Code.IdNotFound,false).Message);
             if (menu.Id == menu.Parent.Id)
             {
                 if (menu.Children.Count>1)
                 {
-                    throw new CascadeException(ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.CascadeDeleteFail, false).Message);
+                    throw new CascadeException(ResponseApi.Create(GetLanguage(), Code.CascadeDeleteFail, false).Message);
                 }
             }
             else
@@ -118,7 +124,7 @@ namespace SocialContact.Api.Areas.Admin.Controllers
                 {
                     if (item.Children.Any())
                     {
-                        throw new CascadeException(ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.CascadeDeleteFail, false).Message);
+                        throw new CascadeException(ResponseApi.Create(GetLanguage(), Code.CascadeDeleteFail, false).Message);
                     }
                 }
                 Func<MenuInfo, MenuInfo> func = (it) => {
@@ -160,14 +166,14 @@ namespace SocialContact.Api.Areas.Admin.Controllers
         }
         [HttpGet("category")]
 
-        public override async Task<Utility.ResponseApi> Category ()
+        public override async Task<ResponseApi> Category ()
         {
             //Microsoft.AspNetCore.JsonPatch.JsonPatchDocument<List<QueryMenuInfoResultViewModel>> jsonPatch = new Microsoft.AspNetCore.JsonPatch.JsonPatchDocument<List<QueryMenuInfoResultViewModel>>();
             List<MenuInfo> menus = UnitWork.Find<MenuInfo>(it=>it.Id==it.Parent.Id ||!it.Parent.Id.HasValue).OrderBy(it=>it.OrderNo).ToList();
             menus = DataParseIfWhileReference(menus);
-            List<MenuViewModel> viewModels = AutoMapperUtils.MapTo<List<MenuViewModel>>(menus);
+            List<MenuViewModel> viewModels = ObjectMapper.Map<List<MenuViewModel>>(menus);
             //jsonPatch.ApplyTo(iconViewModels);
-            Utility.ResponseApi response = ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.QuerySuccess);
+            ResponseApi response = ResponseApi.Create(GetLanguage(), Code.QuerySuccess);
             response.Data = viewModels;
             return await Task.FromResult(response);
         }
@@ -176,8 +182,8 @@ namespace SocialContact.Api.Areas.Admin.Controllers
         {
             List<MenuInfo> menuInfos = UnitWork.Find<MenuInfo>(null).Select(it=>new MenuInfo() { Id=it.Id,MenuName=it.MenuName,OrderNo=it.OrderNo,Icon=new IconInfo() { Style=it.Icon.Style} }).ToList();
             menuInfos = DataParseIfWhileReference(menuInfos);
-            List<MenuViewModel> viewModels = AutoMapperUtils.MapTo<List<MenuViewModel>>(menuInfos);
-            Utility.ResponseApi response = ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.QuerySuccess);
+            List<MenuViewModel> viewModels = ObjectMapper.Map<List<MenuViewModel>>(menuInfos);
+            ResponseApi response = ResponseApi.Create(GetLanguage(), Code.QuerySuccess);
             response.Data = viewModels;
             return await Task.FromResult(response);
         }

@@ -9,6 +9,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Company.Domain;
+using Utility.Domain.Repositories;
+using Utility.Response;
+using Utility.Enums;
 
 namespace Company.Api.Controllers
 {
@@ -28,7 +31,7 @@ namespace Company.Api.Controllers
         [HttpGet("get")]
         public IActionResult Get()
         {
-            var response = ResponseApiUtils.GetResponse(Language.Chinese, Code.QuerySuccess);
+            var response = ResponseApi.Create(Language.Chinese, Code.QuerySuccess);
             var data = this._repository.Find(it => it.Enable.HasValue&&it.Enable.Value).Include(it=>it.BackgroundImage).Include(it=>it.Image).Select(it=> (AboutInfo)it.Clone()).FirstOrDefault();
             response.Data = data;
             return new JsonResult(response);

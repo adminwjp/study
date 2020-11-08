@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Utility;
 using System.Xml.Serialization;
+using Utility.Domain.Repositories;
+using Utility.Response;
 
 namespace OA.Api.AccountItem
 {
@@ -24,13 +26,13 @@ namespace OA.Api.AccountItem
 		protected override ResponseApi Edited(AccountItemInfo obj)
 		{
 			base.Repository.Update(it => it.Id == obj.Id, it => new AccountItemInfo() { Name = obj.Name, Type = obj.Type, Utit = obj.Utit, UpdateDate = DateTime.Now });
-			return ResponseApiUtils.Success();
+			return ResponseApi.CreateSuccess();
 		}
 		[HttpGet("category")]
         public ResponseApi Category()
         {
             var data = base.Repository.Find(null).Select(it => new { it.Id, it.Name }).ToList();
-            return ResponseApiUtils.Success().SetData(data);
+            return ResponseApi.CreateSuccess().SetData(data);
         }
 	}
 }

@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Utility;
+using Utility.Domain.Repositories;
+using Utility.Response;
 
 namespace Company.Api.Areas.Admin.Controllers
 {
@@ -26,12 +28,12 @@ namespace Company.Api.Areas.Admin.Controllers
             return result;
         }
         [HttpGet("category")]
-        public virtual async Task<Utility.ResponseApi> Category()
+        public virtual async Task<ResponseApi> Category()
         {
-            Utility.ResponseApi responseApi = ResponseApiUtils.Success(GetLanguage());
+            ResponseApi responseApi = ResponseApi.CreateSuccess(GetLanguage());
             var data = base.Repository.Find(it=>it.Enable.HasValue&&it.Enable.Value).Select(it => new { Icon= it.Icon ,Id=it.Id});
             responseApi.Data = data;
-            return await Task.FromResult<Utility.ResponseApi>(responseApi);
+            return await Task.FromResult<ResponseApi>(responseApi);
         }
     }
 }

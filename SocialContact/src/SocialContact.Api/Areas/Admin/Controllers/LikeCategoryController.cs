@@ -5,12 +5,16 @@ using SocialContact.Domain.ViewModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Utility;
 using Microsoft.Extensions.Caching.Memory;
 using NHibernate.Criterion;
 using System.Collections.Generic;
 using SocialContact.Api.Models;
 using System;
+using Utility.Response;
+using Utility.Enums;
+using Utility.Redis;
+using Utility.ObjectMapping;
+using Utility.Domain.Uow;
 
 namespace SocialContact.Api.Areas.Admin.Controllers
 {
@@ -18,12 +22,13 @@ namespace SocialContact.Api.Areas.Admin.Controllers
     [Route("admin/api/v1/[controller]")]
     [Produces("application/json")]
     [ApiController]
-    [ProducesResponseType(typeof(Utility.ResponseApi), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ResponseApi), StatusCodes.Status200OK)]
 
     public class LikeCategoryController : SocialContact.Api.Controllers.BaseController<LikeCategoryInfo, QueryLikeCategoryFormViewModel, QueryLikeCategoryInfoResultViewModel>
     {
-        public LikeCategoryController(RedisCache redisCache, IUnitWork unitWork, IMemoryCache cache, AuthrizeValidator authrize, ILogger<LikeCategoryController> logger) : base(redisCache, unitWork,cache,authrize, logger)
+        public LikeCategoryController(IRedisCache redisCache,IObjectMapper objectMapper, IUnitWork unitWork, IMemoryCache cache, AuthrizeValidator authrize, ILogger<LikeCategoryController> logger) : base(redisCache, unitWork,cache,authrize, logger)
         {
+            base.ObjectMapper = objectMapper;
             base.IsCustomValidator = true;
             base.PageName = "like_category";
         }
@@ -61,12 +66,12 @@ namespace SocialContact.Api.Areas.Admin.Controllers
         }
         [HttpGet("parent_category")]
 
-        public async Task<Utility.ResponseApi> QueryCategory()
+        public async Task<ResponseApi> QueryCategory()
         {
             List<LikeCategoryInfo> likeCategoryInfos = UnitWork.Find<LikeCategoryInfo>(null).ToList();
             likeCategoryInfos = this.DataParseIfWhileReference(likeCategoryInfos);
-            List<CategoryViewModel> categoryViewModels = AutoMapperUtils.MapTo<List<CategoryViewModel>>(likeCategoryInfos);
-            Utility.ResponseApi response = ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.QuerySuccess);
+            List<CategoryViewModel> categoryViewModels = ObjectMapper.Map<List<CategoryViewModel>>(likeCategoryInfos);
+            ResponseApi response = ResponseApi.Create(GetLanguage(), Code.QuerySuccess);
             response.Data = categoryViewModels;
             return await Task.FromResult(response);
         }

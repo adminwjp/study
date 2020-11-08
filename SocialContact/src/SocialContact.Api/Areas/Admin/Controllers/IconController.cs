@@ -10,6 +10,11 @@ using System.Collections.Generic;
 using NHibernate.Criterion;
 using Utility;
 using SocialContact.Api.Models;
+using Utility.Enums;
+using Utility.Response;
+using Utility.Domain.Uow;
+using Utility.Redis;
+using Utility.ObjectMapping;
 
 namespace SocialContact.Api.Areas.Admin.Controllers
 {
@@ -17,12 +22,13 @@ namespace SocialContact.Api.Areas.Admin.Controllers
     [Route("admin/api/v1/[controller]")]
     [Produces("application/json")]
     [ApiController]
-    [ProducesResponseType(typeof(Utility.ResponseApi), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ResponseApi), StatusCodes.Status200OK)]
 
     public class IconController : SocialContact.Api.Controllers.BaseController<IconInfo, QueryIconFormViewModel, QueryIconInfoResultViewModel>
     {
-        public IconController(RedisCache redisCache, IUnitWork unitWork, IMemoryCache cache, AuthrizeValidator authrize, ILogger<IconController> logger) : base(redisCache, unitWork,cache, authrize, logger)
+        public IconController(IRedisCache redisCache, IObjectMapper objectMapper, IUnitWork unitWork, IMemoryCache cache, AuthrizeValidator authrize, ILogger<IconController> logger) : base(redisCache, unitWork,cache, authrize, logger)
         {
+            base.ObjectMapper = objectMapper;
             base.IsCustomValidator = true;
             base.PageName = "icon";
         }
@@ -54,7 +60,7 @@ namespace SocialContact.Api.Areas.Admin.Controllers
         public override async Task<ResponseApi> Category()
         {
             List<IconViewModel> iconViewModels = UnitWork.Find<IconInfo>(null).Select(it => new IconViewModel() { Id = it.Id.Value, Value = it.Style, Label = it.Name }).ToList();
-            Utility.ResponseApi response = ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.QuerySuccess);
+            ResponseApi response = ResponseApi.Create(GetLanguage(), Code.QuerySuccess);
             response.Data = iconViewModels;
             return await Task.FromResult(response);
         }

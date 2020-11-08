@@ -9,6 +9,13 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Utility;
+using Utility.Domain.Repositories;
+using Utility.Enums;
+using Utility.Extensions;
+using Utility.Json;
+using Utility.Model;
+using Utility.Page;
+using Utility.Response;
 
 namespace Company.Api.Areas.Admin.Controllers
 {
@@ -52,8 +59,8 @@ namespace Company.Api.Areas.Admin.Controllers
             this.AddMiddleExecet(obj);
             obj.CreateDate = DateTime.Now;
             // this.ActionParamParse(Request, ref obj);
-            this.Repository.Add(obj);
-            return await Task.FromResult(ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.AddSuccess));
+            this.Repository.Insert(obj);
+            return await Task.FromResult(ResponseApi.Create(GetLanguage(), Code.AddSuccess));
         }
         protected virtual void AddMiddleExecet(T obj)
         {
@@ -90,7 +97,7 @@ namespace Company.Api.Areas.Admin.Controllers
             obj.CreateDate = old.CreateDate;
             obj.ModifyDate = DateTime.Now;
             this.Repository.Update(obj);
-            return await Task.FromResult(ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.ModifySuccess));
+            return await Task.FromResult(ResponseApi.Create(GetLanguage(), Code.ModifySuccess));
         }
         [HttpGet("editstatus")]
         public virtual async Task<ResponseApi> Edit([FromQuery]BaseInfo baseInfo)
@@ -98,10 +105,9 @@ namespace Company.Api.Areas.Admin.Controllers
              if(baseInfo.Id.HasValue)
             {
                 this.Repository.Update(it => it.Id == baseInfo.Id, it => new T() { Enable = baseInfo.Enable });
-                this.Repository.Save();
-                return await Task.FromResult(ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.ModifySuccess));
+                return await Task.FromResult(ResponseApi.Create(GetLanguage(), Code.ModifySuccess));
             }
-            return await Task.FromResult(ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.Fail));
+            return await Task.FromResult(ResponseApi.Create(GetLanguage(), Code.Fail));
         }
         [HttpPost("editstatus")]
         public virtual async Task<ResponseApi> PostEdit([FromForm]BaseInfo baseInfo)
@@ -113,13 +119,11 @@ namespace Company.Api.Areas.Admin.Controllers
                 foreach (var item in baseInfo.Ids)
                 {
                     where = where.Or(it => it.Id == item);
-                    this.Repository.Save();
                 }
                 this.Repository.Update(where, it => new T() { Enable = baseInfo.Enable });
-                this.Repository.Save();
-                return await Task.FromResult(ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.ModifySuccess));
+                return await Task.FromResult(ResponseApi.Create(GetLanguage(), Code.ModifySuccess));
             }
-            return await Task.FromResult(ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.Fail));
+            return await Task.FromResult(ResponseApi.Create(GetLanguage(), Code.Fail));
         }
         [HttpGet("delete")]
         [HttpPost("delete")]
@@ -138,19 +142,19 @@ namespace Company.Api.Areas.Admin.Controllers
                         this.Repository.Delete(it => it.Id == item);
                     }
                 }
-                return await Task.FromResult(ResponseApiUtils.GetResponse(GetLanguage(),Utility.Code.DeleteSuccess));
+                return await Task.FromResult(ResponseApi.Create(GetLanguage(),Code.DeleteSuccess));
             }
             else
             {
-                Utility.ResponseApi ResponseApi = ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.ParamNotNull,false);
+                ResponseApi ResponseApi = ResponseApi.Create(GetLanguage(), Code.ParamNotNull,false);
                 ResponseApi.Message=$"id {ResponseApi.Data}";
                 return await Task.FromResult(ResponseApi);
             }
         }
         [HttpPost("query")]
-        public virtual async Task<ResponseApi> Query([FromForm,FromBody]T obj, int? page, int? size)
+        public virtual async Task<ResponseApi<ResultModel<T>>> Query([FromForm,FromBody]T obj, int? page, int? size)
         {
-            PageUtils.Set(ref page,ref size);
+            PageHelper.Set(ref page,ref size);
             if (Request.ContentType != null)
             {
                 if (Request.ContentType.Contains("application/json"))
@@ -170,7 +174,7 @@ namespace Company.Api.Areas.Admin.Controllers
             }
             
             // this.ActionParamParse(Request,ref obj);
-            Utility.ResponseApi<ResultModel<T>> responseApi = ResponseApiUtils.GetResponse<ResultModel<T>>(GetLanguage(),Utility.Code.QuerySuccess);
+            ResponseApi<ResultModel<T>> responseApi = ResponseApi<ResultModel<T>>.Create(GetLanguage(),Code.QuerySuccess);
             responseApi.Data = new ResultModel<T>();
             responseApi.Data.Data=QueryList(obj, page, size);
             responseApi.Data.Result = new PageModel() { Page = 1, Size = 10, Records = responseApi.Data.Data==null?0: responseApi.Data.Data.Count };
@@ -244,7 +248,7 @@ namespace Company.Api.Areas.Admin.Controllers
         /// <param name="str"></param>
         protected void Ref<M>(ref M obj, string str) where M : class
         {
-            obj = JsonUtils.Instance.ToObject<M>(str, JsonUtils.JsonSerializerSettings);
+            obj = JsonHelper.ToObject<M>(str, JsonHelper.JsonSerializerSettings);
         }
         protected virtual void ActionParamParse(HttpRequest request,ref T obj)
         {

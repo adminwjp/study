@@ -9,17 +9,21 @@ using System.Linq;
 using Utility;
 using Utility.Nhibernate;
 using Utility.Nhibernate.Infrastructure;
+using Utility.Redis;
+using Utility.Json.Extensions;
+using Utility.Json;
+using System.Text;
 
 namespace SocialContact.Api.Data
 {
     
     public class Core
     {
-        private readonly RedisCache _redisCache;
+        private readonly IRedisCache _redisCache;
         private readonly ILogger<Core> _logger;
         private readonly IMemoryCache _cache;
         private readonly AppSessionFactory _appSessionFactory;
-        public Core(RedisCache redisCache,  AppSessionFactory appSessionFactory, IMemoryCache cache, ILogger<Core> logger)
+        public Core(IRedisCache redisCache,  AppSessionFactory appSessionFactory, IMemoryCache cache, ILogger<Core> logger)
         {
             this._redisCache = redisCache;
             this._logger = logger;
@@ -28,7 +32,7 @@ namespace SocialContact.Api.Data
         }
         public void InitialMain()
         {
-            using var session = this._appSessionFactory.Session();
+            using var session = this._appSessionFactory.OpenSession();
             var categoryEntries = session.CreateCriteria<FileCategoryInfo>().SetProjection(new IProjection[] { Projections.Property("Id").As("Id"),
                 Projections.Property("Category").As("Category"),Projections.Property("Accept").As("Accept") })
                .SetResultTransformer(new AliasToBeanResultTransformer(typeof(FileCategoryEntry))).List<FileCategoryEntry>();
@@ -70,8 +74,9 @@ namespace SocialContact.Api.Data
         public void  SubscribeFileCategory() 
         {
             this._redisCache.Subscribe( Core.FileCategoryChannel, (it,msg)=> {
-                this._logger.LogInformation($"订阅渠道:{it},订阅文件分类信息:{msg}");
-                List<FileCategoryEntry> categoryEntries = JsonUtils.Instance.ToObject<List<FileCategoryEntry>>(msg);
+                string str = Encoding.UTF8.GetString(msg);
+                this._logger.LogInformation($"订阅渠道:{it},订阅文件分类信息:{str}");
+                List<FileCategoryEntry> categoryEntries = JsonHelper.ToObject<List<FileCategoryEntry>>(str);
                 this._cache.Set(Core.FileCategoryChannel, categoryEntries,new MemoryCacheEntryOptions() {  Priority= CacheItemPriority.NeverRemove});
             });
         }
@@ -79,19 +84,22 @@ namespace SocialContact.Api.Data
         public List<UserFileEntry> UserFileEntries=> this._cache.Get<List<UserFileEntry>>(Core.FileChannel) ?? new List<UserFileEntry>();
         public void PublishFileCategory(string msg)
         {
-            this._redisCache.Publish(Core.FileCategoryChannel, msg);
+            byte[] buffer = Encoding.UTF8.GetBytes(msg);
+            this._redisCache.Publish(Core.FileCategoryChannel, buffer);
         }
         public void SubscribeFile()
         {
             this._redisCache.Subscribe(Core.FileChannel, (it, msg) => {
-                this._logger.LogInformation($"订阅渠道:{it},订阅文件信息:{msg}");
-                List<UserFileEntry> userFileEntries = JsonUtils.Instance.ToObject<List<UserFileEntry>>(msg);
+                string str = Encoding.UTF8.GetString(msg);
+                this._logger.LogInformation($"订阅渠道:{it},订阅文件信息:{str}");
+                List<UserFileEntry> userFileEntries = JsonHelper.ToObject<List<UserFileEntry>>(str);
                 this._cache.Set(Core.FileChannel, userFileEntries, new MemoryCacheEntryOptions() { Priority = CacheItemPriority.NeverRemove });
             });
         }
         public void PublishFile(string msg)
         {
-            this._redisCache.Publish(Core.FileChannel, msg);
+            byte[] buffer = Encoding.UTF8.GetBytes(msg);
+            this._redisCache.Publish(Core.FileChannel, buffer);
         }
     }
 }

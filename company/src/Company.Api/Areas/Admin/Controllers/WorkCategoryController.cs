@@ -9,6 +9,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Company.Domain;
+using Utility.Domain.Repositories;
+using Utility.Ef.Repositories;
+using Utility.Response;
 
 namespace Company.Api.Areas.Admin.Controllers
 {
@@ -27,7 +30,7 @@ namespace Company.Api.Areas.Admin.Controllers
         {
             if (obj.WorkId.HasValue)
             {
-                obj.Work = (base.Repository.DbContext as Company.Domain.CompanyDbContext).Works.Find(new object[] { obj.WorkId });
+                obj.Work = (((BaseEfRepository<WorkCategoryInfo>)base.Repository).DbContext as Company.Domain.CompanyDbContext).Works.Find(new object[] { obj.WorkId });
             }
             else
             {
@@ -37,7 +40,7 @@ namespace Company.Api.Areas.Admin.Controllers
             if (obj.ParentId.HasValue&& obj.ParentId != obj.Id)
             {
                 
-                obj.Parent = (base.Repository.DbContext as Company.Domain.CompanyDbContext).WorkCategories.Find(new object[] { obj.ParentId });
+                obj.Parent = (((BaseEfRepository<WorkCategoryInfo>)base.Repository).DbContext as Company.Domain.CompanyDbContext).WorkCategories.Find(new object[] { obj.ParentId });
             }
             else
             {
@@ -77,7 +80,7 @@ namespace Company.Api.Areas.Admin.Controllers
                 Name = it.Name,
                 EnglishName = it.EnglishName
             });
-            var result = ResponseApiUtils.Success();
+            var result = ResponseApi.CreateSuccess();
             result.Data = data;
             return result;
         }

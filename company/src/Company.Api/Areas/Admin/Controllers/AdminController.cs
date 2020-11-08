@@ -11,6 +11,9 @@ using Microsoft.EntityFrameworkCore;
 using Company.Domain;
 using System.Text;
 using Dapper;
+using Utility.Ef.Repositories;
+using Utility.Domain.Repositories;
+using Utility.Response;
 
 namespace Company.Api.Areas.Admin.Controllers
 {
@@ -29,7 +32,7 @@ namespace Company.Api.Areas.Admin.Controllers
         {
             if (obj.Role != null && obj.Role.Id.HasValue)
             {
-                obj.Role = ((CompanyDbContext)base.Repository.DbContext).Roles.Find(new object[] { obj.Role.Id});
+                obj.Role = (((BaseEfRepository<AdminInfo>)base.Repository).DbContext as Company.Domain.CompanyDbContext).Roles.Find(new object[] { obj.Role.Id});
             }
         }
         protected override void EditMiddleExecet(AdminInfo obj)
@@ -44,7 +47,7 @@ namespace Company.Api.Areas.Admin.Controllers
         [HttpGet("total")]
         public  ResponseApi Total()
         {
-            ResponseApi response = ResponseApiUtils.Success();
+            ResponseApi response = ResponseApi.CreateSuccess();
             string sql = ToSql();
 			StringBuilder builder = new StringBuilder(500);
 
@@ -86,7 +89,7 @@ namespace Company.Api.Areas.Admin.Controllers
 				}
 			}
 			string totalSql = builder.ToString();
-		    var data=	(base.Repository.DbContext as Company.Domain.CompanyDbContext).Database.GetDbConnection().Query(totalSql);
+		    var data= (((BaseEfRepository<AdminInfo>)base.Repository).DbContext as Company.Domain.CompanyDbContext).Database.GetDbConnection().Query(totalSql);
 			response.Data = new { data,name=names};
 			return response;
 

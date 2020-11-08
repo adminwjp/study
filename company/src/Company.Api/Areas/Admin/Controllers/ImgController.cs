@@ -9,6 +9,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Utility;
+using Utility.Domain.Repositories;
+using Utility.Enums;
+using Utility.Randoms;
+using Utility.Response;
 
 namespace Company.Api.Areas.Admin.Controllers
 {
@@ -29,9 +33,9 @@ namespace Company.Api.Areas.Admin.Controllers
             {
                 var file = Request.Form.Files[0];
                 var suffix = file.Name.Split('.').LastOrDefault();
-                obj.Name = RandomUtils.Instance.Id;
-                obj.Src = $"{RandomUtils.Instance.Id}.{suffix}";
-                obj.Href = $"{RandomUtils.Instance.Id}.{suffix}";
+                obj.Name = RandomHelper.Id;
+                obj.Src = $"{RandomHelper.Id}.{suffix}";
+                obj.Href = $"{RandomHelper.Id}.{suffix}";
                 using Stream stream = file.OpenReadStream();
                 byte[] buffer = new byte[stream.Length];
                 stream.Read(buffer,0,buffer.Length);
@@ -39,7 +43,7 @@ namespace Company.Api.Areas.Admin.Controllers
             }
             else
             {
-                return await Task.FromResult(ResponseApiUtils.GetResponse(Language.Chinese, Code.UploadFileFail));
+                return await Task.FromResult(ResponseApi.Create(Language.Chinese, Code.UploadFileFail));
             }
             return await base.Add(obj);
         }
@@ -50,9 +54,9 @@ namespace Company.Api.Areas.Admin.Controllers
             {
                 var file = Request.Form.Files[0];
                 var suffix = file.Name.Split('.').LastOrDefault();
-                obj.Name = RandomUtils.Instance.Id;
-                obj.Src = $"{RandomUtils.Instance.Id}.{suffix}";
-                obj.Href = $"{RandomUtils.Instance.Id}.{suffix}";
+                obj.Name = RandomHelper.Id;
+                obj.Src = $"{RandomHelper.Id}.{suffix}";
+                obj.Href = $"{RandomHelper.Id}.{suffix}";
                 using Stream stream = file.OpenReadStream();
                 byte[] buffer = new byte[stream.Length];
                 stream.Read(buffer, 0, buffer.Length);
@@ -60,7 +64,7 @@ namespace Company.Api.Areas.Admin.Controllers
             }
             else
             {
-                return await Task.FromResult(ResponseApiUtils.GetResponse(Language.Chinese, Code.UploadFileFail));
+                return await Task.FromResult(ResponseApi.Create(Language.Chinese, Code.UploadFileFail));
             }
             return await base.Edit(obj);
         }

@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Utility;
+using Utility.Domain.Repositories;
+using Utility.Response;
 
 namespace OA.Api.Authority
 {
@@ -25,7 +27,7 @@ namespace OA.Api.Authority
             this.Repository.Update(it => it.Id == obj.Id, it => new PersonInfo() { UpdateDate = DateTime.Now, Address=obj.Address, ComputerGrate=obj.ComputerGrate, Email=obj.Email,
              GraduateDate=obj.GraduateDate, GraduateSchool=obj.GraduateSchool, Handset=obj.Handset, Likes=obj.Likes, OnesStrongSuit=obj.OnesStrongSuit, PartyMemberDate=obj.PartyMemberDate,
              Postlacode=obj.Postlacode, QQ=obj.QQ, SecondSchoolAge= obj.SecondSchoolAge, SecondSpeciaity=obj.SecondSpeciaity, Telphone= obj.Telphone, User=obj.User});
-            return ResponseApiUtils.Success();
+            return ResponseApi.CreateSuccess();
         }
     }
 }

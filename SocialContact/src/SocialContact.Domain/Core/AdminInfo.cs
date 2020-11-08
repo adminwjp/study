@@ -8,14 +8,14 @@ namespace SocialContact.Domain.Core
 {
     public class AdminInfo:Entry,ICasecade<AdminInfo>
     {
-        [Utility.Required(Message = "请输入账户")]
-        [Utility.Range(Min = 5, Max = 10, Message = "长度在 5 到 10 个字符账户")]
+        [Utility.Attributes.Required(Message = "请输入账户")]
+        [Utility.Attributes.Range(Min = 5, Max = 10, Message = "长度在 5 到 10 个字符账户")]
         public virtual string Account { get; set; }
-        [Utility.Required(Message = "请输入密码")]
-        [Utility.Range(Min = 6, Max = 20, Message = "长度在 6 到 20 个字符密码")]
+        [Utility.Attributes.Required(Message = "请输入密码")]
+        [Utility.Attributes.Range(Min = 6, Max = 20, Message = "长度在 6 到 20 个字符密码")]
         public virtual string Password { get; set; }
-        [Utility.Required(Message = "请输入昵称")]
-        [Utility.Range(Min = 2, Max = 10, Message = "长度在 2 到 10 个字符昵称")]
+        [Utility.Attributes.Required(Message = "请输入昵称")]
+        [Utility.Attributes.Range(Min = 2, Max = 10, Message = "长度在 2 到 10 个字符昵称")]
         [FromForm(Name ="nick_name")]
         public virtual string NickName { get; set; }
 
@@ -24,22 +24,22 @@ namespace SocialContact.Domain.Core
         public virtual DateTime? LoginDate { get; set; }
         public virtual string Token { get; set; }
         public virtual int ExpressIn { get; set; }
-        [Utility.Required(Message = "请输入姓名")]
-        [Utility.Range(Min = 2, Max = 10, Message = "长度在 2 到 10 个字符姓名")]
+        [Utility.Attributes.Required(Message = "请输入姓名")]
+        [Utility.Attributes.Range(Min = 2, Max = 10, Message = "长度在 2 到 10 个字符姓名")]
         [FromForm(Name = "real_name")]
         public virtual string RealName { get; set; }
-        [Utility.Required(Message = "请选择日期")]
+        [Utility.Attributes.Required(Message = "请选择日期")]
         public virtual DateTime? Birthday { get; set; }
-        [Utility.Required(Message = "请输入手机号")]
-        [Utility.Range(Min = 11, Max = 11, Message = "长度在 11 个数字手机号")]
+        [Utility.Attributes.Required(Message = "请输入手机号")]
+        [Utility.Attributes.Range(Min = 11, Max = 11, Message = "长度在 11 个数字手机号")]
         public virtual string Phone { get; set; }
-        [Utility.Required(Message = "请选择性别",Options =new string[] { "男","女"})]
+        [Utility.Attributes.Required(Message = "请选择性别",Options =new string[] { "男","女"})]
         public virtual string Sex { get; set; }
-        [Utility.Required(Message = "请输入邮箱")]
-        [Utility.Range(Min = 10, Max = 20, Message = "长度在 10 到 20 个字符邮箱")]
+        [Utility.Attributes.Required(Message = "请输入邮箱")]
+        [Utility.Attributes.Range(Min = 10, Max = 20, Message = "长度在 10 到 20 个字符邮箱")]
         public virtual string Email { get; set; }
-        [Utility.Required(Message = "请输入描述")]
-        [Utility.Range(Min = 10, Max = 500, Message = "长度在 10 到 500 个字符描述")]
+        [Utility.Attributes.Required(Message = "请输入描述")]
+        [Utility.Attributes.Range(Min = 10, Max = 500, Message = "长度在 10 到 500 个字符描述")]
         public virtual string Description { get; set; }
         public virtual string LoginIp { get; set; }
         [BindProperty(Name = "admin_pic")]

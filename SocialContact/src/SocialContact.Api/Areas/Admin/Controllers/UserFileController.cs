@@ -19,6 +19,14 @@ using SocialContact.Api.Data;
 using SocialContact.Api.Models;
 using StackExchange.Redis;
 using Utility;
+using Utility.Response;
+using Utility.Domain.Uow;
+using Utility.Redis;
+using Utility.Enums;
+using Utility.Base64;
+using Utility.Randoms;
+using Utility.Security.Extensions;
+using Utility.ObjectMapping;
 
 namespace SocialContact.Api.Areas.Admin.Controllers
 {
@@ -30,16 +38,17 @@ namespace SocialContact.Api.Areas.Admin.Controllers
     [Route("admin/api/v1")]
     [Produces("application/json")]
     [ApiController]
-    [ProducesResponseType(typeof(Utility.ResponseApi), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ResponseApi), StatusCodes.Status200OK)]
     public class UserFileController : SocialContact.Api.Controllers.BaseController<SocialContact.Domain.Core.UserFileInfo, QueryUserFileFormViewModel, QueryUserFileInfoResultViewModel>
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IUserFileService _userFileService;
         private readonly Core _core;
         private readonly string _fileAddress;
-        public UserFileController(RedisCache redisCache, IUnitWork unitWork, IConfiguration configuration, IMemoryCache cache, AuthrizeValidator authrize, 
+        public UserFileController(IRedisCache redisCache, IObjectMapper objectMapper, IUnitWork unitWork, IConfiguration configuration, IMemoryCache cache, AuthrizeValidator authrize, 
             Core core, IUserFileService userFileService, IHttpClientFactory httpClientFactory, ILogger<UserFileController> logger) :base(redisCache,unitWork, configuration, cache,authrize, logger)
         {
+            base.ObjectMapper = objectMapper;
             this._userFileService = userFileService;
             this._core = core;
             this._httpClientFactory = httpClientFactory;
@@ -48,7 +57,7 @@ namespace SocialContact.Api.Areas.Admin.Controllers
             base.PageName = "file";
         }
         [HttpPost("file/add")]
-        public override async Task<Utility.ResponseApi> Add([FromForm]SocialContact.Domain.Core.UserFileInfo obj)
+        public override async Task<ResponseApi> Add([FromForm]SocialContact.Domain.Core.UserFileInfo obj)
         {
             return await base.Add(obj);
   
@@ -58,15 +67,15 @@ namespace SocialContact.Api.Areas.Admin.Controllers
             base.GetBase64(obj);
             if (string.IsNullOrEmpty(obj.Base64))
             {
-                Utility.ResponseApi response1 = ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.UploadFileFail,false);
+                ResponseApi response1 = ResponseApi.Create(GetLanguage(), Code.UploadFileFail,false);
                 return await Task.FromResult(response1); 
             }
             obj = this.AddMiddlewareExecute(obj);
             var parent = base.UnitWork.FindSingle<UserFileInfo>(it => it.Base64 == obj.Base64);
             if (parent == null)
             {
-                obj.Id = (int)base.UnitWork.Add(obj);
-                System.IO.File.WriteAllBytes($"{AddressConfig.UploadImgDirectory}\\{ obj.Src}", /*obj.Base64*/Base64Utils.FromBase64String(obj.Base64));
+                obj.Id = (int)base.UnitWork.Insert(obj);
+                System.IO.File.WriteAllBytes($"{AddressConfig.UploadImgDirectory}\\{ obj.Src}", /*obj.Base64*/Base64Helper.FromBase64String(obj.Base64));
                 obj = (UserFileInfo)obj.Clone();
             }
             else
@@ -74,12 +83,12 @@ namespace SocialContact.Api.Areas.Admin.Controllers
                 obj.Parent = parent;
                 obj.Base64 = null;
             }
-            obj.FileId = RandomUtils.Instance.OrderId.Sha1();
-            obj.Src = $"{RandomUtils.Instance.OrderId.Sha1()}.{obj.Parent.Src.Split('.').LastOrDefault()}";
-            obj.Id = (int)base.UnitWork.Add(obj);
+            obj.FileId = RandomHelper.OrderId.Sha1();
+            obj.Src = $"{RandomHelper.OrderId.Sha1()}.{obj.Parent.Src.Split('.').LastOrDefault()}";
+            obj.Id = (int)base.UnitWork.Insert(obj);
             var userFileEntry = this._userFileService.ToUserFileEntry(obj);
             this._userFileService.Publish(userFileEntry);
-            Utility.ResponseApi response = ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.AddSuccess);
+            ResponseApi response = ResponseApi.Create(GetLanguage(), Code.AddSuccess);
             response.Data  = new { obj.Src, Id = obj.FileId };
             return await Task.FromResult(response);
         }
@@ -110,7 +119,7 @@ namespace SocialContact.Api.Areas.Admin.Controllers
                     
                     customErrors.Add("file", new List<string>() { "上传文件失败" });
                 }
-                return await Task<Utility.ResponseApi>.FromResult(customErrors.Count > 0 ? new ResponseApi() { Message = "参数错误", Code = (int)Utility.Code.参数错误, Data = new { Error = customErrors } } : null);
+                return await Task<ResponseApi>.FromResult(customErrors.Count > 0 ? new ResponseApi() { Message = "参数错误", Code = (int)Code.参数错误, Data = new { Error = customErrors } } : null);
             }
      
             return error;
@@ -131,11 +140,11 @@ namespace SocialContact.Api.Areas.Admin.Controllers
                 var oldObj= base.UnitWork.FindSingle<SocialContact.Domain.Core.UserFileInfo>(it => it.Id == obj.Id && it.FileId == obj.FileId);
                 if (oldObj == null)
                 {
-                    Utility.ResponseApi response1 = ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.UploadFileFail, false);
+                    ResponseApi response1 = ResponseApi.Create(GetLanguage(), Code.UploadFileFail, false);
                     return await Task.FromResult(response1);
                 }
-                oldObj.FileId = RandomUtils.Instance.OrderId.Sha1();
-                oldObj.Src = $"{RandomUtils.Instance.OrderId.Sha1()}.{oldObj.Src.Split('.').LastOrDefault()}";
+                oldObj.FileId = RandomHelper.OrderId.Sha1();
+                oldObj.Src = $"{RandomHelper.OrderId.Sha1()}.{oldObj.Src.Split('.').LastOrDefault()}";
                 obj.FileId = oldObj.FileId;
                 obj.Src = oldObj.Src;
                 obj.Parent = oldObj.Parent;
@@ -157,18 +166,18 @@ namespace SocialContact.Api.Areas.Admin.Controllers
                     parent = (UserFileInfo)obj.Clone();
                     parent.Parent = null;
                     parent.Base64 = obj.Base64;
-                    parent.Id = (int)base.UnitWork.Add(parent);
-                    System.IO.File.WriteAllBytes($"{AddressConfig.UploadImgDirectory}\\{ parent.Src}",Base64Utils.FromBase64String(parent.Base64));
+                    parent.Id = (int)base.UnitWork.Insert(parent);
+                    System.IO.File.WriteAllBytes($"{AddressConfig.UploadImgDirectory}\\{ parent.Src}",Base64Helper.FromBase64String(parent.Base64));
                 }
                 obj.Base64 = null;
                 obj.Parent = parent;
-                obj.FileId = RandomUtils.Instance.OrderId.Sha1();
-                obj.Src = $"{RandomUtils.Instance.OrderId.Sha1()}.{obj.Parent.Src.Split('.').LastOrDefault()}";
+                obj.FileId = RandomHelper.OrderId.Sha1();
+                obj.Src = $"{RandomHelper.OrderId.Sha1()}.{obj.Parent.Src.Split('.').LastOrDefault()}";
                 base.UnitWork.Update(obj);
             }
             var userFileEntry = this._userFileService.ToUserFileEntry(obj);
             this._userFileService.Publish(userFileEntry);
-            Utility.ResponseApi response = ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.ModifySuccess);
+            ResponseApi response = ResponseApi.Create(GetLanguage(), Code.ModifySuccess);
             response.Data = new { obj.Src, Id = obj.FileId };
             return await Task.FromResult(response);
         }
@@ -188,43 +197,43 @@ namespace SocialContact.Api.Areas.Admin.Controllers
             return obj;
         }
         [HttpPost("file/upload")]
-        public async Task<Utility.ResponseApi> Upload([FromForm] IFormCollection froms)
+        public async Task<ResponseApi> Upload([FromForm] IFormCollection froms)
         {
             if (froms.Count != 1)
             {
-                Utility.ResponseApi response1 = ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.UploadFileFail, false);
+                ResponseApi response1 = ResponseApi.Create(GetLanguage(), Code.UploadFileFail, false);
                 return await Task.FromResult(response1);
             }
             string type = Request.Form["type"];
             return await Upload(froms, type);
         }
-        async Task<Utility.ResponseApi> Upload([FromForm] IFormCollection froms,string type,string name="",bool ignore=true)
+        async Task<ResponseApi> Upload([FromForm] IFormCollection froms,string type,string name="",bool ignore=true)
         {
             if (froms.Count != 1||(!ignore && Request.Form.Files[0].Name.ToLower() != name))
             {
-                Utility.ResponseApi response1 = ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.UploadFileFail, false);
+                ResponseApi response1 = ResponseApi.Create(GetLanguage(), Code.UploadFileFail, false);
                 return await Task.FromResult(response1);
             }
             using System.IO.Stream stream = Request.Form.Files[0].OpenReadStream();
             byte[] buffer = new Byte[stream.Length];
             stream.Read(buffer);
-            var id = RandomUtils.Instance.OrderId.Sha1();
+            var id = RandomHelper.OrderId.Sha1();
             string suffix = Request.Form.Files[0].FileName.Split('.').LastOrDefault();
             //if (!base.Test && !type.Contains(suffix))
             //{
             //    return await Task.FromResult(new Utility.Response() { Message = "上传文件格式错误!", Success = false, Code = (int)Code.上传文件格式错误 });
             //}
-            var src = $"{RandomUtils.Instance.OrderId.Sha1()}.{suffix}";
+            var src = $"{RandomHelper.OrderId.Sha1()}.{suffix}";
             System.IO.File.WriteAllBytes($"{AddressConfig.UploadImgDirectory}\\{src}", buffer);
-            if (base.RedisCache.HashSet("file", new HashEntry[] { new HashEntry(id, $"{src}_{type??string.Empty}") }))
+            if (base.RedisCache.AddHash("file", id, $"{src}_{type ?? string.Empty}"))
             {
-                Utility.ResponseApi response1 = ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.UploadFileSuccess, false);
+                ResponseApi response1 = ResponseApi.Create(GetLanguage(), Code.UploadFileSuccess, false);
                 response1.Data = new { Id = id, src };
                 return await Task.FromResult(response1);
             }
             else
             {
-                Utility.ResponseApi response1 = ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.UploadFileFail, false);
+                ResponseApi response1 = ResponseApi.Create(GetLanguage(), Code.UploadFileFail, false);
                 return await Task.FromResult(response1);
             }
         }
@@ -243,7 +252,7 @@ namespace SocialContact.Api.Areas.Admin.Controllers
             XmlSerializer serializer = new XmlSerializer(t);
             serializer.Serialize(sw, Ids);
             sw.Close();
-            Utility.ResponseApi response1 = ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.OperatorSuccess, true);
+            ResponseApi response1 = ResponseApi.Create(GetLanguage(), Code.OperatorSuccess, true);
             response1.Data = sw.ToString();
             return await Task.FromResult(response1);
         }
@@ -319,7 +328,7 @@ namespace SocialContact.Api.Areas.Admin.Controllers
             {
                 return new FileContentResult(System.IO.File.ReadAllBytes(src), "*/*");
             }
-            src = base.RedisCache.HashGet("file", id);
+            src = base.RedisCache.GetHashValue("file", id);
             if (!string.IsNullOrEmpty(src))
             {
                 src = src.Split('_')[0];
@@ -342,23 +351,23 @@ namespace SocialContact.Api.Areas.Admin.Controllers
             return NotFound();
         }
         [HttpPost("img/upload")]
-        public async Task<Utility.ResponseApi> UploadHeadPic([FromForm] IFormCollection froms)
+        public async Task<ResponseApi> UploadHeadPic([FromForm] IFormCollection froms)
         {
             return await Upload(froms);
         }
 
         [HttpGet("file/operator")]
 
-        public override async Task<Utility.ResponseApi> Operator()
+        public override async Task<ResponseApi> Operator()
         {
             return await base.Operator();
         }
         [HttpGet("file/category")]
 
-        public async Task<Utility.ResponseApi> QueryCategory()
+        public async Task<ResponseApi> QueryCategory()
         {
             List<CategoryEntry> categoryEntries = UnitWork.Find<SocialContact.Domain.Core.UserFileInfo>(it=>it.Parent.Id.HasValue).Select(Select()).ToList();
-            Utility.ResponseApi response1 = ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.QuerySuccess);
+            ResponseApi response1 = ResponseApi.Create(GetLanguage(), Code.QuerySuccess);
             response1.Data = categoryEntries;
             return await Task.FromResult(response1);
         }
@@ -367,9 +376,9 @@ namespace SocialContact.Api.Areas.Admin.Controllers
             return it => new CategoryEntry() { Id = it.Id.Value, Category = it.Src };
         }
         [HttpGet("file/getdata")]
-        public Utility.ResponseApi GetData()
+        public ResponseApi GetData()
         {
-            Utility.ResponseApi response1 = ResponseApiUtils.GetResponse(GetLanguage(), Utility.Code.QuerySuccess);
+            ResponseApi response1 = ResponseApi.Create(GetLanguage(), Code.QuerySuccess);
             response1.Data = base.Cache.Get(Core.FileChannel);
             return response1;
         }

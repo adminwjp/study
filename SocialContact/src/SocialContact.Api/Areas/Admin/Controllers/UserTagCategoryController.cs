@@ -12,6 +12,10 @@ using Microsoft.Extensions.DependencyInjection;
 using NHibernate.Criterion;
 using NHibernate.Transform;
 using System;
+using Utility.Domain.Uow;
+using Utility.Redis;
+using Utility.Response;
+using Utility.ObjectMapping;
 
 namespace SocialContact.Api.Areas.Admin.Controllers
 {
@@ -19,12 +23,13 @@ namespace SocialContact.Api.Areas.Admin.Controllers
     [Route("admin/api/v1/[controller]")]
     [Produces("application/json")]
     [ApiController]
-    [ProducesResponseType(typeof(Utility.ResponseApi), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ResponseApi), StatusCodes.Status200OK)]
 
     public class UserTagCategoryController : SocialContact.Api.Controllers.BaseController<UserTagCategoryInfo, QueryUserTagCategoryFormViewModel, QueryUserTagCategoryInfoResultViewModel>
     {
-        public UserTagCategoryController(RedisCache redisCache, IUnitWork unitWork, IMemoryCache cache, AuthrizeValidator authrize, ILogger<UserTagCategoryController> logger) : base(redisCache, unitWork,cache,authrize, logger)
+        public UserTagCategoryController(IRedisCache redisCache, IObjectMapper objectMapper, IUnitWork unitWork, IMemoryCache cache, AuthrizeValidator authrize, ILogger<UserTagCategoryController> logger) : base(redisCache, unitWork,cache,authrize, logger)
         {
+            base.ObjectMapper = objectMapper;
             base.IsCustomValidator = true;
             base.PageName = "user_tag_category";
         }
